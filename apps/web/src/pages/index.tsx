@@ -1,6 +1,34 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import { useRouter } from 'next/router'
 
 const Home = () => {
+  const queryClient = useQueryClient()
+
+  const router = useRouter()
+
+  const discordLogIn = () =>
+    router.push('http://localhost:3001/api/auth/discord/login')
+
+  const localLogin = useMutation(user => {
+    return axios.post('http://localhost:3001/api/auth/login', user, {
+      withCredentials: true,
+    })
+  })
+
+  const localRegister = useMutation(user => {
+    return axios.post('http://localhost:3001/api/auth/signup', user, {
+      withCredentials: true,
+    })
+  })
+
+  const { data } = useQuery(['testLogin'], () => {
+    return axios.get('http://localhost:3001/api/auth/protected', {
+      withCredentials: true,
+    })
+  })
+
   return (
     <div className="bg-[#565264] px-6">
       <nav className="flex h-16 items-center justify-between">
@@ -28,6 +56,46 @@ const Home = () => {
             className="w-full rounded border-2 border-gray-500 bg-[#706677] py-1 pl-10 text-white outline-none"
           />
         </div>
+      </div>
+      <div className="flex">
+        <div
+          className="ml-1 bg-blue-600 px-4 py-4 text-lg"
+          onClick={() => {
+            discordLogIn()
+          }}
+        >
+          Discord
+        </div>
+        <div
+          className="ml-1 bg-blue-600 px-4 py-4 text-lg"
+          onClick={() => {
+            ;(localLogin.mutate as any)({
+              username: 'usernameTesting',
+              email: 'Douglas@email.com',
+              password: 'passwordTesting',
+            })
+          }}
+        >
+          Login Here
+        </div>
+        <div
+          className="ml-1 bg-blue-600 px-4 py-4 text-lg"
+          onClick={() => {
+            ;(localRegister.mutate as any)({
+              username: 'usernameTesting',
+              email: 'Douglas@email.com',
+              password: 'passwordTesting',
+            })
+          }}
+        >
+          Register Here
+        </div>
+        <div
+          className="ml-1 bg-blue-600 px-4 py-4 text-lg"
+          onClick={() => {
+            alert(JSON.stringify(data))
+          }}
+        ></div>
       </div>
       <footer className="mt-auto">
         <ul>

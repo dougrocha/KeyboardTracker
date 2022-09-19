@@ -1,0 +1,9 @@
+export const USERS_SERVICE = 'USERS_SERVICE'
+
+export const AUTH_SERVICE = 'AUTH_SERVICE'
+
+export const PRISMA_SERVICE = 'PRISMA_SERVICE'
+
+export const DISCORD_USERS_SERVICE = 'DISCORD_USERS_SERVICE'
+
+export const REDIS = 'REDIS'
