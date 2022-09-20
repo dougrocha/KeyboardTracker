@@ -5,8 +5,6 @@ import {
   PRISMA_SERVICE,
   USERS_SERVICE,
   DISCORD_AUTH_SERVICE,
-  REDDIT_AUTH_SERVICE,
-  REDDIT_USERS_SERVICE,
 } from '../common/constants'
 import { UsersService } from '../users/services/users.service'
 import { LocalStrategy } from './strategies/local.strategy'

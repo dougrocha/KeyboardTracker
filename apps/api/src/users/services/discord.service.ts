@@ -21,13 +21,10 @@ export class DiscordUsersService {
    * @returns User's Discord Identity without token fields or id
    */
   async findUser(id: string) {
-    const {
-      accessToken,
-      refreshToken,
-      id: _id,
-      ...discordUser
-    } = await this.prisma.discordIdentity.findUnique({ where: { id } })
-    return discordUser
+    return await this.prisma.discordIdentity.findUnique({
+      where: { id },
+      select: { accessToken: false, refreshToken: false, id: false },
+    })
   }
 
   async create(discordUser: CreateDiscordUserDto) {
