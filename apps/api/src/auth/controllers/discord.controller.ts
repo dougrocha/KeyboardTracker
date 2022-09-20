@@ -6,7 +6,6 @@ import { GetCurrentUser } from '../../common/decorators/getCurrentUser.decorator
 import { DiscordAuthGuard } from '../../common/guards/auth.guard'
 import { AuthenticatedGuard } from '../../common/guards/authenticated.guard'
 import { FillDiscordUser } from '../../common/guards/discordUser.guard'
-import { UsersController } from '../../users/users.controller'
 
 @Controller('discord')
 export class DiscordAuthController {

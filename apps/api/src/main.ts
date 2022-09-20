@@ -3,10 +3,6 @@ import { ConfigService } from '@nestjs/config'
 import { HttpAdapterHost, NestFactory } from '@nestjs/core'
 import { PrismaClientExceptionFilter } from 'nestjs-prisma'
 import { AppModule } from './app.module'
-import * as session from 'express-session'
-import * as passport from 'passport'
-import * as createRedisStore from 'connect-redis'
-import { createClient } from 'redis'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)

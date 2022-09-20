@@ -34,7 +34,7 @@ export class LocalAuthController {
    */
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async login(@GetCurrentUser() user: User) {
+  async login() {
     return
   }
 
