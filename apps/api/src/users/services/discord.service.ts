@@ -11,22 +11,32 @@ export class DiscordUsersService {
   async findUserByDiscordId(discordId: string) {
     return await this.prisma.discordIdentity.findUnique({
       where: { discordId },
-      include: { User: true },
+      include: { user: true },
     })
   }
 
-  async findUser(id: number) {
-    return await this.prisma.discordIdentity.findUnique({ where: { id } })
+  /**
+   * Find a user by their user id
+   * @param id User ID
+   * @returns User's Discord Identity without token fields or id
+   */
+  async findUser(id: string) {
+    const {
+      accessToken,
+      refreshToken,
+      id: _id,
+      ...discordUser
+    } = await this.prisma.discordIdentity.findUnique({ where: { id } })
+    return discordUser
   }
 
-  async create(discordUser: CreateDiscordUserDto, userId: number) {
+  async create(discordUser: CreateDiscordUserDto) {
     return await this.prisma.discordIdentity.create({
       data: {
         ...discordUser,
-        User: {
+        user: {
           connectOrCreate: {
             where: {
-              id: userId,
               email: discordUser.email,
             },
             create: {
@@ -39,14 +49,14 @@ export class DiscordUsersService {
     })
   }
 
-  async update(id: number, discordUser: UpdateDiscordUserDto) {
+  async update(id: string, discordUser: UpdateDiscordUserDto) {
     return await this.prisma.discordIdentity.update({
       where: { id },
       data: discordUser,
     })
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     return await this.prisma.discordIdentity.delete({ where: { id } })
   }
 }

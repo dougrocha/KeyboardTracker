@@ -10,6 +10,9 @@
     },
     "dev": {
       "cache": false
+    },
+    "#web:build": {
+      "dependsOn": ["$PUBLIC_API_URL"]
     }
   }
 }

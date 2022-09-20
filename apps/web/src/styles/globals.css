@@ -6,4 +6,14 @@
   html {
     height: 100vh;
   }
+
+  body {
+    height: 100%;
+    margin: 0;
+    width: 100%;
+
+    /*   background-color: #12263a;
+      background-color: #4b5267;
+ */
+  }
 }

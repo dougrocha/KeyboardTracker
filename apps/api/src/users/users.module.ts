@@ -3,6 +3,7 @@ import {
   DISCORD_USERS_SERVICE,
   PRISMA_SERVICE,
   USERS_SERVICE,
+  REDDIT_USERS_SERVICE,
 } from '../common/constants'
 import { UsersService } from './services/users.service'
 import { UsersController } from './users.controller'
