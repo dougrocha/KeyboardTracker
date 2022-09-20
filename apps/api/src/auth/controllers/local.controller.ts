@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Inject,
   Post,
   Req,
@@ -9,19 +11,19 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { Request, Response } from 'express'
-import { AUTH_SERVICE } from '../../common/constants'
 import { CreateUserDto } from '../../users/dto/create-user.dto'
-import { AuthService } from '../auth.service'
-import * as bcrypt from 'bcrypt'
 import { LocalAuthGuard } from '../../common/guards/auth.guard'
 import { AuthenticatedGuard } from '../../common/guards/authenticated.guard'
 import { User } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
+import { LOCAL_AUTH_SERVICE } from '../../common/constants'
+import { LocalAuthService } from '../services/local.service'
+import { GetCurrentUser } from '../../common/decorators/getCurrentUser.decorator'
 
 @Controller()
-export class AuthController {
+export class LocalAuthController {
   constructor(
-    @Inject(AUTH_SERVICE) private readonly authService: AuthService,
+    @Inject(LOCAL_AUTH_SERVICE) private readonly authService: LocalAuthService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -32,45 +34,45 @@ export class AuthController {
    */
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async localLogin(@Req() req: Request) {
-    return {
-      msg: 'User logged in',
-      user: req.user,
-    }
+  async login(@GetCurrentUser() user: User) {
+    return
   }
 
   /**
-   * GET /api/auth/register
+   * GET /api/auth/signup
    *
    * This is the route for registration.
    */
   @Post('signup')
-  async localRegister(
+  @HttpCode(HttpStatus.CREATED)
+  async signUp(
     @Body() createUserDto: CreateUserDto,
     @Body('password') password: string,
+    @Res() res: Response,
   ) {
-    const saltOfRounds = 10
-    const hashedPassword = await bcrypt.hash(password, saltOfRounds)
+    const user = await this.authService.register(createUserDto, password)
 
-    const user = await this.authService.registerLocalUser({
-      ...createUserDto,
-      password: hashedPassword,
+    res.json({
+      msg: 'User created successfully',
+      email: user.email,
+      username: user.username,
     })
 
-    return {
-      msg: 'User created successfully',
-      id: user.id,
-      username: user.username,
-    }
+    return
   }
 
+  /**
+   * GET /api/auth/protected
+   */
   @Get('protected')
   @UseGuards(AuthenticatedGuard)
-  async protected(@Req() req: Request) {
-    const { password, ...user } = req.user as User
-    return user
+  async protected(@GetCurrentUser() user: User) {
+    return { isLoggedIn: true, user }
   }
 
+  /**
+   * GET /api/auth/logout
+   */
   @Get('logout')
   async logout(@Req() req: Request, @Res() res: Response) {
     req.session.destroy(() => {

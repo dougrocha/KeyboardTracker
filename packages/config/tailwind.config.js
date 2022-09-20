@@ -1,8 +1,9 @@
 module.exports = {
   content: [
-    '../../packages/ui/**/*.{js,ts,jsx,tsx}',
-    './src/pages/**/*.{js,ts,jsx,tsx}',
-    './src/components/**/*.{js,ts,jsx,tsx}',
+    '../../packages/ui/**/*.{ts,tsx}',
+    './src/pages/**/*.{ts,tsx}',
+    './src/components/**/*.{ts,tsx}',
+    './src/layouts/**/*.{ts,tsx}',
   ],
   darkMode: 'class',
   theme: {

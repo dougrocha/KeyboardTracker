@@ -1,4 +1,4 @@
-import { HttpStatus, Logger } from '@nestjs/common'
+import { HttpStatus, Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { HttpAdapterHost, NestFactory } from '@nestjs/core'
 import { PrismaClientExceptionFilter } from 'nestjs-prisma'
@@ -14,41 +14,14 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
   const NODE_ENV = configService.get('NODE_ENV')
 
+  app.useGlobalPipes(new ValidationPipe())
+
   app.setGlobalPrefix('api')
 
   app.enableCors({
     origin: configService.get('CORS_ORIGIN'),
     credentials: true,
   })
-
-  // const RedisStore = createRedisStore(session)
-  // const redisClient = createClient({
-  //   url: configService.get('REDIS_URL'),
-  //   legacyMode: true,
-  // })
-
-  // redisClient.connect()
-
-  // redisClient.on('error', (err) =>
-  //   Logger.error('Could not establish a connection with redis. ' + err),
-  // )
-  // redisClient.on('connect', () => Logger.log('Connected to redis successfully'))
-
-  // app.use(
-  //   session({
-  //     store: new RedisStore({ client: redisClient as any }),
-  //     secret: configService.get('SESSION_SECRET'),
-  //     resave: false,
-  //     saveUninitialized: false,
-  //     cookie: {
-  //       httpOnly: true,
-  //       secure: NODE_ENV === 'production',
-  //       maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
-  //     },
-  //   }),
-  // )
-  // app.use(passport.initialize())
-  // app.use(passport.session())
 
   const { httpAdapter } = app.get(HttpAdapterHost)
 

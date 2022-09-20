@@ -4,13 +4,12 @@ import {
   Delete,
   Get,
   Inject,
-  NotFoundException,
   Param,
-  ParseIntPipe,
   Patch,
+  UseGuards,
 } from '@nestjs/common'
-import { NotFoundError } from '@prisma/client/runtime'
 import { USERS_SERVICE } from '../common/constants'
+import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UsersService } from './services/users.service'
 
@@ -21,23 +20,18 @@ export class UsersController {
   ) {}
 
   @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number) {
-    const user = await this.usersService.findById(id)
-    // if (!user) return null
-    // const { password, ...foundUser } = user
-    return user
+  async findById(@Param('id') id: string) {
+    return await this.usersService.findById(id)
   }
 
   @Patch(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
+  @UseGuards(AuthenticatedGuard)
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.usersService.update(id, updateUserDto)
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id') id: string) {
     return await this.usersService.delete(id)
   }
 }

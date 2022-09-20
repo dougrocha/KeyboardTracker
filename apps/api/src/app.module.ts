@@ -9,6 +9,8 @@ import { RouterModule } from '@nestjs/core'
 import { routes } from './config/routes'
 import { RedisModule } from './redis/redis.module'
 import { REDIS } from './common/constants'
+import { KeycapsModule } from './keycaps/keycaps.module';
+import { VendorsModule } from './vendors/vendors.module';
 import * as session from 'express-session'
 import * as RedisStore from 'connect-redis'
 import * as passport from 'passport'
@@ -29,6 +31,8 @@ import * as passport from 'passport'
     AuthModule,
     UsersModule,
     RedisModule,
+    KeycapsModule,
+    VendorsModule,
   ],
 })
 export class AppModule implements NestModule {
