@@ -67,6 +67,7 @@ export class LocalAuthController {
   @Get('protected')
   @UseGuards(AuthenticatedGuard)
   async protected(@GetCurrentUser() user: User) {
+    if (!user) return { isLoggedIn: false }
     return { isLoggedIn: true, user }
   }
 

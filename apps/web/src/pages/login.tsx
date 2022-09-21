@@ -8,12 +8,12 @@ import Footer from '../components/Footer'
 const LoginSources = [
   {
     name: 'Github',
-    href: `${process.env.PUBLIC_API_URL}/auth/github/login`,
+    href: `${process.env.NEXT_PUBLIC_API_URL}/auth/github/login`,
     Icon: FaGithub,
   },
   {
     name: 'Discord',
-    href: `${process.env.PUBLIC_API_URL}/auth/discord/login`,
+    href: `${process.env.NEXT_PUBLIC_API_URL}/auth/discord/login`,
     Icon: FaDiscord,
   },
 ]

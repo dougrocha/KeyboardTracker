@@ -11,8 +11,10 @@
     "dev": {
       "cache": false
     },
-    "#web:build": {
-      "dependsOn": ["$PUBLIC_API_URL"]
+    "web#build": {
+      "dependsOn": ["^build", "$NEXT_PUBLIC_API_URL"],
+      "outputs": [".next/**"]
     }
-  }
+  },
+  "globalDependencies": ["$NODE_ENV"]
 }

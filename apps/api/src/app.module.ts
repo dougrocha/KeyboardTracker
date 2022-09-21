@@ -55,8 +55,8 @@ export class AppModule implements NestModule {
           resave: false,
           cookie: {
             secure: this.configService.get('NODE_ENV') === 'production',
-            httpOnly: false,
-            maxAge: 60 * 60 * 24 * 14, // 14 days
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
           },
         }),
         passport.initialize(),
