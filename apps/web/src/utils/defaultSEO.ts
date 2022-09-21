@@ -7,15 +7,11 @@ export default {
   additionalLinkTags: [
     {
       rel: 'icon',
-      href: '/favicon/favicon.ico',
+      href: '/favicon.ico',
     },
     {
       rel: 'apple-touch-icon',
-      href: '/favicon/apple-touch-icon.png',
-    },
-    {
-      rel: 'manifest',
-      href: '/site.webmanifest',
+      href: '/apple-touch-icon.png',
     },
   ],
 } as NextSeoProps
