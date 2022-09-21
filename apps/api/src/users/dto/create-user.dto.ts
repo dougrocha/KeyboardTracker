@@ -24,5 +24,10 @@ export class CreateUserDto {
   discriminator?: string
 
   @IsString()
+  @MinLength(3)
   username: string
+
+  @IsString()
+  @IsOptional()
+  avatar?: string
 }

@@ -16,6 +16,35 @@ class EnvironmentVariables {
 
   @IsString()
   SESSION_SECRET: string
+
+  @IsString()
+  APP_URL: string
+  @IsString()
+  CORS_ORIGIN: string
+
+  @IsString()
+  DISCORD_CLIENT_SECRET: string
+  @IsString()
+  DISCORD_CLIENT_ID: string
+  @IsString()
+  DISCORD_CALLBACK_URL: string
+
+  @IsString()
+  POSTGRES_PASSWORD: string
+  @IsString()
+  POSTGRES_USER: string
+  @IsString()
+  POSTGRES_DB: string
+  @IsString()
+  DATABASE_URL: string
+
+  @IsString()
+  REDIS_URL: string
+
+  @IsString()
+  UPLOADS_PATH: string
+  @IsNumber()
+  MAX_FILE_UPLOAD_SIZE: number
 }
 
 export function validate(config: Record<string, unknown>) {
