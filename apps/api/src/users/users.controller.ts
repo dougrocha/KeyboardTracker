@@ -1,11 +1,13 @@
 import {
-  ConsoleLogger,
   Controller,
   Get,
+  Header,
+  HttpCode,
+  HttpStatus,
   Inject,
-  Param,
   Post,
   Res,
+  StreamableFile,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -13,12 +15,13 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express'
 import { User } from '@prisma/client'
 import { Response } from 'express'
-import { join } from 'path'
-import { Observable, of } from 'rxjs'
+import { createReadStream } from 'fs'
+import { extname, join } from 'path'
 import { USERS_SERVICE } from '../common/constants'
 import { GetCurrentUser } from '../common/decorators/getCurrentUser.decorator'
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
-import { multerConfig, multerOptions } from '../config/multer.config'
+import { SharpPipe } from '../common/pipes/SharpPipe.pipe'
+import { multerConfig, multerImageOptions } from '../config/multer.config'
 import { UsersService } from './services/users.service'
 
 @Controller()
@@ -45,22 +48,41 @@ export class UsersController {
 
   @Post('avatar')
   @UseGuards(AuthenticatedGuard)
-  @UseInterceptors(FileInterceptor('file', multerOptions('avatar')))
+  @UseInterceptors(FileInterceptor('file', multerImageOptions()))
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      SharpPipe({
+        folder: 'avatars',
+        fileType: 'webp',
+      }),
+    )
+    file: string,
     @GetCurrentUser() user: User,
   ) {
-    const { avatar } = await this.usersService.update(user.id, {
-      avatar: file.filename,
+    await this.usersService.update(user.id, {
+      avatar: file,
     })
-
-    return { fileName: avatar }
+    return { fileName: file }
   }
 
   @Get('avatar')
-  findProfileImage(@GetCurrentUser() user: User, @Res() res: Response) {
-    return res.sendFile(
-      join(process.cwd(), multerConfig.dest, 'avatar', user.avatar),
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthenticatedGuard)
+  findProfileImage(
+    @GetCurrentUser() user: User,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const fileName = user.avatar
+
+    const stream = createReadStream(
+      join(process.cwd(), multerConfig.dest, 'avatars', fileName),
     )
+
+    res.set({
+      'Content-Disposition': `inline; filename="${fileName}"`,
+      'Content-Type': 'image/webp',
+    })
+
+    return new StreamableFile(stream)
   }
 }

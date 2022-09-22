@@ -41,10 +41,7 @@ export class KeycapsService {
   async getAllByDesigner(designer: string) {
     return await this.prisma.keycapSet.findMany({
       where: {
-        designerName: {
-          contains: designer,
-          mode: 'insensitive',
-        },
+        designerId: designer,
       },
     })
   }
