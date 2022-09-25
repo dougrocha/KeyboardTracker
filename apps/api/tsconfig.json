@@ -6,12 +6,12 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "target": "ES2020",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true
   },
-  "include": ["environment.d.ts", "src/**/*.ts"]
+  "include": ["environment.d.ts", "src/**/*.ts", "test/**/*.ts"]
 }

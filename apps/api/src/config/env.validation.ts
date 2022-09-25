@@ -40,6 +40,10 @@ class EnvironmentVariables {
 
   @IsString()
   REDIS_URL: string
+  @IsString()
+  REDIS_HOST: string
+  @IsNumber()
+  REDIS_PORT: number
 
   @IsString()
   UPLOADS_PATH: string

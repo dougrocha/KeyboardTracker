@@ -5,7 +5,7 @@ import { PrismaConfigService } from './config/database/prisma/configuration'
 import { validate } from './config/env.validation'
 import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
-import { RouterModule } from '@nestjs/core'
+import { APP_FILTER, RouterModule } from '@nestjs/core'
 import { routes } from './config/routes'
 import { RedisModule } from './redis/redis.module'
 import { REDIS } from './common/constants'
@@ -14,6 +14,13 @@ import { VendorsModule } from './vendors/vendors.module'
 import * as session from 'express-session'
 import * as RedisStore from 'connect-redis'
 import * as passport from 'passport'
+import { BullModule } from '@nestjs/bull'
+import { BullConfigService } from './config/bull.config'
+import { AppConfigService } from './config/config.service'
+import { ScheduleModule } from '@nestjs/schedule'
+import { ThrottlerModule } from '@nestjs/throttler'
+import { ThrottlerConfigService } from './config/throttler.config'
+import { SnowflakeModule } from './snowflake/snowflake.module'
 
 @Module({
   imports: [
@@ -28,12 +35,31 @@ import * as passport from 'passport'
       useClass: PrismaConfigService,
     }),
     RouterModule.register(routes),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: BullConfigService,
+      inject: [ConfigService],
+    }),
+    ScheduleModule.forRoot(),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: ThrottlerConfigService,
+      inject: [ConfigService],
+    }),
+    SnowflakeModule.forRoot({
+      options: {
+        epoch: new Date('2021-01-01').getTime(),
+        datacenter: 1,
+      },
+      global: true,
+    }),
     AuthModule,
     UsersModule,
     RedisModule,
     KeycapsModule,
     VendorsModule,
   ],
+  providers: [AppConfigService],
 })
 export class AppModule implements NestModule {
   constructor(
@@ -54,7 +80,7 @@ export class AppModule implements NestModule {
           saveUninitialized: false,
           resave: false,
           cookie: {
-            secure: this.configService.get('NODE_ENV') === 'production',
+            secure: AppConfigService.isProd,
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
           },

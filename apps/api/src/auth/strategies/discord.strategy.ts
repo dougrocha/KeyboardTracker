@@ -23,7 +23,7 @@ export class DiscordStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(accessToken: string, refreshToken: string, profile: Profile) {
-    const { discriminator, username, email } = profile
+    const { discriminator, username, email, mfa_enabled } = profile
 
     return this.authService.validateUser({
       discordId: profile.id,
@@ -32,6 +32,7 @@ export class DiscordStrategy extends PassportStrategy(Strategy) {
       email,
       refreshToken,
       accessToken,
+      mfaEnabled: mfa_enabled,
     })
   }
 }

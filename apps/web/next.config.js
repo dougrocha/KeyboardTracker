@@ -6,7 +6,10 @@ const withTM = require('next-transpile-modules')(['ui'])
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  images: { domains: ['localhost'] },
+  images: {
+    domains: ['localhost'],
+    formats: ['image/webp'],
+  },
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
