@@ -19,9 +19,7 @@ export class DiscordAuthController {
 
   @Get('login')
   @UseGuards(DiscordAuthGuard)
-  login() {
-    return
-  }
+  login() {}
 
   @Get('profile')
   @UseGuards(AuthenticatedGuard, FillDiscordUser)

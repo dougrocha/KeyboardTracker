@@ -1,4 +1,7 @@
 export enum Role {
-  User = 'user',
-  Vendor = 'vendor',
+  USER = 'USER',
+  VENDOR = 'VENDOR',
+  DESIGNER = 'DESIGNER',
 }
+
+export type RoleType = `${keyof typeof Role}`

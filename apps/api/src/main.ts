@@ -2,7 +2,9 @@ import { HttpStatus, Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { HttpAdapterHost, NestFactory } from '@nestjs/core'
 import { PrismaClientExceptionFilter } from 'nestjs-prisma'
+import * as compression from 'compression'
 import { AppModule } from './app.module'
+import { AllExceptionsFilter } from './common/filters/global.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -12,14 +14,15 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe())
 
-  app.setGlobalPrefix('api')
-
   app.enableCors({
     origin: configService.get('CORS_ORIGIN'),
     credentials: true,
   })
 
-  const { httpAdapter } = app.get(HttpAdapterHost)
+  app.use(compression())
+
+  const httpAdapter = app.getHttpAdapter()
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter))
 
   app.useGlobalFilters(
     new PrismaClientExceptionFilter(httpAdapter, {
