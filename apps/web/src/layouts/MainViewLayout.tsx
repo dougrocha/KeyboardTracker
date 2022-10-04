@@ -1,6 +1,6 @@
-import Footer from '../components/Footer'
-import Navbar from '../components/Navbar'
-import { LayoutProps } from '../types/layoutProps'
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+import { LayoutProps } from "../types/layoutProps";
 
 interface MainViewLayoutProps extends LayoutProps {}
 
@@ -11,7 +11,7 @@ const MainViewLayout = ({ children }: MainViewLayoutProps) => {
       <main className="mb-auto">{children}</main>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default MainViewLayout
+export default MainViewLayout;

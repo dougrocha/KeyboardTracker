@@ -1,22 +1,22 @@
-import Link from 'next/link'
-import React from 'react'
+import Link from "next/link";
+import React from "react";
 
-import { FaDiscord, FaGithub } from 'react-icons/fa'
-import Footer from '../components/Footer'
+import { FaDiscord, FaGithub } from "react-icons/fa";
+import Footer from "../components/Footer";
 
 // Icon must always be capitalized
 const LoginSources = [
   {
-    name: 'Github',
+    name: "Github",
     href: `${process.env.NEXT_PUBLIC_API_URL}/auth/github/login`,
     Icon: FaGithub,
   },
   {
-    name: 'Discord',
+    name: "Discord",
     href: `${process.env.NEXT_PUBLIC_API_URL}/auth/discord/login`,
     Icon: FaDiscord,
   },
-]
+];
 
 const LoginPage = () => {
   return (
@@ -41,7 +41,7 @@ const LoginPage = () => {
         ))}
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;
