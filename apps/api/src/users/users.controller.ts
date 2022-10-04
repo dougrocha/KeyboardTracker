@@ -16,7 +16,7 @@ import {
   StreamableFile,
   UseGuards,
   UseInterceptors,
-  Session,
+  Logger,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { User } from '@prisma/client'
@@ -40,6 +40,8 @@ import { UsersService } from './services/users.service'
 
 @Controller()
 export class UsersController {
+  private logger: Logger = new Logger(UsersController.name)
+
   constructor(
     @Inject(USERS_SERVICE) private readonly usersService: UsersService,
     @Inject(IMAGES_SERVICE) private readonly imagesService: ImagesService,
@@ -95,6 +97,7 @@ export class UsersController {
       fileName: user.avatar,
     })
 
+    // Update User with new avatar id
     await this.usersService.update(user.id, {
       avatar: id,
     })
@@ -113,15 +116,16 @@ export class UsersController {
         'Something went wrong. The URL contains errors.',
         HttpStatus.NOT_FOUND,
       )
-    try {
-      const path = this.imagesService.joinFilePath(id, avatar) + '.webp'
-      await access(path, constants.F_OK)
-      const stream = createReadStream(path)
-      res.header('Content-Type', 'image/webp')
-      res.header('Content-Disposition', `inline, filename=${avatar}.webp`)
-      return new StreamableFile(stream)
-    } catch {
-      throw new ImageNotFoundException()
-    }
+
+    const path = this.imagesService.joinFilePath(id, avatar) + '.webp'
+    return await access(path, constants.F_OK | constants.R_OK)
+      .then(() => {
+        res.set('Content-Type', 'image/webp')
+        res.header('Content-Disposition', `inline, filename=${avatar}.webp`)
+        return new StreamableFile(createReadStream(path))
+      })
+      .catch(() => {
+        throw new ImageNotFoundException()
+      })
   }
 }

@@ -1,9 +1,11 @@
-import Image from 'next/future/image'
-import useAuth from '../hooks/useAuth'
-import MainViewLayout from '../layouts/MainViewLayout'
+import Image from "next/future/image";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+
+import useAuth from "../hooks/useAuth";
+import MainViewLayout from "../layouts/MainViewLayout";
 
 const Home = () => {
-  const { data, isLoading } = useAuth()
+  const { data, isLoading } = useAuth();
 
   return (
     <MainViewLayout>
@@ -34,8 +36,12 @@ const Home = () => {
           </>
         )}
       </div>
+      <div className="flex">
+        hasdasd
+        <MagnifyingGlassIcon className="h-6 w-6" />
+      </div>
     </MainViewLayout>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
