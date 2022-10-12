@@ -1,47 +1,48 @@
-import Image from "next/future/image";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-
-import useAuth from "../hooks/useAuth";
-import MainViewLayout from "../layouts/MainViewLayout";
+import Card from "../components/Card"
+import ItemCarousel from "../components/CardCarousel"
+import Hero from "../components/Hero"
+import ThemeToggle from "../components/ThemeToggle"
+import MainViewLayout from "../layouts/MainViewLayout"
 
 const Home = () => {
-  const { data, isLoading } = useAuth();
-
   return (
     <MainViewLayout>
-      <div className="flex space-x-10">
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          <>
-            <div>
-              UNOPTIMIZED
-              <Image
-                src={`http://localhost:3001/users/avatars/${data?.user?.id}/${data?.user?.avatar}`}
-                alt="user profile image"
-                width={128}
-                height={128}
-                unoptimized={true}
-              />
-            </div>
-            <div>
-              OPTIMIZED
-              <Image
-                src={`http://localhost:3001/users/avatars/${data?.user?.id}/${data?.user?.avatar}`}
-                alt="user profile imag"
-                width={128}
-                height={128}
-              />
-            </div>
-          </>
-        )}
-      </div>
-      <div className="flex">
-        hasdasd
-        <MagnifyingGlassIcon className="h-6 w-6" />
+      <Hero />
+
+      <ThemeToggle />
+
+      <div className="mt-36 mb-10 flex flex-col space-y-10 overflow-x-scroll">
+        <ItemCarousel title="Interest Checks">
+          <Card title="TESTING" />
+          <Card title="TESTING 2" />
+          <Card title="TESTING 2" />
+          <Card title="TESTING 2" />
+        </ItemCarousel>
+        <ItemCarousel title="Group Buys">
+          <Card title="TESTING" />
+          <Card title="TESTING 2" />
+          <Card title="TESTING 2" />
+          <Card title="TESTING 2" />
+        </ItemCarousel>
+        <div className="flex flex-col items-center">
+          <p className="mb-8 mt-10 text-2xl font-semibold">Live Group Buys</p>
+          <div className="grid-cols-auto grid w-full grid-rows-6 place-items-center gap-4 md:grid-rows-5 lg:grid-cols-4 lg:gap-0">
+            <Card title="TESTING 2" />
+            <Card title="TESTING 2" />
+            <Card title="TESTING 2" />
+            <Card title="TESTING 2" />
+            <Card title="TESTING 2" />
+            <Card title="TESTING 2" />
+            <Card title="TESTING 2" />
+            <Card title="TESTING 2" />
+          </div>
+          <button className="mt-10 rounded-md bg-gray-200 py-2 px-4 font-medium text-black">
+            Find More
+          </button>
+        </div>
       </div>
     </MainViewLayout>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
