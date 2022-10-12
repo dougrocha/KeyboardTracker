@@ -1,18 +1,17 @@
 module.exports = {
   content: [
-    '../../packages/ui/**/*.{ts,tsx}',
-    './src/pages/**/*.{ts,tsx}',
-    './src/components/**/*.{ts,tsx}',
-    './src/layouts/**/*.{ts,tsx}',
+    "../../packages/ui/**/*.{ts,tsx}",
+    "./src/pages/**/*.{ts,tsx}",
+    "./src/components/**/*.{ts,tsx}",
+    "./src/layouts/**/*.{ts,tsx}",
   ],
-  darkMode: 'class',
+  darkMode: "class",
   theme: {
     extend: {
       fontFamily: {
-        rubik: ['Rubik', 'sans-serif'],
-        poppins: ['Poppins', 'sans-serif'],
+        montserrat: ["Montserrat", "sans-serif"],
       },
     },
   },
-  plugins: [require('@tailwindcss/line-clamp')],
+  plugins: [require("@tailwindcss/line-clamp")],
 }
