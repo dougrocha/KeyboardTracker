@@ -29,16 +29,20 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="container mx-auto mb-10 flex h-20 w-full items-center justify-between py-4 px-2 sm:px-6">
+    <nav className="container mx-auto mb-5 flex h-20 w-full items-center justify-between px-2 py-8 sm:px-6">
       <p className="text-4xl font-bold text-black dark:text-white">MEKA</p>
-      <div className="flex  items-center space-x-5 text-gray-200">
-        {NavLinks.map((link) => (
-          <Link key={link.name} href={link.href}>
-            <a className="text-black transition-colors hover:text-blue-400 dark:text-white dark:hover:text-gray-400">
-              {link.name}
-            </a>
-          </Link>
-        ))}
+      <div className="flex items-center space-x-5 text-gray-200">
+        <ul className="hidden space-x-5 md:flex">
+          {NavLinks.map((link) => (
+            <li key={link.name}>
+              <Link href={link.href}>
+                <a className="text-black transition-colors hover:text-blue-400 dark:text-white dark:hover:text-gray-400">
+                  {link.name}
+                </a>
+              </Link>
+            </li>
+          ))}
+        </ul>
         {data && (
           <div className="flex w-full items-center gap-3">
             <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-blue-900">
@@ -84,6 +88,14 @@ const Navbar = () => {
       </div>
     </nav>
   )
+}
+
+const HamMenu = () => {
+  return <></>
+}
+
+const UserMenu = () => {
+  return <></>
 }
 
 export default Navbar
