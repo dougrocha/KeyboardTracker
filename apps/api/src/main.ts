@@ -11,7 +11,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService)
   const NODE_ENV = configService.get('NODE_ENV')
 
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(new ValidationPipe({ transform: true }))
 
   app.enableCors({
     origin: configService.get('CORS_ORIGIN'),

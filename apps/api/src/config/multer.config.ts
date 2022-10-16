@@ -21,6 +21,7 @@ export const multerImageOptions = {
     }
     cb(null, true)
   },
+  // TODO: Change so image is saved into storage first. Then optimized and replaced with new image.
   storage: memoryStorage(),
 }
 

@@ -10,7 +10,7 @@ export class VendorsService {
     return await this.prisma.vendor.findMany()
   }
 
-  async getOne(id: number) {
+  async getOne(id: string) {
     return await this.prisma.vendor.findUnique({
       where: {
         id,

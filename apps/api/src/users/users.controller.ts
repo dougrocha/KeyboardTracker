@@ -16,7 +16,6 @@ import {
   StreamableFile,
   UseGuards,
   UseInterceptors,
-  Logger,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { User } from '@prisma/client'
@@ -40,8 +39,6 @@ import { UsersService } from './services/users.service'
 
 @Controller()
 export class UsersController {
-  private logger: Logger = new Logger(UsersController.name)
-
   constructor(
     @Inject(USERS_SERVICE) private readonly usersService: UsersService,
     @Inject(IMAGES_SERVICE) private readonly imagesService: ImagesService,
@@ -83,7 +80,7 @@ export class UsersController {
   ) {
     const id = this.snowflake.nano()
 
-    // Save the image to the disk
+    // Add image to Optimization queue
     await this.imagesQueue.add('optimize-avatar', {
       file,
       folder: [user.id],

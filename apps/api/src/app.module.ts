@@ -21,6 +21,8 @@ import { ScheduleModule } from '@nestjs/schedule'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { ThrottlerConfigService } from './config/throttler.config'
 import { SnowflakeModule } from './snowflake/snowflake.module'
+import { DesignersModule } from './designers/designers.module'
+import { ItemsModule } from './items/items.module'
 
 @Module({
   imports: [
@@ -56,8 +58,10 @@ import { SnowflakeModule } from './snowflake/snowflake.module'
     AuthModule,
     UsersModule,
     RedisModule,
+    ItemsModule,
     KeycapsModule,
-    VendorsModule,
+    // VendorsModule,
+    // DesignersModule,
   ],
   providers: [AppConfigService],
 })
