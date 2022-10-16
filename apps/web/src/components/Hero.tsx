@@ -19,7 +19,7 @@ const Hero = () => {
           alt={"Keyboard Picture"}
           width={512}
           height={512}
-          sizes="(max-width: 375px) 140px, (max-width: 600px) 280px,"
+          sizes="100vw"
           className="h-full object-cover object-center"
         />
       </div>

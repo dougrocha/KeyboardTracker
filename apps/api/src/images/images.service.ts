@@ -86,7 +86,6 @@ export class ImagesService {
   }
 
   /**
-   *
    * @param name File name
    * @returns A supported file extension
    */

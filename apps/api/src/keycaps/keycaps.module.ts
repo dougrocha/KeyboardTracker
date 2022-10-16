@@ -7,8 +7,9 @@ import { KeycapsService } from './keycaps.service'
 @Module({
   controllers: [KeycapsController],
   providers: [
+    { provide: PRISMA_SERVICE, useClass: PrismaService },
     { provide: KEYCAPS_SERVICE, useClass: KeycapsService },
-    { provide: PRISMA_SERVICE, useValue: PrismaService },
   ],
+  exports: [{ provide: KEYCAPS_SERVICE, useClass: KeycapsService }],
 })
 export class KeycapsModule {}

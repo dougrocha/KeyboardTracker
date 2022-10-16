@@ -10,11 +10,11 @@ export class KeycapsController {
 
   @Get('all')
   async getAllKeycaps() {
-    return await this.keycapsService.getAll()
+    return await this.keycapsService.findMany()
   }
 
   @Get(':id')
-  async getKeycapSet(@Param('id', ParseIntPipe) id: number) {
-    return await this.keycapsService.getOne(id)
+  async getKeycapSet(@Param('id') id: string) {
+    return await this.keycapsService.findOne(id)
   }
 }

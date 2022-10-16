@@ -56,7 +56,7 @@ model DiscordIdentity {
 }
 
 model KeycapSet {
-  id          Int     @id @default(autoincrement())
+  id          String  @id
   name        String  @unique
   description String?
 
@@ -73,7 +73,7 @@ model KeycapSet {
   groupBuyStartDate DateTime?
   groupBuyEndDate   DateTime?
 
-  status  GroupBuyStatus
+  status  GroupBuyStatus @default(UPCOMING)
   delayed Boolean        @default(false)
 
   createdAt DateTime @default(now())
@@ -87,7 +87,7 @@ model KeycapSet {
 }
 
 model Designer {
-  id String @id @default(uuid())
+  id String @id
 
   username String
 
@@ -114,7 +114,7 @@ model KeycapKitImage {
   imgUrl String
 
   keycapSet   KeycapSet? @relation(fields: [keycapSetId], references: [id])
-  keycapSetId Int?
+  keycapSetId String?
 }
 
 enum GroupBuyStatus {
@@ -129,7 +129,7 @@ enum GroupBuyStatus {
 }
 
 model Vendor {
-  id   Int    @id @default(autoincrement())
+  id   String @id
   name String @unique
 
   logoUrl String?
@@ -150,14 +150,14 @@ model KeycapSetVendor {
   id Int @id @default(autoincrement())
 
   keycapSet   KeycapSet @relation(fields: [keycapSetId], references: [id])
-  keycapSetId Int
+  keycapSetId String
 
   vendor   Vendor @relation(fields: [vendorId], references: [id])
-  vendorId Int
+  vendorId String
 }
 
 model Keyboard {
-  id          Int     @id @default(autoincrement())
+  id          String  @id
   name        String  @unique
   description String?
 
@@ -182,8 +182,8 @@ model KeyboardVendor {
   id Int @id @default(autoincrement())
 
   keyboard   Keyboard @relation(fields: [keyboardId], references: [id])
-  keyboardId Int
+  keyboardId String
 
   vendor   Vendor @relation(fields: [vendorId], references: [id])
-  vendorId Int
+  vendorId String
 }
