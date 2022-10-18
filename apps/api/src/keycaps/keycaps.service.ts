@@ -36,14 +36,6 @@ export class KeycapsService {
     })
   }
 
-  async findOneBySlug(slug: string) {
-    return await this.prisma.keycapSet.findUnique({
-      where: {
-        slug,
-      },
-    })
-  }
-
   async findAllByBrand(brand: string) {
     return await this.prisma.keycapSet.findMany({
       where: {

@@ -2,8 +2,10 @@ import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
 import { HeartIcon } from "@heroicons/react/24/outline"
 import Image from "next/future/image"
 import React from "react"
-import MainViewLayout from "../../layouts/MainViewLayout"
-import AxiosClient from "../../libs/AxiosClient"
+import MainViewLayout from "../../../layouts/MainViewLayout"
+import AxiosClient from "../../../libs/AxiosClient"
+import { GetStaticPropsContext } from "next"
+import GetAllKeycaps from "../../../libs/api/GetAllKeycaps"
 
 interface ItemPageProps {
   item: {
@@ -19,9 +21,14 @@ interface ItemPageProps {
   }
 }
 
-const ItemPage = ({ item }: ItemPageProps) => {
-  console.log({ item })
+/**
+ * TODO: Add ability to change images of big slides
+ * TODO: Possibly make crumbs list above title
+ * TODO: Implement Information on backend
+ *
+ */
 
+const ItemPage = ({ item }: ItemPageProps) => {
   return (
     <MainViewLayout>
       <div className="mb-20 flex items-center gap-x-10">
@@ -171,8 +178,8 @@ const ItemPage = ({ item }: ItemPageProps) => {
   )
 }
 
-export const getStaticProps = async ({ params }: { params: any }) => {
-  const res = await AxiosClient.get(`/keycaps/${params.id}`)
+export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
+  const res = await AxiosClient.get(`/keycaps/${params?.id}`)
   const data = res.data
 
   return {
@@ -182,10 +189,12 @@ export const getStaticProps = async ({ params }: { params: any }) => {
   }
 }
 
+// TODO: Make seperate pages for different types of products
+// TODO: Due to getStaticPaths only passing the id without the type, there is no way to tell what item is being loaded without change database.
 export const getStaticPaths = async () => {
-  const res = await AxiosClient.get<{ id: string }[]>("items?id=true")
+  const res = await GetAllKeycaps({ id: true })
 
-  const paths = res.data.map(({ id }) => ({
+  const paths = res.map(({ id }) => ({
     params: { id },
   }))
 
