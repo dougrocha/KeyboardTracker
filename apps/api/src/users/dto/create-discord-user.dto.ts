@@ -5,4 +5,5 @@ export class CreateDiscordUserDto {
   email: string
   refreshToken: string
   accessToken: string
+  mfaEnabled: boolean
 }

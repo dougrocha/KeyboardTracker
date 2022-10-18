@@ -7,11 +7,31 @@
     height: 100vh;
   }
 
+  * {
+    font-family: montserrat, sans-serif;
+  }
+
   body {
     height: 100%;
     margin: 0;
+    padding: 0;
     width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    margin: 0;
+  }
+}
 
-    background-color: #212529;
+@layer components {
+  .icon {
+    @apply h-6 w-6;
+  }
+
+  .icon-sm {
+    @apply h-5 w-5;
+  }
+
+  .nav-link {
+    @apply inline-block py-1 px-3 text-gray-700 no-underline hover:text-gray-600;
   }
 }
