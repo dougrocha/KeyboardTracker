@@ -52,7 +52,7 @@ const Card = ({ title, image, className, alt }: CardProps) => {
           <p className="text-sm">Date</p>
         </div>
         <div className="flex flex-col items-end justify-between">
-          <div className="rounded bg-orange-400 px-1 py-1 text-xs font-light">
+          <div className="rounded bg-orange-600 px-1 py-1 text-xs">
             SHIPPING
           </div>
           <button
@@ -60,7 +60,7 @@ const Card = ({ title, image, className, alt }: CardProps) => {
               addCurrentToFavorite(e)
             }}
           >
-            <HeartIcon className="right-6 bottom-1/4 h-5 w-5 text-black" />
+            <HeartIcon className="right-6 bottom-1/4 h-5 w-5 text-black dark:text-white" />
           </button>
         </div>
       </div>

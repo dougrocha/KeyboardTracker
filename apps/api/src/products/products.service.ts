@@ -3,7 +3,7 @@ import { PrismaService } from 'nestjs-prisma'
 import { PRISMA_SERVICE } from '../common/constants'
 
 @Injectable()
-export class ItemsService {
+export class ProductsService {
   constructor(@Inject(PRISMA_SERVICE) private readonly prisma: PrismaService) {}
 
   async create(data) {

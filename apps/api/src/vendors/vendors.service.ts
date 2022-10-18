@@ -28,14 +28,4 @@ export class VendorsService {
       },
     })
   }
-
-  async getAllKeycaps(id: number) {
-    return await this.prisma.keycapSetVendor.findMany({
-      where: {
-        id: {
-          equals: id,
-        },
-      },
-    })
-  }
 }

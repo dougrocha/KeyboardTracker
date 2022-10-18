@@ -8,7 +8,7 @@ import { UpdateKeycapSetDto } from './dtos/update-keycaps.dto'
 
 interface findAllOptions {
   select?: Prisma.KeycapSetSelect
-  orderBy?: Prisma.KeycapSetOrderByWithRelationInput
+  orderBy?: Prisma.KeycapSetOrderByWithRelationAndSearchRelevanceInput
   take?: number
   skip?: number
 }
@@ -36,27 +36,6 @@ export class KeycapsService {
     })
   }
 
-  async findAllByBrand(brand: string) {
-    return await this.prisma.keycapSet.findMany({
-      where: {
-        brand: {
-          contains: brand,
-          mode: 'insensitive',
-        },
-      },
-    })
-  }
-
-  async findAllByDesigner(designer: string, take?: number, skip?: number) {
-    return await this.prisma.keycapSet.findMany({
-      where: {
-        designerId: designer,
-      },
-      take,
-      skip,
-    })
-  }
-
   async findAllByMaterial(material: string) {
     return await this.prisma.keycapSet.findMany({
       where: {
@@ -68,21 +47,15 @@ export class KeycapsService {
     })
   }
 
-  async findVendors(id: number) {
-    return await this.prisma.keycapSetVendor.findMany({
-      where: {
-        id: {
-          equals: id,
-        },
-      },
-    })
-  }
-
-  async create({ ...data }: CreateKeycapsDto, designerId?: string) {
+  async create({ ...data }: CreateKeycapsDto, productId?: string) {
     return await this.prisma.keycapSet.create({
       data: {
         ...data,
-        designer: { connect: { id: designerId } },
+        product: {
+          connect: {
+            id: productId,
+          },
+        },
       },
     })
   }

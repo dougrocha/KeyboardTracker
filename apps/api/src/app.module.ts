@@ -10,7 +10,6 @@ import { routes } from './config/routes'
 import { RedisModule } from './redis/redis.module'
 import { REDIS } from './common/constants'
 import { KeycapsModule } from './keycaps/keycaps.module'
-import { VendorsModule } from './vendors/vendors.module'
 import * as session from 'express-session'
 import * as RedisStore from 'connect-redis'
 import * as passport from 'passport'
@@ -21,8 +20,9 @@ import { ScheduleModule } from '@nestjs/schedule'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { ThrottlerConfigService } from './config/throttler.config'
 import { SnowflakeModule } from './snowflake/snowflake.module'
+import { ProductsModule } from './products/products.module'
+import { VendorsModule } from './vendors/vendors.module'
 import { DesignersModule } from './designers/designers.module'
-import { ItemsModule } from './items/items.module'
 
 @Module({
   imports: [
@@ -58,10 +58,10 @@ import { ItemsModule } from './items/items.module'
     AuthModule,
     UsersModule,
     RedisModule,
-    ItemsModule,
+    ProductsModule,
     KeycapsModule,
-    // VendorsModule,
-    // DesignersModule,
+    VendorsModule,
+    DesignersModule,
   ],
   providers: [AppConfigService],
 })

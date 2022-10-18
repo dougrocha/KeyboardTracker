@@ -21,12 +21,10 @@ export default async function GetAllKeycaps({
   all = false,
 }: GetAllKeycaps): Promise<Keycaps[]> {
   const data = await AxiosClient.get(
-    `/keycaps?take=${take}&skip=${skip}&id=${id}&all=${all}`
+    `/keycaps/ids?take=${take}&skip=${skip}&id=${id}&all=${all}`
   ).then((res) => {
     return res.data
   })
 
   return data
 }
-
-//

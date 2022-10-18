@@ -1,7 +1,7 @@
 import { Controller, Get, Inject, Param, Query } from '@nestjs/common'
 import { KEYCAPS_SERVICE } from '../common/constants'
-import { FindAllItemsDto } from '../items/dtos/find-all.dto'
-import { PaginationParams } from '../items/dtos/pagination-params.dto'
+import { FindAllProductsDto } from '../products/dtos/find-all-products.dto'
+import { PaginationParams } from '../products/dtos/pagination-params.dto'
 import { KeycapsService } from './keycaps.service'
 
 @Controller('keycaps')
@@ -12,7 +12,7 @@ export class KeycapsController {
 
   @Get()
   async getAllKeycaps(
-    @Query() { id, all }: FindAllItemsDto,
+    @Query() { id, all }: FindAllProductsDto,
     @Query() { take, skip }: PaginationParams,
   ) {
     if (all) {

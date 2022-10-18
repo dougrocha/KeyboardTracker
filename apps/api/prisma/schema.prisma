@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -24,16 +25,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
-  role AccountType @default(USER)
-
   discord         DiscordIdentity?
-  designerAccount Designer[]
-}
-
-enum AccountType {
-  USER
-  VENDOR
-  DESIGNER
+  designerAccount Designer?
 }
 
 model DiscordIdentity {
@@ -57,41 +50,21 @@ model DiscordIdentity {
 }
 
 model KeycapSet {
-  id          String  @id
-  name        String  @unique
-  description String?
+  id String @id
 
-  type ProductType @default(KEYCAP_SET)
-
-  brand    String?
   profile  String?
   material String?
-
-  imageCovers CoverImage[]
-  images      Image[]
-
-  interestCheckUrl String?
-  groupBuyUrl      String?
-
-  groupBuyStartDate DateTime?
-  groupBuyEndDate   DateTime?
-
-  status  GroupBuyStatus @default(UPCOMING)
-  delayed Boolean        @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
-  keycapSetVendor KeycapSetVendor[]
-
-  designer   Designer? @relation(fields: [designerId], references: [id])
-  designerId String?
+  product Product @relation(fields: [id], references: [id])
 }
 
 enum ProductType {
   KEYCAP_SET
-  SWITCHES
-  KEYBOARDS
+  SWITCH
+  KEYBOARD
 }
 
 model Designer {
@@ -108,10 +81,8 @@ model Designer {
 
   discordServerUrl String?
 
-  keycapSet KeycapSet[]
-  keyboard  Keyboard[]
-
-  user User @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user    User      @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  product Product[]
 }
 
 model Image {
@@ -123,11 +94,8 @@ model Image {
 
   imgUrl String
 
-  keycapSet   KeycapSet? @relation(fields: [keycapSetId], references: [id])
-  keycapSetId String?
-
-  keyboard   Keyboard? @relation(fields: [keyboardId], references: [id])
-  keyboardId String?
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
 }
 
 model CoverImage {
@@ -139,11 +107,8 @@ model CoverImage {
 
   imgUrl String
 
-  keycapSet   KeycapSet? @relation(fields: [keycapSetId], references: [id])
-  keycapSetId String?
-
-  keyboard   Keyboard? @relation(fields: [keyboardId], references: [id])
-  keyboardId String?
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
 }
 
 enum GroupBuyStatus {
@@ -172,48 +137,70 @@ model Vendor {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
-  keycapSetVendor KeycapSetVendor[]
-  keyboardVendor  KeyboardVendor[]
-}
-
-model KeycapSetVendor {
-  id Int @id @default(autoincrement())
-
-  keycapSet   KeycapSet @relation(fields: [keycapSetId], references: [id])
-  keycapSetId String
-
-  vendor   Vendor @relation(fields: [vendorId], references: [id])
-  vendorId String
+  productVendor ProductVendor[]
 }
 
 model Keyboard {
-  id   String @id
-  name String @unique
+  id String @id
 
-  type ProductType @default(KEYBOARDS)
+  updatedAt DateTime @updatedAt()
+
+  product Product @relation(fields: [id], references: [id])
+}
+
+model ProductVendor {
+  id Int @id @default(autoincrement())
+
+  vendor   Vendor @relation(fields: [vendorId], references: [id])
+  vendorId String
+
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+}
+
+model Product {
+  id String @id
+
+  name String
 
   description String?
+  policy      String?
+  status      GroupBuyStatus @default(UPCOMING)
+  type        ProductType
+
+  brand String?
+
+  interestCheckUrl String?
+  groupBuyUrl      String?
+
+  groupBuyStartDate DateTime?
+  groupBuyEndDate   DateTime?
+
+  price Decimal?
 
   imageCovers CoverImage[]
   images      Image[]
 
-  status GroupBuyStatus
+  estimatedDeliveryQuarter YearQuarter
+  estimatedDeliveryYear    String?     @db.Char(4)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
-  keyboardVendor KeyboardVendor[]
+  keyboard  Keyboard?
+  keycapSet KeycapSet?
+
+  vendors ProductVendor[]
 
   designer   Designer? @relation(fields: [designerId], references: [id])
   designerId String?
+
+  @@index([name, description, type, brand, status])
 }
 
-model KeyboardVendor {
-  id Int @id @default(autoincrement())
-
-  keyboard   Keyboard @relation(fields: [keyboardId], references: [id])
-  keyboardId String
-
-  vendor   Vendor @relation(fields: [vendorId], references: [id])
-  vendorId String
+enum YearQuarter {
+  Q1
+  Q2
+  Q3
+  Q4
 }
