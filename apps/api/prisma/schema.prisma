@@ -26,7 +26,8 @@ model User {
 
   role AccountType @default(USER)
 
-  discord DiscordIdentity?
+  discord         DiscordIdentity?
+  designerAccount Designer[]
 }
 
 enum AccountType {
@@ -60,13 +61,15 @@ model KeycapSet {
   name        String  @unique
   description String?
 
-  type          String?
-  brand         String?
-  imageCoverUrl String?
-  slug          String  @unique
-  material      String?
+  type ProductType @default(KEYCAP_SET)
 
-  imageUrls        String[]
+  brand    String?
+  profile  String?
+  material String?
+
+  imageCovers CoverImage[]
+  images      Image[]
+
   interestCheckUrl String?
   groupBuyUrl      String?
 
@@ -80,10 +83,15 @@ model KeycapSet {
   updatedAt DateTime @updatedAt()
 
   keycapSetVendor KeycapSetVendor[]
-  keycapKitImages KeycapKitImage[]
 
   designer   Designer? @relation(fields: [designerId], references: [id])
   designerId String?
+}
+
+enum ProductType {
+  KEYCAP_SET
+  SWITCHES
+  KEYBOARDS
 }
 
 model Designer {
@@ -102,25 +110,47 @@ model Designer {
 
   keycapSet KeycapSet[]
   keyboard  Keyboard[]
+
+  user User @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-model KeycapKitImage {
+model Image {
   id Int @id @default(autoincrement())
 
-  description String?
+  title String @db.VarChar(20)
 
-  type String @db.VarChar(20)
+  description String?
 
   imgUrl String
 
   keycapSet   KeycapSet? @relation(fields: [keycapSetId], references: [id])
   keycapSetId String?
+
+  keyboard   Keyboard? @relation(fields: [keyboardId], references: [id])
+  keyboardId String?
+}
+
+model CoverImage {
+  id Int @id @default(autoincrement())
+
+  title String @db.VarChar(20)
+
+  description String?
+
+  imgUrl String
+
+  keycapSet   KeycapSet? @relation(fields: [keycapSetId], references: [id])
+  keycapSetId String?
+
+  keyboard   Keyboard? @relation(fields: [keyboardId], references: [id])
+  keyboardId String?
 }
 
 enum GroupBuyStatus {
   UPCOMING
   INTEREST_CHECK
   WAITING_GROUP_BUY
+  DELAYED
   GROUP_BUY
   GROUP_BUY_ENDED
   PRODUCTION
@@ -157,15 +187,15 @@ model KeycapSetVendor {
 }
 
 model Keyboard {
-  id          String  @id
-  name        String  @unique
+  id   String @id
+  name String @unique
+
+  type ProductType @default(KEYBOARDS)
+
   description String?
 
-  imageCoverUrl String
-  slug          String @unique
-
-  imageUrls String[]
-  delayed   Boolean  @default(false)
+  imageCovers CoverImage[]
+  images      Image[]
 
   status GroupBuyStatus
 

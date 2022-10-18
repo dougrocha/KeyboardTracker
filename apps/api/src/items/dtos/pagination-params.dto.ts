@@ -1,12 +1,7 @@
 import { Transform } from 'class-transformer'
-import { IsBoolean, IsNumber, IsOptional } from 'class-validator'
+import { IsOptional, IsNumber } from 'class-validator'
 
-export class FindAllItemsDto {
-  @IsOptional()
-  @IsBoolean()
-  @Transform(({ value }) => (value === 'true' ? true : undefined))
-  id?: boolean
-
+export class PaginationParams {
   @IsOptional()
   @IsNumber()
   @Transform(({ value }) => (value ? parseInt(value) : undefined))

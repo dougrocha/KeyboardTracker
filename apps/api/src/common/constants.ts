@@ -20,6 +20,8 @@ export const IMAGES_SERVICE = 'IMAGES_SERVICE'
 
 export const DESIGNERS_SERVICE = 'DESIGNERS_SERVICE'
 
+export const ITEMS_SERVICE = 'ITEMS_SERVICE'
+
 /* #END SERVICES */
 
 export const REDIS = 'REDIS'

@@ -30,7 +30,9 @@ const Navbar = () => {
 
   return (
     <nav className="container mx-auto mb-5 flex h-20 w-full items-center justify-between px-2 py-8 sm:px-6">
-      <p className="text-4xl font-bold text-black dark:text-white">MEKA</p>
+      <Link href="/">
+        <a className="text-4xl font-bold text-black dark:text-white">MEKA</a>
+      </Link>
       <div className="flex items-center space-x-5 text-gray-200">
         <ul className="hidden space-x-5 md:flex">
           {NavLinks.map((link) => (
