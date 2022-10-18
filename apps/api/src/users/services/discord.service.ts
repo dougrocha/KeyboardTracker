@@ -1,12 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
-import { PRISMA_SERVICE } from '../../common/constants'
+import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants'
+import { SnowflakeService } from '../../snowflake/snowflake.module'
 import { CreateDiscordUserDto } from '../dto/create-discord-user.dto'
 import { UpdateDiscordUserDto } from '../dto/update-discord-user.dto'
 
 @Injectable()
 export class DiscordUsersService {
-  constructor(@Inject(PRISMA_SERVICE) private readonly prisma: PrismaClient) {}
+  constructor(
+    @Inject(PRISMA_SERVICE) private readonly prisma: PrismaClient,
+    @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
+  ) {}
 
   async findUserByDiscordId(discordId: string) {
     return await this.prisma.discordIdentity.findUnique({
@@ -23,7 +27,6 @@ export class DiscordUsersService {
   async findUser(id: string) {
     return await this.prisma.discordIdentity.findUnique({
       where: { id },
-      select: { accessToken: false, refreshToken: false, id: false },
     })
   }
 
@@ -37,6 +40,7 @@ export class DiscordUsersService {
               email: discordUser.email,
             },
             create: {
+              id: this.snowflake.nextId(),
               email: discordUser.email,
               username: discordUser.username,
             },

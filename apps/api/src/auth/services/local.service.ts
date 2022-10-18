@@ -34,7 +34,6 @@ export class LocalAuthService {
     if (!isPasswordValid)
       throw new UnauthorizedException('Incorrect email or password')
 
-    const { password: _password, ...validUser } = user
-    return validUser
+    return { ...user, password: undefined }
   }
 }

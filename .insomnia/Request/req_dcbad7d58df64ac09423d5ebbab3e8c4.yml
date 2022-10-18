@@ -1,0 +1,29 @@
+_id: req_dcbad7d58df64ac09423d5ebbab3e8c4
+type: Request
+parentId: fld_a1552d94f29c4cccb8db200f1defa114
+modified: 1664397483544
+created: 1664397483544
+url: http://localhost:3001/users/avatars
+name: Upload Image
+description: ""
+method: POST
+body:
+  params:
+    - type: file
+      name: avatar
+      disabled: false
+      fileName: /Users/douglasrocha/Downloads/deku.webp
+  mimeType: multipart/form-data
+parameters: []
+headers:
+  - name: Cookie
+    value: connect.sid=s%3Ag2rRXKk-TajU-eBm2HI6OiMXT7-bx6FA.uxwm%2BymF%2FQoeJvQbidXWiNy1cCrLywp7ykBjTmmDMeE
+authentication: {}
+metaSortKey: -1664397483544
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

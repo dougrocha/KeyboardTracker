@@ -1,88 +1,128 @@
+import { InjectQueue } from '@nestjs/bull'
 import {
+  Body,
   Controller,
+  Delete,
   Get,
-  Header,
   HttpCode,
+  HttpException,
   HttpStatus,
   Inject,
+  Param,
+  Patch,
   Post,
   Res,
-  StreamableFile,
   UploadedFile,
+  StreamableFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { User } from '@prisma/client'
+import { Queue } from 'bull'
 import { Response } from 'express'
 import { createReadStream } from 'fs'
-import { extname, join } from 'path'
-import { USERS_SERVICE } from '../common/constants'
+import { access, constants } from 'fs/promises'
+import {
+  IMAGES_SERVICE,
+  SNOWFLAKE_SERVICE,
+  USERS_SERVICE,
+} from '../common/constants'
 import { GetCurrentUser } from '../common/decorators/getCurrentUser.decorator'
+import { ImageNotFoundException } from '../common/exceptions/imageNotFound.exception'
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
-import { SharpPipe } from '../common/pipes/SharpPipe.pipe'
-import { multerConfig, multerImageOptions } from '../config/multer.config'
+import { multerImageOptions } from '../config/multer.config'
+import { ImagesService } from '../images/images.service'
+import { SnowflakeService } from '../snowflake/snowflake.module'
+import { UpdateUserDto } from './dto/update-user.dto'
 import { UsersService } from './services/users.service'
 
 @Controller()
 export class UsersController {
   constructor(
     @Inject(USERS_SERVICE) private readonly usersService: UsersService,
+    @Inject(IMAGES_SERVICE) private readonly imagesService: ImagesService,
+    @InjectQueue('images') private readonly imagesQueue: Queue,
+    @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
   ) {}
 
-  // @Get(':id')
-  // async findById(@Param('id') id: string) {
-  //   return await this.usersService.findById(id)
-  // }
-
-  // @Patch(':id')
-  // @UseGuards(AuthenticatedGuard)
-  // async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return await this.usersService.update(id, updateUserDto)
-  // }
-
-  // @Delete(':id')
-  // async delete(@Param('id') id: string) {
-  //   return await this.usersService.delete(id)
-  // }
-
-  @Post('avatar')
+  @Get('me')
   @UseGuards(AuthenticatedGuard)
-  @UseInterceptors(FileInterceptor('file', multerImageOptions()))
-  async uploadFile(
-    @UploadedFile(
-      SharpPipe({
-        folder: 'avatars',
-        fileType: 'webp',
-      }),
-    )
-    file: string,
-    @GetCurrentUser() user: User,
-  ) {
-    await this.usersService.update(user.id, {
-      avatar: file,
-    })
-    return { fileName: file }
+  async findById(@GetCurrentUser() user: User) {
+    return user
   }
 
-  @Get('avatar')
+  @Patch('me')
+  @UseGuards(AuthenticatedGuard)
+  async update(
+    @GetCurrentUser() user: User,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    const updatedUser = await this.usersService.update(user.id, updateUserDto)
+    return { ...updatedUser, password: undefined }
+  }
+
+  @Delete('me')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(AuthenticatedGuard)
+  async delete(@GetCurrentUser() user: User) {
+    const deletedUser = await this.usersService.delete(user.id)
+    return { ...deletedUser, password: undefined }
+  }
+
+  @Post('avatars')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthenticatedGuard)
-  findProfileImage(
+  @UseInterceptors(FileInterceptor('avatar', multerImageOptions))
+  async uploadFile(
     @GetCurrentUser() user: User,
-    @Res({ passthrough: true }) res: Response,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    const fileName = user.avatar
+    const id = this.snowflake.nano()
 
-    const stream = createReadStream(
-      join(process.cwd(), multerConfig.dest, 'avatars', fileName),
-    )
-
-    res.set({
-      'Content-Disposition': `inline; filename="${fileName}"`,
-      'Content-Type': 'image/webp',
+    // Add image to Optimization queue
+    await this.imagesQueue.add('optimize-avatar', {
+      file,
+      folder: [user.id],
+      fileName: id,
     })
 
-    return new StreamableFile(stream)
+    // Delete the old image from the disk
+    await this.imagesQueue.add('delete-avatar', {
+      file,
+      folder: [user.id],
+      fileName: user.avatar,
+    })
+
+    // Update User with new avatar id
+    await this.usersService.update(user.id, {
+      avatar: id,
+    })
+    return { fileId: id }
+  }
+
+  @Get('avatars/:id/:avatar_id')
+  @HttpCode(HttpStatus.OK)
+  async findProfileImage(
+    @Param('id') id: string,
+    @Param('avatar_id') avatar: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    if (!id || !avatar)
+      throw new HttpException(
+        'Something went wrong. The URL contains errors.',
+        HttpStatus.NOT_FOUND,
+      )
+
+    const path = this.imagesService.joinFilePath(id, avatar) + '.webp'
+    return await access(path, constants.F_OK | constants.R_OK)
+      .then(() => {
+        res.set('Content-Type', 'image/webp')
+        res.header('Content-Disposition', `inline, filename=${avatar}.webp`)
+        return new StreamableFile(createReadStream(path))
+      })
+      .catch(() => {
+        throw new ImageNotFoundException()
+      })
   }
 }

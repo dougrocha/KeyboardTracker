@@ -1,20 +1,15 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import { Html, Head, Main, NextScript } from "next/document"
 
 export default function Document() {
   return (
     <Html>
       <Head>
         <link
-          href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap"
-          rel="stylesheet"
-        />
-
-        <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </Head>
-      <body className="m-0 h-full w-full scroll-smooth antialiased">
+      <body className="bg-[#f7f7f7] antialiased transition-colors dark:bg-[#212529]">
         <Main />
         <NextScript />
       </body>

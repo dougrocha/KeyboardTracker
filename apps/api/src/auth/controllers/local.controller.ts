@@ -34,9 +34,7 @@ export class LocalAuthController {
    */
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async login() {
-    return
-  }
+  async login() {}
 
   /**
    * GET /api/auth/signup
@@ -48,21 +46,19 @@ export class LocalAuthController {
   async signUp(
     @Body() createUserDto: CreateUserDto,
     @Body('password') password: string,
-    @Res() res: Response,
   ) {
     const user = await this.authService.register(createUserDto, password)
-
-    res.json({
+    return {
       msg: 'User created successfully',
-      email: user.email,
-      username: user.username,
-    })
-
-    return
+      userId: user.id,
+    }
   }
 
   /**
    * GET /api/auth/protected
+   *
+   * This is the route for protected content.
+   * Will keep track of amount of visits.
    */
   @Get('protected')
   @UseGuards(AuthenticatedGuard)
