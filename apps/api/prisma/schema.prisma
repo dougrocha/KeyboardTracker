@@ -27,6 +27,8 @@ model User {
 
   discord         DiscordIdentity?
   designerAccount Designer?
+  formAnswers     FormAnswer[]
+  forms           Form[]
 }
 
 model DiscordIdentity {
@@ -55,10 +57,11 @@ model KeycapSet {
   profile  String?
   material String?
 
+  images  Image[]
+  product Product @relation(fields: [id], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
-
-  product Product @relation(fields: [id], references: [id])
 }
 
 enum ProductType {
@@ -88,27 +91,18 @@ model Designer {
 model Image {
   id Int @id @default(autoincrement())
 
-  title String @db.VarChar(20)
+  title String? @db.VarChar(20)
 
   description String?
 
-  imgUrl String
+  imgUrl String @unique
 
-  Product   Product? @relation(fields: [productId], references: [id])
-  productId String?
-}
-
-model CoverImage {
-  id Int @id @default(autoincrement())
-
-  title String @db.VarChar(20)
-
-  description String?
-
-  imgUrl String
-
-  Product   Product? @relation(fields: [productId], references: [id])
-  productId String?
+  product     Product?   @relation(fields: [productId], references: [id])
+  productId   String?
+  KeycapSet   KeycapSet? @relation(fields: [keycapSetId], references: [id])
+  keycapSetId String?
+  keyboard    Keyboard?  @relation(fields: [keyboardId], references: [id])
+  keyboardId  String?
 }
 
 enum GroupBuyStatus {
@@ -143,9 +137,15 @@ model Vendor {
 model Keyboard {
   id String @id
 
+  angle      Int?
+  mountStyle String?
+  hotswap    Boolean?
+  size       String?  @db.VarChar(20)
+
   updatedAt DateTime @updatedAt()
 
   product Product @relation(fields: [id], references: [id])
+  Image   Image[]
 }
 
 model ProductVendor {
@@ -170,6 +170,8 @@ model Product {
 
   brand String?
 
+  layout String?
+
   interestCheckUrl String?
   groupBuyUrl      String?
 
@@ -178,8 +180,8 @@ model Product {
 
   price Decimal?
 
-  imageCovers CoverImage[]
-  images      Image[]
+  coverImage String?
+  images     Image[]
 
   estimatedDeliveryQuarter YearQuarter
   estimatedDeliveryYear    String?     @db.Char(4)
@@ -194,6 +196,7 @@ model Product {
 
   designer   Designer? @relation(fields: [designerId], references: [id])
   designerId String?
+  form       Form?
 
   @@index([name, description, type, brand, status])
 }
@@ -203,4 +206,107 @@ enum YearQuarter {
   Q2
   Q3
   Q4
+}
+
+model Form {
+  id String @id @default(uuid())
+
+  name        String
+  description String?
+
+  fields               FormField[]
+  formAnswer           FormAnswer[]
+  formListValueAnswers FormListValueAnswers[]
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @unique
+
+  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+}
+
+enum FieldType {
+  TEXT
+  TEXTAREA
+  BOOLEAN
+  SELECT
+  RADIO
+  NUMBER
+}
+
+model FormField {
+  id Int @id @default(autoincrement())
+
+  name        String
+  description String?
+  required    Boolean @default(false)
+  position    Int
+
+  type                 FieldType
+  formAnswer           FormAnswer[]
+  formListValues       FormListValues[]
+  formListValueAnswers FormListValueAnswers[]
+
+  form   Form   @relation(fields: [formId], references: [id])
+  formId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@unique([formId, position])
+}
+
+model FormListValues {
+  id Int @id @default(autoincrement())
+
+  position Int
+  value    String
+
+  formListValueAnswers FormListValueAnswers[]
+
+  formField   FormField? @relation(fields: [formFieldId], references: [id])
+  formFieldId Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@unique([formFieldId, position])
+}
+
+model FormAnswer {
+  id Int @id @default(autoincrement())
+
+  booleanValue         Boolean?
+  numberValue          Int?
+  textValue            String?
+  formListValueAnswers FormListValueAnswers[]
+
+  formField   FormField @relation(fields: [formFieldId], references: [id])
+  formFieldId Int
+
+  form   Form   @relation(fields: [formId], references: [id])
+  formId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  answeredAt DateTime @default(now())
+}
+
+model FormListValueAnswers {
+  id Int @id @default(autoincrement())
+
+  option       FormListValues @relation(fields: [optionId], references: [id])
+  optionId     Int
+  formAnswer   FormAnswer     @relation(fields: [formAnswerId], references: [id])
+  formAnswerId Int
+  form         Form?          @relation(fields: [formId], references: [id])
+  formId       String?
+  formField    FormField?     @relation(fields: [formFieldId], references: [id])
+  formFieldId  Int?
+
+  @@unique([formAnswerId, optionId])
 }
