@@ -21,6 +21,10 @@ const Column1 = [
 ]
 const Column2 = [
   {
+    name: "Resources",
+    href: "resources",
+  },
+  {
     name: "Contact Us",
     href: "contact",
   },

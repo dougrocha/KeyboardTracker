@@ -27,8 +27,9 @@ model User {
 
   discord         DiscordIdentity?
   designerAccount Designer?
-  formAnswers     FormAnswer[]
+  formResponses   FormResponse[]
   forms           Form[]
+  images          Image[]
 }
 
 model DiscordIdentity {
@@ -44,7 +45,7 @@ model DiscordIdentity {
 
   mfaEnabled Boolean?
 
-  connected DateTime @default(now())
+  connectedAt DateTime @default(now())
 
   user User @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -84,8 +85,8 @@ model Designer {
 
   discordServerUrl String?
 
-  user    User      @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  product Product[]
+  user     User      @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  products Product[]
 }
 
 model Image {
@@ -103,6 +104,8 @@ model Image {
   keycapSetId String?
   keyboard    Keyboard?  @relation(fields: [keyboardId], references: [id])
   keyboardId  String?
+  user        User?      @relation(fields: [userId], references: [id])
+  userId      String?
 }
 
 enum GroupBuyStatus {
@@ -142,10 +145,11 @@ model Keyboard {
   hotswap    Boolean?
   size       String?  @db.VarChar(20)
 
+  images Image[]
+
   updatedAt DateTime @updatedAt()
 
   product Product @relation(fields: [id], references: [id])
-  Image   Image[]
 }
 
 model ProductVendor {
@@ -156,6 +160,8 @@ model ProductVendor {
 
   product   Product? @relation(fields: [productId], references: [id])
   productId String?
+
+  @@unique([vendorId, productId])
 }
 
 model Product {
@@ -209,14 +215,16 @@ enum YearQuarter {
 }
 
 model Form {
-  id String @id @default(uuid())
+  id String @id
 
   name        String
   description String?
 
-  fields               FormField[]
-  formAnswer           FormAnswer[]
-  formListValueAnswers FormListValueAnswers[]
+  fields    FormField[]
+  responses FormResponse[]
+
+  startDate DateTime?
+  endDate   DateTime?
 
   product   Product @relation(fields: [productId], references: [id])
   productId String  @unique
@@ -238,17 +246,16 @@ enum FieldType {
 }
 
 model FormField {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
 
   name        String
   description String?
   required    Boolean @default(false)
   position    Int
 
-  type                 FieldType
-  formAnswer           FormAnswer[]
-  formListValues       FormListValues[]
-  formListValueAnswers FormListValueAnswers[]
+  type      FieldType
+  responses FormResponse[]
+  values    FieldValue[]
 
   form   Form   @relation(fields: [formId], references: [id])
   formId String
@@ -259,33 +266,34 @@ model FormField {
   @@unique([formId, position])
 }
 
-model FormListValues {
-  id Int @id @default(autoincrement())
+model FieldValue {
+  id String @id @default(uuid())
 
   position Int
   value    String
 
-  formListValueAnswers FormListValueAnswers[]
+  fieldValueResponses FieldValueResponse[]
 
-  formField   FormField? @relation(fields: [formFieldId], references: [id])
-  formFieldId Int?
+  parentField   FormField? @relation(fields: [parentFieldId], references: [id])
+  parentFieldId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
-  @@unique([formFieldId, position])
+  @@unique([parentFieldId, position])
 }
 
-model FormAnswer {
-  id Int @id @default(autoincrement())
+model FormResponse {
+  id String @id @default(uuid())
 
-  booleanValue         Boolean?
-  numberValue          Int?
-  textValue            String?
-  formListValueAnswers FormListValueAnswers[]
+  booleanValue Boolean?
+  numberValue  Int?
+  textValue    String?
 
-  formField   FormField @relation(fields: [formFieldId], references: [id])
-  formFieldId Int
+  fieldValueResponses FieldValueResponse[]
+
+  field   FormField @relation(fields: [fieldId], references: [id])
+  fieldId String
 
   form   Form   @relation(fields: [formId], references: [id])
   formId String
@@ -296,17 +304,13 @@ model FormAnswer {
   answeredAt DateTime @default(now())
 }
 
-model FormListValueAnswers {
-  id Int @id @default(autoincrement())
+model FieldValueResponse {
+  id String @id @default(uuid())
 
-  option       FormListValues @relation(fields: [optionId], references: [id])
-  optionId     Int
-  formAnswer   FormAnswer     @relation(fields: [formAnswerId], references: [id])
-  formAnswerId Int
-  form         Form?          @relation(fields: [formId], references: [id])
-  formId       String?
-  formField    FormField?     @relation(fields: [formFieldId], references: [id])
-  formFieldId  Int?
+  value      FieldValue   @relation(fields: [valueId], references: [id])
+  valueId    String
+  response   FormResponse @relation(fields: [responseId], references: [id])
+  responseId String
 
-  @@unique([formAnswerId, optionId])
+  @@unique([responseId, valueId])
 }

@@ -2,23 +2,20 @@ import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
 import { HeartIcon } from "@heroicons/react/24/outline"
 import Image from "next/future/image"
 import React from "react"
-import MainViewLayout from "../../../layouts/MainViewLayout"
-import AxiosClient from "../../../libs/AxiosClient"
-import { GetStaticPropsContext } from "next"
-import GetAllKeycaps from "../../../libs/api/GetAllKeycaps"
+import MainViewLayout from "../../layouts/MainViewLayout"
+import { GetStaticPropsContext, GetStaticPropsResult } from "next"
+import { GetAllProductIds } from "../../libs/api/GetAllProducts"
+import {
+  FindOneProduct,
+  FindProductVendors,
+} from "../../libs/api/FindOneProduct"
+import { Product } from "../../types/product"
+import { Vendor } from "../../types/image"
+import Link from "next/link"
 
-interface ItemPageProps {
-  item: {
-    id: string
-    name: string
-    groupBuyStartDate?: string
-    groupBuyEndDate?: string
-    status?: string
-    brand?: string
-    type?: string
-    createdAt: string
-    material?: string
-  }
+interface ProductPageProps {
+  product: Product
+  vendors: Vendor[]
 }
 
 /**
@@ -28,13 +25,13 @@ interface ItemPageProps {
  *
  */
 
-const ItemPage = ({ item }: ItemPageProps) => {
+const ProductPage = ({ product, vendors }: ProductPageProps) => {
   return (
     <MainViewLayout>
       <div className="mb-20 flex items-center gap-x-10">
-        <h1 className="text-4xl font-semibold">{item.name}</h1>
+        <h1 className="text-4xl font-semibold">{product.name}</h1>
         <div className="rounded bg-yellow-600 px-2 py-1 text-sm uppercase">
-          {item.status}
+          {product.status}
         </div>
         <SolidHeartIcon className="icon ml-auto text-red-600" />
       </div>
@@ -42,9 +39,11 @@ const ItemPage = ({ item }: ItemPageProps) => {
         <div className="relative h-96 w-1/2">
           <Image
             src="/hero.jpg"
-            alt={`${item.name}`}
+            alt={`${product.name}`}
             fill
-            sizes="100vw"
+            sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 50vw,
+              33vw"
             className="absolute rounded-lg object-cover object-center"
           />
         </div>
@@ -53,34 +52,33 @@ const ItemPage = ({ item }: ItemPageProps) => {
             <ul className="flex flex-col justify-between gap-y-5">
               <li>
                 <p className="font-semibold">Start Date</p>
-                {item.groupBuyStartDate
-                  ? new Date(item.groupBuyStartDate).toLocaleDateString()
+                {product.groupBuyStartDate
+                  ? new Date(product.groupBuyStartDate).toLocaleDateString()
                   : null}
               </li>
               <li>
                 <p className="font-semibold">Brand</p>
-                {item.brand}
+                {product.brand}
               </li>
               <li>
                 <p className="font-semibold">Status</p>
-                {item.status}
+                {product.status}
               </li>
             </ul>
             <ul className="flex flex-col justify-between gap-y-5">
               <li>
                 <p className="font-semibold">End Date</p>
-                {item.groupBuyEndDate
-                  ? new Date(item.groupBuyEndDate).toLocaleDateString()
+                {product.groupBuyEndDate
+                  ? new Date(product.groupBuyEndDate).toLocaleDateString()
                   : null}
               </li>
               <li>
                 <p className="font-semibold">Profile</p>
-                {/* Profile doesnt exist yet */}
-                Cherry
+                {product.keycapSet?.profile}
               </li>
               <li>
                 <p className="font-semibold">Material</p>
-                {item.material}
+                {product.keycapSet?.material}
               </li>
             </ul>
           </div>
@@ -89,27 +87,32 @@ const ItemPage = ({ item }: ItemPageProps) => {
           </button>
         </div>
       </section>
-      <div className="mt-24">
+      <section className="mt-24">
         <h3 className="text-3xl font-semibold">Vendors</h3>
-        <div className="mt-10 flex gap-x-4">
-          <div className="w-full rounded bg-gray-400 px-2 py-4 text-center text-white">
-            CannonKeys
-          </div>
-          <div className="w-full rounded bg-gray-400 px-2 py-4 text-center text-white">
-            KBDFans
-          </div>
-          <div className="w-full rounded bg-gray-400 px-2 py-4 text-center text-white">
-            SwagKeys
-          </div>
-          <div className="w-full rounded bg-gray-400 px-2 py-4 text-center text-white">
-            MyKeyboard
-          </div>
-          <div className="w-full rounded bg-gray-400 px-2 py-4 text-center text-white">
-            FancyCustoms
-          </div>
+        <div
+          className={`mt-10 flex gap-x-4 ${
+            vendors ? "justify-start" : "justify-center"
+          }`}
+        >
+          {vendors ? (
+            <>
+              {vendors.map((vendor) => (
+                <Link
+                  key={vendor.name}
+                  href={`/vendors/${vendor.name.toLowerCase()}`}
+                >
+                  <a className="w-56 rounded bg-gray-400 px-2 py-4 text-center text-white">
+                    {vendor.name}
+                  </a>
+                </Link>
+              ))}
+            </>
+          ) : (
+            <span>NO VENDORS</span>
+          )}
         </div>
-      </div>
-      <div className="mt-24 mb-20">
+      </section>
+      <section className="mt-24 mb-20">
         <h3 className="text-3xl font-semibold">Kits</h3>
         <div className="mt-10 grid grid-cols-3 gap-x-4">
           <div className="mb-6 flex flex-col">
@@ -140,7 +143,7 @@ const ItemPage = ({ item }: ItemPageProps) => {
             <div className="relative h-52 w-full">
               <Image
                 src="/hero.jpg"
-                alt={`${item.name}`}
+                alt={`${product.name}`}
                 fill
                 sizes="100vw"
                 className="absolute rounded-lg object-cover object-center"
@@ -173,28 +176,31 @@ const ItemPage = ({ item }: ItemPageProps) => {
             <p className="mt-2 font-medium">Kit Name</p>
           </div>
         </div>
-      </div>
+      </section>
     </MainViewLayout>
   )
 }
 
-export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
-  const res = await AxiosClient.get(`/keycaps/${params?.id}`)
-  const data = res.data
+export const getStaticProps = async ({
+  params,
+}: GetStaticPropsContext): Promise<GetStaticPropsResult<ProductPageProps>> => {
+  const product = await FindOneProduct(params?.id as string)
+  const productVendors = await FindProductVendors(params?.id as string)
+
+  const vendors = productVendors.map((vendor) => vendor.vendor)
 
   return {
     props: {
-      item: data,
+      product,
+      vendors,
     },
   }
 }
 
-// TODO: Make seperate pages for different types of products
-// TODO: Due to getStaticPaths only passing the id without the type, there is no way to tell what item is being loaded without change database.
 export const getStaticPaths = async () => {
-  const res = await GetAllKeycaps({ id: true })
+  const data = await GetAllProductIds({})
 
-  const paths = res.map(({ id }) => ({
+  const paths = data.map(({ id }) => ({
     params: { id },
   }))
 
@@ -204,4 +210,4 @@ export const getStaticPaths = async () => {
   }
 }
 
-export default ItemPage
+export default ProductPage

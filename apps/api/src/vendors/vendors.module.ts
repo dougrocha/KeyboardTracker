@@ -8,7 +8,7 @@ import { VendorsService } from './vendors.service'
   controllers: [VendorsController],
   providers: [
     { provide: VENDORS_SERVICE, useClass: VendorsService },
-    { provide: PRISMA_SERVICE, useValue: PrismaService },
+    { provide: PRISMA_SERVICE, useClass: PrismaService },
   ],
 })
 export class VendorsModule {}

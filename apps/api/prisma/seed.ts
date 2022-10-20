@@ -7,48 +7,15 @@ const prisma = new PrismaClient()
 const flake = new FlakeId({
   epoch: new Date('2021-01-01').getTime(),
   datacenter: 1,
+  worker: 1,
 })
 
 async function main() {
   const nextId = () => intFormat(flake.next(), 'dec')
 
-  const userId1 = nextId()
-  const userId2 = nextId()
-
-  const productId1 = nextId()
-  const productId2 = nextId()
-
-  const vendorId1 = nextId()
-  const vendorId2 = nextId()
-
-  const formField1 = 0
-  const formField2 = 1
-  const formField3 = 2
-  const formField4 = 3
-  const formField5 = 4
-  const formField6 = 5
-
-  const formAnswer1 = 0
-  const formAnswer2 = 1
-  const formAnswer3 = 2
-  const formAnswer4 = 3
-  const formAnswer5 = 4
-  const formAnswer6 = 5
-  const formAnswer7 = 6
-  const formAnswer8 = 7
-  const formAnswer9 = 8
-
-  const formId1 = nextId()
-
-  const formListValueAnswer1 = 0
-  const formListValueAnswer2 = 1
-  const formListValueAnswer3 = 2
-  const formListValueAnswer4 = 3
-  const formListValueAnswer5 = 4
-
-  await prisma.user.create({
+  const user1 = await prisma.user.create({
     data: {
-      id: userId1,
+      id: nextId(),
       email: 'doug@gmail.com',
       password: 'password',
       username: 'doug',
@@ -60,7 +27,7 @@ async function main() {
           discriminator: '1234',
           accessToken: '38394bf98nqe9ap9v',
           refreshToken: 'adsjhasdlh2893123587',
-          connected: new Date(),
+          connectedAt: new Date(),
           email: 'doug.discord@gmail.com',
           mfaEnabled: false,
         },
@@ -68,9 +35,28 @@ async function main() {
     },
   })
 
-  await prisma.user.create({
+  const user2 = await prisma.user.create({
     data: {
-      id: userId2,
+      id: nextId(),
+      email: 'billy@mail.com',
+      username: 'billy',
+      name: 'Billy Bob',
+      password: 'password',
+      designerAccount: {
+        create: {
+          name: 'Billy Bob Design',
+          username: 'billybobdesign',
+          discordServerUrl: 'https://discord.gg/1234',
+          redditUsername: 'billybobdesign',
+          twitterHandle: 'billybobdesign',
+        },
+      },
+    },
+  })
+
+  const user3 = await prisma.user.create({
+    data: {
+      id: nextId(),
       email: 'dave@icloud.com',
       password: 'pass123',
       username: 'dave',
@@ -83,100 +69,266 @@ async function main() {
     },
   })
 
-  await prisma.vendor.create({
+  const vendor1 = await prisma.vendor.create({
     data: {
-      id: vendorId1,
+      id: nextId(),
       name: 'Keycult',
       country: 'China',
       verified: true,
+      url: 'https://keycult.com',
     },
   })
 
-  await prisma.vendor.create({
+  const vendor2 = await prisma.vendor.create({
     data: {
-      id: vendorId2,
+      id: nextId(),
       name: 'Drop',
       country: 'USA',
       verified: true,
+      url: 'https://drop.com',
     },
   })
 
-  await prisma.product.create({
+  const product1 = await prisma.product.create({
     data: {
-      id: productId1,
+      id: nextId(),
       name: 'Product 1',
       description: 'Product 1 description',
       price: 100,
       estimatedDeliveryQuarter: 'Q1',
       estimatedDeliveryYear: '2021',
+      groupBuyStartDate: new Date('2021-01-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'INTEREST_CHECK',
       type: 'KEYBOARD',
       brand: 'GMK',
       designer: {
         connect: {
-          id: userId2,
+          id: user2.id,
         },
       },
     },
   })
 
-  await prisma.product.create({
+  const product2 = await prisma.product.create({
     data: {
-      id: productId2,
+      id: nextId(),
+      name: 'GMK Keycap Set',
+      description: 'GMK Keycap Set description',
+      price: 100,
+      estimatedDeliveryQuarter: 'Q1',
+      estimatedDeliveryYear: '2021',
+      groupBuyStartDate: new Date('2021-03-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'INTEREST_CHECK',
+      type: 'KEYCAP_SET',
+      brand: 'GMK',
+      designer: {
+        connect: {
+          id: user3.id,
+        },
+      },
+    },
+  })
+
+  const product3 = await prisma.product.create({
+    data: {
+      id: nextId(),
       name: 'Product 2',
       description: 'Product 2 description',
       price: 200,
       estimatedDeliveryQuarter: 'Q2',
       estimatedDeliveryYear: '2023',
+      groupBuyStartDate: new Date('2021-02-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'INTEREST_CHECK',
       type: 'KEYCAP_SET',
       brand: 'JTK',
     },
   })
 
-  await prisma.keycapSet.create({
+  const product4 = await prisma.product.create({
+    data: {
+      id: nextId(),
+      name: 'Product 3',
+      description: 'Product 3 description',
+      price: 300,
+      estimatedDeliveryQuarter: 'Q3',
+      estimatedDeliveryYear: '2024',
+      groupBuyStartDate: new Date('2021-03-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'GROUP_BUY',
+      type: 'KEYBOARD',
+      brand: 'JTK',
+    },
+  })
+
+  const product5 = await prisma.product.create({
+    data: {
+      id: nextId(),
+      name: 'Product 4',
+      description: 'Product 4 description',
+      price: 400,
+      estimatedDeliveryQuarter: 'Q4',
+      estimatedDeliveryYear: '2025',
+      groupBuyStartDate: new Date('2021-04-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'GROUP_BUY',
+      type: 'KEYBOARD',
+      brand: 'JTK',
+    },
+  })
+
+  const keycap1 = await prisma.keycapSet.create({
     data: {
       material: 'ABS',
       profile: 'SA',
       product: {
         connect: {
-          id: productId2,
+          id: product2.id,
         },
       },
     },
   })
 
-  await prisma.keyboard.create({
+  const keyboard2 = await prisma.keyboard.create({
     data: {
       product: {
         connect: {
-          id: productId1,
+          id: product1.id,
         },
       },
     },
   })
 
-  await prisma.productVendor.create({
+  const keyboard3 = await prisma.keyboard.create({
     data: {
-      productId: productId1,
-      vendorId: vendorId1,
+      product: {
+        connect: {
+          id: product4.id,
+        },
+      },
     },
   })
 
-  await prisma.productVendor.create({
+  const keyboard4 = await prisma.keyboard.create({
     data: {
-      productId: productId2,
-      vendorId: vendorId2,
+      product: {
+        connect: {
+          id: product5.id,
+        },
+      },
     },
   })
 
-  await prisma.form.create({
+  const productVendor1 = await prisma.productVendor.create({
     data: {
-      id: formId1,
+      product: {
+        connect: {
+          id: product1.id,
+        },
+      },
+      vendor: {
+        connect: {
+          id: vendor1.id,
+        },
+      },
+    },
+  })
+
+  const productVendor2 = await prisma.productVendor.create({
+    data: {
+      product: {
+        connect: {
+          id: product2.id,
+        },
+      },
+      vendor: {
+        connect: {
+          id: vendor2.id,
+        },
+      },
+    },
+  })
+
+  const productVendor3 = await prisma.productVendor.create({
+    data: {
+      product: {
+        connect: {
+          id: product3.id,
+        },
+      },
+      vendor: {
+        connect: {
+          id: vendor1.id,
+        },
+      },
+    },
+  })
+
+  const productVendor4 = await prisma.productVendor.create({
+    data: {
+      product: {
+        connect: {
+          id: product4.id,
+        },
+      },
+      vendor: {
+        connect: {
+          id: vendor2.id,
+        },
+      },
+    },
+  })
+
+  const productVendor5 = await prisma.productVendor.create({
+    data: {
+      product: {
+        connect: {
+          id: product5.id,
+        },
+      },
+      vendor: {
+        connect: {
+          id: vendor1.id,
+        },
+      },
+    },
+  })
+
+  const formField1 = nextId()
+  const formField2 = nextId()
+  const formField3 = nextId()
+  const formField4 = nextId()
+  const formField5 = nextId()
+  const formField6 = nextId()
+
+  const formAnswer1 = nextId()
+  const formAnswer2 = nextId()
+  const formAnswer3 = nextId()
+  const formAnswer4 = nextId()
+  const formAnswer5 = nextId()
+  const formAnswer6 = nextId()
+  const formAnswer7 = nextId()
+  const formAnswer8 = nextId()
+  const formAnswer9 = nextId()
+
+  const form1 = await prisma.form.create({
+    data: {
+      id: nextId(),
       name: 'Form 1',
       description: 'Form 1 description',
-      product: { connect: { id: productId1 } },
+      startDate: new Date('2021-01-01'),
+      endDate: new Date('2021-12-02'),
+      product: { connect: { id: product1.id } },
       createdBy: {
         connect: {
-          id: userId2,
+          id: user2.id,
         },
       },
       fields: {
@@ -233,57 +385,57 @@ async function main() {
           ],
         },
       },
-      formAnswer: {
+      responses: {
         createMany: {
           data: [
             {
               id: formAnswer1,
               booleanValue: true,
-              userId: userId1,
-              formFieldId: formField6,
+              userId: user1.id,
+              fieldId: formField6,
             },
             {
               id: formAnswer2,
               numberValue: 123,
-              userId: userId1,
-              formFieldId: formField3,
+              userId: user1.id,
+              fieldId: formField3,
             },
             {
               id: formAnswer3,
               textValue: 'Text 1 answer',
-              userId: userId1,
-              formFieldId: formField1,
+              userId: user1.id,
+              fieldId: formField1,
             },
             {
               id: formAnswer4,
               textValue: 'TextArea 2 answer',
-              userId: userId1,
-              formFieldId: formField2,
+              userId: user1.id,
+              fieldId: formField2,
             },
             {
               id: formAnswer5,
-              userId: userId1,
-              formFieldId: formField4,
+              userId: user1.id,
+              fieldId: formField4,
             },
             {
               id: formAnswer6,
-              userId: userId1,
-              formFieldId: formField5,
+              userId: user1.id,
+              fieldId: formField5,
             },
             {
               id: formAnswer7,
-              userId: userId1,
-              formFieldId: formField4,
+              userId: user1.id,
+              fieldId: formField4,
             },
             {
               id: formAnswer8,
-              userId: userId1,
-              formFieldId: formField5,
+              userId: user1.id,
+              fieldId: formField5,
             },
             {
               id: formAnswer9,
-              userId: userId1,
-              formFieldId: formField4,
+              userId: user1.id,
+              fieldId: formField4,
             },
           ],
         },
@@ -291,78 +443,68 @@ async function main() {
     },
   })
 
-  const formListValue1 = 0
-  const formListValue2 = 1
-  const formListValue3 = 2
-  const formListValue4 = 3
-  const formListValue5 = 4
+  const formListValue1 = nextId()
+  const formListValue2 = nextId()
+  const formListValue3 = nextId()
+  const formListValue4 = nextId()
+  const formListValue5 = nextId()
 
-  await prisma.formListValues.createMany({
+  await prisma.fieldValue.createMany({
     data: [
       {
         id: formListValue1,
         value: 'Select 4 answer 1',
         position: 0,
-        formFieldId: formField4,
+        parentFieldId: formField4,
       },
       {
         id: formListValue2,
         value: 'Select 4 answer 2',
         position: 1,
-        formFieldId: formField4,
+        parentFieldId: formField4,
       },
       {
         id: formListValue3,
         value: 'Select 4 answer 3',
         position: 2,
-        formFieldId: formField4,
+        parentFieldId: formField4,
       },
       {
         id: formListValue4,
         value: 'Radio 5 answer 1',
         position: 0,
-        formFieldId: formField5,
+        parentFieldId: formField5,
       },
       {
         id: formListValue5,
         value: 'Radio 5 answer 2',
         position: 1,
-        formFieldId: formField5,
+        parentFieldId: formField5,
       },
     ],
   })
 
-  await prisma.formListValueAnswers.createMany({
+  await prisma.fieldValueResponse.createMany({
     data: [
       {
-        formAnswerId: formAnswer5,
-        optionId: formListValue1,
-        formId: formId1,
-        formFieldId: formField4,
+        responseId: formAnswer5,
+        valueId: formListValue1,
       },
       {
-        formAnswerId: formAnswer7,
-        optionId: formListValue2,
-        formId: formId1,
-        formFieldId: formField4,
+        responseId: formAnswer7,
+        valueId: formListValue2,
       },
       {
-        formAnswerId: formAnswer9,
-        optionId: formListValue3,
-        formId: formId1,
-        formFieldId: formField4,
+        responseId: formAnswer9,
+        valueId: formListValue3,
       },
       {
-        formAnswerId: formAnswer6,
-        optionId: formListValue4,
-        formId: formId1,
-        formFieldId: formField5,
+        responseId: formAnswer6,
+        valueId: formListValue4,
       },
       {
-        formAnswerId: formAnswer8,
-        optionId: formListValue5,
-        formId: formId1,
-        formFieldId: formField5,
+        responseId: formAnswer8,
+        valueId: formListValue5,
       },
     ],
   })

@@ -22,6 +22,8 @@ export const DESIGNERS_SERVICE = 'DESIGNERS_SERVICE'
 
 export const PRODUCTS_SERVICE = 'PRODUCTS_SERVICE'
 
+export const FORMS_SERVICE = 'FORMS_SERVICE'
+
 /* #END SERVICES */
 
 export const REDIS = 'REDIS'
