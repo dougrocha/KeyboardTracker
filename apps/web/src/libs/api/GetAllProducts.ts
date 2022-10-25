@@ -12,7 +12,7 @@ export async function GetAllProducts({
   skip = 0,
 }: PaginationParams) {
   const data = await AxiosClient.get<Product[]>(
-    `/products?take=${take}&skip=${skip}&products=${true}`
+    `/products/all?take=${take}&skip=${skip}&products=${true}`
   )
 
   return data.data
@@ -23,7 +23,7 @@ export async function GetAllProductIds({
   skip = 0,
 }: PaginationParams) {
   const res = await AxiosClient.get<ProductId[]>(
-    `/products?take=${take}&skip=${skip}`
+    `/products/all?take=${take}&skip=${skip}`
   )
   return res.data
 }

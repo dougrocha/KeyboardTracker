@@ -3,22 +3,17 @@ import { PaginationParams } from "./types"
 
 /**
  * Search products
- * @param search Search query
- * @param param1 Pagination params
- * @default { take: 10, skip: 0 }
- * @returns Products
+ *
+ * Will not run if search is empty
  */
 export const SearchProducts = async (
   search: string,
   { take, skip }: PaginationParams = { take: 10, skip: 0 }
 ) => {
-  const res = await AxiosClient.get(
-    `/products/search?take=${take}&skip=${skip}`,
-    {
-      data: {
-        search,
-      },
-    }
-  )
+  if (!search) return []
+  const res = await AxiosClient.get(`/products`, {
+    params: { search, take, skip },
+  })
+
   return res.data
 }

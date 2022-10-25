@@ -1,6 +1,6 @@
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
 import { HeartIcon } from "@heroicons/react/24/outline"
-import Image from "next/future/image"
+import Image from "next/image"
 import React from "react"
 import MainViewLayout from "../../layouts/MainViewLayout"
 import { GetStaticPropsContext, GetStaticPropsResult } from "next"

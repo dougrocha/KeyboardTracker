@@ -1,6 +1,6 @@
 import { HeartIcon } from "@heroicons/react/24/outline"
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
-import Image from "next/future/image"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { useState } from "react"
@@ -40,11 +40,11 @@ const Card = ({ product, className }: CardProps) => {
           sizes="100vw"
           className="h-full object-cover object-center"
         />
+        {/* This is trick is so the link can extend to the parent object */}
       </div>
 
-      {/* This is trick is so the link can extend to the parent object */}
       <Link href={`products/${id}`}>
-        <a className="after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0"></a>
+        <a className="after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0" />
       </Link>
 
       <div className="bottom-0 flex h-24 w-full justify-between py-2">
