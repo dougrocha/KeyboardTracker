@@ -16,8 +16,8 @@ const CatalogPage = ({ products }: CatalogPageProps) => {
   return (
     <MainViewLayout>
       {/* Search bar area */}
-      <div className="flex w-full items-center justify-between">
-        <SearchBox />
+      <div className="my-10 flex w-full items-center justify-center">
+        <SearchBox className="w-full md:w-1/2" />
       </div>
       {/* Items area */}
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">

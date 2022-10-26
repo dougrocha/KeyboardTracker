@@ -1,14 +1,13 @@
-const withTM = require('next-transpile-modules')(['ui'])
+const withTM = require("next-transpile-modules")(["ui"])
 
 /**
  * @type {import('next').NextConfig}
  **/
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   images: {
-    domains: ['localhost'],
-    formats: ['image/webp'],
+    domains: ["localhost"],
+    formats: ["image/webp"],
   },
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,

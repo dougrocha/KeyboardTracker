@@ -21,7 +21,7 @@ const HomePage = ({
   mostRecentProducts,
 }: HomePageProps) => {
   return (
-    <MainViewLayout>
+    <MainViewLayout footer>
       <Hero />
 
       <div className="mt-20 mb-10 flex flex-col space-y-10 overflow-x-scroll">
@@ -47,7 +47,7 @@ const HomePage = ({
               />
             ))}
           </div>
-          <Link href={"/products"}>
+          <Link href={"/products"} legacyBehavior>
             <button className="mt-10 rounded-md bg-gray-200 py-2 px-4 font-medium text-black">
               Find More
             </button>

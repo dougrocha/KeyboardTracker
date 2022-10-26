@@ -1,21 +1,33 @@
 import dynamic from "next/dynamic"
-import Image from "next/image"
 
 import Navbar from "../components/Navbar"
 import { LayoutProps } from "../types/layoutProps"
 
 const Footer = dynamic(() => import("../components/Footer"))
 
-interface MainViewLayoutProps extends LayoutProps {}
+interface MainViewLayoutProps extends LayoutProps {
+  footer?: boolean
+  className?: string
+}
 
 // container mx-auto mb-auto px-1 sm:px-6
 
-const MainViewLayout = ({ children }: MainViewLayoutProps) => {
+const MainViewLayout = ({
+  children,
+  footer = true,
+  className = "flex-col",
+}: MainViewLayoutProps) => {
   return (
-    <div className="mx-auto flex h-screen flex-col justify-between">
+    <div className="mx-auto flex h-screen flex-col">
       <Navbar />
-      <main className="container mx-auto mb-auto px-2 sm:px-6">{children}</main>
-      <Footer />
+      <main
+        className={`container mx-auto flex px-2 sm:px-6 ${
+          footer ? "mb-auto" : ""
+        } ${className}`}
+      >
+        {children}
+      </main>
+      {footer ? <Footer /> : null}
     </div>
   )
 }

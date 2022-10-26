@@ -1,8 +1,8 @@
-import { NextSeoProps } from "next-seo";
+import { NextSeoProps } from "next-seo"
 
 export default {
-  titleTemplate: "KGB | %s",
-  defaultTitle: "KGB | Calendar",
+  titleTemplate: "MEKA | %s",
+  defaultTitle: "MEKA | Calendar",
   // Additional tags for Icons
   additionalLinkTags: [
     {
@@ -14,4 +14,4 @@ export default {
       href: "/apple-touch-icon.png",
     },
   ],
-} as NextSeoProps;
+} as NextSeoProps

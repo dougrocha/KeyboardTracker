@@ -14,6 +14,8 @@ export interface User {
   images?: Image[]
 }
 
+export type LoginFormData = Required<Pick<User, "email" | "password">>
+
 export interface ProtectedAuth {
   user?: User
   isLoggedIn: boolean

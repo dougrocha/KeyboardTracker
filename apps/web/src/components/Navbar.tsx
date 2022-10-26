@@ -26,17 +26,18 @@ const Navbar = () => {
 
   return (
     <nav className="container mx-auto mb-5 flex h-20 w-full items-center justify-between px-2 py-8 sm:px-6">
-      <Link href="/">
-        <a className="text-3xl font-bold text-black dark:text-white">MEKA</a>
+      <Link href="/" className="text-3xl font-bold text-black dark:text-white">
+        MEKA
       </Link>
       <div className="flex items-center space-x-5 text-gray-200">
         <ol className="hidden space-x-5 md:flex">
           {NavLinks.map((link) => (
             <li key={link.name}>
-              <Link href={link.href}>
-                <a className="text-black transition-colors hover:text-blue-400 dark:text-white dark:hover:text-gray-400">
-                  {link.name}
-                </a>
+              <Link
+                href={link.href}
+                className="text-black transition-colors hover:text-blue-400 dark:text-white dark:hover:text-gray-400"
+              >
+                {link.name}
               </Link>
             </li>
           ))}
@@ -63,10 +64,11 @@ const Navbar = () => {
           </div>
         )}
         {!data && (
-          <Link href={"/login"}>
-            <a className="flex h-12 items-center justify-center rounded-lg bg-blue-600 px-4 font-medium text-gray-200 transition-colors hover:bg-blue-900 hover:text-black dark:text-white">
-              Login
-            </a>
+          <Link
+            href={"/login"}
+            className="flex h-12 items-center justify-center rounded-lg bg-blue-600 px-4 font-medium text-gray-200 transition-colors hover:bg-blue-900 hover:text-black dark:text-white"
+          >
+            Login
           </Link>
         )}
         {isLoading && (

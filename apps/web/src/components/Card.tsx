@@ -43,9 +43,10 @@ const Card = ({ product, className }: CardProps) => {
         {/* This is trick is so the link can extend to the parent object */}
       </div>
 
-      <Link href={`products/${id}`}>
-        <a className="after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0" />
-      </Link>
+      <Link
+        href={`products/${id}`}
+        className="after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0"
+      />
 
       <div className="bottom-0 flex h-24 w-full justify-between py-2">
         <div className="flex flex-col justify-between">

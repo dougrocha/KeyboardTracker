@@ -3,7 +3,6 @@ import {
   Get,
   Inject,
   Query,
-  Body,
   ParseBoolPipe,
   Param,
   ParseEnumPipe,
@@ -22,14 +21,14 @@ export class ProductsController {
   ) {}
 
   /**
-   * GET /products
+   * GET /products/all
    *
    * Returns all products
    *
    * @param param0
    * @returns
    */
-  @Get()
+  @Get('all')
   async findMany(
     @Query() { take, skip }: PaginationParams,
     @Query('products', ParseBoolPipe) products: boolean,
@@ -62,24 +61,22 @@ export class ProductsController {
   }
 
   /**
-   * GET /products/search
+   * GET /products
    *
    * Search for products by name, description, brand, vendor, material, status, and type
    * @param search Search query
    * @param pagination Pagination params
    * @returns Products
    */
-  @Get('search')
+  @Get()
   async search(
+    @Query() search: ProductSearchQuery,
     @Query() pagination: PaginationParams,
-    @Body() search: ProductSearchQuery,
   ) {
-    const products = await this.productsService.search({
+    return await this.productsService.search({
       pagination,
       search,
     })
-
-    return { products, count: products.length }
   }
 
   /**
@@ -97,7 +94,6 @@ export class ProductsController {
     @Query() pagination: PaginationParams,
     @Query() dateSort: DateSortQuery,
   ) {
-    const products = await this.productsService.findByStatus(status, pagination)
-    return products
+    return await this.productsService.findByStatus(status, pagination)
   }
 }
