@@ -18,11 +18,11 @@ import { DesignersService } from './designers.service'
     },
     {
       provide: PRISMA_SERVICE,
-      useValue: PrismaService,
+      useClass: PrismaService,
     },
     {
       provide: KEYCAPS_SERVICE,
-      useValue: KeycapsService,
+      useClass: KeycapsService,
     },
   ],
 })

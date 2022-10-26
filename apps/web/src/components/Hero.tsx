@@ -1,4 +1,4 @@
-import Image from "next/future/image"
+import Image from "next/image"
 import React from "react"
 import SearchBox from "./SearchBox"
 
@@ -20,6 +20,7 @@ const Hero = () => {
           width={512}
           height={512}
           sizes="100vw"
+          priority
           className="h-full object-cover object-center"
         />
       </div>

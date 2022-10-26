@@ -6,11 +6,11 @@ import { PRISMA_SERVICE } from '../common/constants'
 export class VendorsService {
   constructor(@Inject(PRISMA_SERVICE) private readonly prisma: PrismaService) {}
 
-  async getAll() {
+  async findAll() {
     return await this.prisma.vendor.findMany()
   }
 
-  async getOne(id: string) {
+  async findOne(id: string) {
     return await this.prisma.vendor.findUnique({
       where: {
         id,
@@ -18,7 +18,7 @@ export class VendorsService {
     })
   }
 
-  async getAllByCountry(country: string) {
+  async findAllByCountry(country: string) {
     return await this.prisma.vendor.findMany({
       where: {
         country: {
@@ -29,12 +29,13 @@ export class VendorsService {
     })
   }
 
-  async getAllKeycaps(id: number) {
-    return await this.prisma.keycapSetVendor.findMany({
+  async findAllProducts(id: string) {
+    return await this.prisma.productVendor.findMany({
       where: {
-        id: {
-          equals: id,
-        },
+        vendorId: id,
+      },
+      include: {
+        product: true,
       },
     })
   }

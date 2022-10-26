@@ -13,5 +13,10 @@
     "incremental": true,
     "skipLibCheck": true
   },
-  "include": ["environment.d.ts", "src/**/*.ts", "test/**/*.ts"]
+  "include": [
+    "environment.d.ts",
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "prisma/**/*.ts"
+  ]
 }

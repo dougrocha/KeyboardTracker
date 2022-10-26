@@ -1,28 +1,28 @@
+import { BullModule } from '@nestjs/bull'
 import { Inject, MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { PrismaModule } from 'nestjs-prisma'
-import { PrismaConfigService } from './config/database/prisma/configuration'
-import { validate } from './config/env.validation'
-import { AuthModule } from './auth/auth.module'
-import { UsersModule } from './users/users.module'
 import { RouterModule } from '@nestjs/core'
-import { routes } from './config/routes'
-import { RedisModule } from './redis/redis.module'
-import { REDIS } from './common/constants'
-import { KeycapsModule } from './keycaps/keycaps.module'
-import { VendorsModule } from './vendors/vendors.module'
+import { ScheduleModule } from '@nestjs/schedule'
+import { ThrottlerModule } from '@nestjs/throttler'
+import { PrismaModule } from 'nestjs-prisma'
 import * as session from 'express-session'
 import * as RedisStore from 'connect-redis'
 import * as passport from 'passport'
-import { BullModule } from '@nestjs/bull'
 import { BullConfigService } from './config/bull.config'
 import { AppConfigService } from './config/config.service'
-import { ScheduleModule } from '@nestjs/schedule'
-import { ThrottlerModule } from '@nestjs/throttler'
+import { PrismaConfigService } from './config/database/prisma/configuration'
+import { validate } from './config/env.validation'
+import { routes } from './config/routes'
 import { ThrottlerConfigService } from './config/throttler.config'
-import { SnowflakeModule } from './snowflake/snowflake.module'
 import { DesignersModule } from './designers/designers.module'
-import { ItemsModule } from './items/items.module'
+import { KeycapsModule } from './keycaps/keycaps.module'
+import { ProductsModule } from './products/products.module'
+import { RedisModule } from './redis/redis.module'
+import { SnowflakeModule } from './snowflake/snowflake.module'
+import { UsersModule } from './users/users.module'
+import { VendorsModule } from './vendors/vendors.module'
+import { AuthModule } from './auth/auth.module'
+import { REDIS } from './common/constants'
 
 @Module({
   imports: [
@@ -58,17 +58,16 @@ import { ItemsModule } from './items/items.module'
     AuthModule,
     UsersModule,
     RedisModule,
-    ItemsModule,
+    ProductsModule,
     KeycapsModule,
-    // VendorsModule,
-    // DesignersModule,
+    VendorsModule,
+    DesignersModule,
   ],
   providers: [AppConfigService],
 })
 export class AppModule implements NestModule {
   constructor(
     @Inject(REDIS) private readonly redis: RedisStore.Client,
-
     private readonly configService: ConfigService,
   ) {}
   configure(consumer: MiddlewareConsumer) {

@@ -38,14 +38,14 @@ export class DesignersController {
     return
   }
 
-  @Get(':id/keyboards')
-  async getAccountKeyboards(
-    @Param('id') id: string,
-    @Query('take') take: number,
-    @Query('skip') skip: number,
-  ) {
-    return await this.keycapsService.findAllByDesigner(id, take, skip)
-  }
+  // @Get(':id/keyboards')
+  // async getAccountKeyboards(
+  //   @Param('id') id: string,
+  //   @Query('take') take: number,
+  //   @Query('skip') skip: number,
+  // ) {
+  //   return await this.keycapsService.findMany(id, take, skip)
+  // }
 
   @Post(':id/keyboards')
   @HttpCode(HttpStatus.CREATED)
