@@ -25,11 +25,21 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
+  theme Theme @default(SYSTEM)
+
+  isFavoritesPrivate Boolean @default(false)
+
   discord         DiscordIdentity?
   designerAccount Designer?
   formResponses   FormResponse[]
   forms           Form[]
-  images          Image[]
+  favorites       UserProductFavorite[]
+}
+
+enum Theme {
+  DARK
+  LIGHT
+  SYSTEM
 }
 
 model DiscordIdentity {
@@ -50,6 +60,20 @@ model DiscordIdentity {
   user User @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@unique([username, discriminator])
+}
+
+model UserProductFavorite {
+  id Int @id @default(autoincrement())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  productId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
 }
 
 model KeycapSet {
@@ -104,8 +128,6 @@ model Image {
   keycapSetId String?
   keyboard    Keyboard?  @relation(fields: [keyboardId], references: [id])
   keyboardId  String?
-  user        User?      @relation(fields: [userId], references: [id])
-  userId      String?
 }
 
 enum GroupBuyStatus {
@@ -200,9 +222,10 @@ model Product {
 
   vendors ProductVendor[]
 
-  designer   Designer? @relation(fields: [designerId], references: [id])
-  designerId String?
-  form       Form?
+  designer      Designer?             @relation(fields: [designerId], references: [id])
+  designerId    String?
+  form          Form?
+  userFavorites UserProductFavorite[]
 
   @@index([name, description, type, brand, status])
 }

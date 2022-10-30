@@ -1,4 +1,4 @@
-import "../styles/globals.css"
+import "../styles/global.css"
 
 import { NextPage } from "next"
 import { DefaultSeo } from "next-seo"

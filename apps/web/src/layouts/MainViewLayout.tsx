@@ -15,13 +15,13 @@ interface MainViewLayoutProps extends LayoutProps {
 const MainViewLayout = ({
   children,
   footer = true,
-  className = "flex-col",
+  className,
 }: MainViewLayoutProps) => {
   return (
-    <div className="mx-auto flex h-screen flex-col">
+    <div className="mx-auto flex min-h-screen flex-col">
       <Navbar />
       <main
-        className={`container mx-auto flex px-2 sm:px-6 ${
+        className={`container mx-auto px-2 sm:px-6 ${
           footer ? "mb-auto" : ""
         } ${className}`}
       >

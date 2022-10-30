@@ -1,10 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaClient, User } from '@prisma/client'
 import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants'
-import {
-  SnowflakeModule,
-  SnowflakeService,
-} from '../../snowflake/snowflake.module'
+import { SnowflakeService } from '../../snowflake/snowflake.module'
 import { CreateUserDto } from '../dto/create-user.dto'
 import { UpdateUserDto } from '../dto/update-user.dto'
 
@@ -40,5 +37,37 @@ export class UsersService {
 
   async delete(id: string) {
     return await this.prisma.user.delete({ where: { id } })
+  }
+
+  async findFavorites(userId: string) {
+    return await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { favorites: { select: { productId: true } } },
+    })
+  }
+
+  async addFavorite(userId: string, productId: string) {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        favorites: {
+          connectOrCreate: {
+            where: { userId_productId: { userId, productId } },
+            create: { productId },
+          },
+        },
+      },
+    })
+  }
+
+  async removeFavorite(userId: string, favoritesId: number) {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        favorites: {
+          delete: { id: favoritesId },
+        },
+      },
+    })
   }
 }

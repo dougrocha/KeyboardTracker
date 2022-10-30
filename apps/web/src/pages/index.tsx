@@ -1,5 +1,6 @@
 import { GetStaticPropsResult } from "next"
 import Link from "next/link"
+import { ReactElement } from "react"
 import Card from "../components/Card"
 import Carousel from "../components/Carousel"
 import Hero from "../components/Hero"
@@ -21,7 +22,7 @@ const HomePage = ({
   mostRecentProducts,
 }: HomePageProps) => {
   return (
-    <MainViewLayout footer>
+    <>
       <Hero />
 
       <div className="mt-20 mb-10 flex flex-col space-y-10 overflow-x-scroll">
@@ -54,9 +55,13 @@ const HomePage = ({
           </Link>
         </div>
       </div>
-    </MainViewLayout>
+    </>
   )
 }
+
+HomePage.getLayout = (page: ReactElement) => (
+  <MainViewLayout footer>{page}</MainViewLayout>
+)
 
 export default HomePage
 

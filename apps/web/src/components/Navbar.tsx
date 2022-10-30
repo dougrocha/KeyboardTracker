@@ -1,7 +1,9 @@
+"use client"
+
 import { HeartIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
 import Link from "next/link"
-import React from "react"
+import React, { useState } from "react"
 
 import useAuth from "../hooks/useAuth"
 import { capitalizeFirstLetter } from "../utils/string"
@@ -22,7 +24,9 @@ const NavLinks = [
 ]
 
 const Navbar = () => {
-  const { data, isLoading } = useAuth()
+  const { data, logoutUrl } = useAuth()
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   return (
     <nav className="container mx-auto mb-5 flex h-20 w-full items-center justify-between px-2 py-8 sm:px-6">
@@ -42,22 +46,40 @@ const Navbar = () => {
             </li>
           ))}
         </ol>
-        {data && (
+        {data?.user && (
           <div className="flex w-full items-center gap-3">
-            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-blue-900">
-              {data.user?.avatar ? (
+            <div
+              className="relative flex h-10 w-10 items-center justify-center rounded-full bg-blue-900"
+              onClick={
+                data.user ? () => setIsDropdownOpen((prev) => !prev) : undefined
+              }
+            >
+              {data.user.avatar ? (
                 <Image
                   src={`http://localhost:3001/users/avatars/${data?.user?.id}/${data?.user?.avatar}`}
-                  alt="user profile imag"
+                  alt="user profile image"
                   fill
+                  className="rounded-full"
                 />
               ) : (
                 <span className="text-lg font-medium text-gray-200">
                   {capitalizeFirstLetter(
-                    data?.user?.name ?? data?.user?.username ?? ""
+                    data.user.name ?? data.user.username ?? ""
                   ).slice(0, 2)}
                 </span>
               )}
+              {isDropdownOpen ? (
+                <div className="absolute top-14 right-0 z-50 bg-red-500">
+                  <ul className="flex flex-col gap-2 p-2">
+                    <li>
+                      <Link href="/profile">Profile</Link>
+                    </li>
+                    <li>
+                      <Link href={logoutUrl}>Logout</Link>
+                    </li>
+                  </ul>
+                </div>
+              ) : null}
             </div>
             <MagnifyingGlassIcon className="icon cursor-pointer text-gray-800 hover:text-gray-500 dark:text-white dark:hover:text-gray-400" />
             <HeartIcon className="icon cursor-pointer text-gray-800 hover:text-gray-500 dark:text-white dark:hover:text-gray-400" />
@@ -70,16 +92,6 @@ const Navbar = () => {
           >
             Login
           </Link>
-        )}
-        {isLoading && (
-          <div className="flex items-center justify-center">
-            <div
-              className="spinner-border inline-block h-8 w-8 animate-spin rounded-full border-4"
-              role="status"
-            >
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </div>
         )}
       </div>
     </nav>
