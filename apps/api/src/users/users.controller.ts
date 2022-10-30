@@ -16,6 +16,7 @@ import {
   StreamableFile,
   UseGuards,
   UseInterceptors,
+  ParseIntPipe,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { User } from '@prisma/client'
@@ -124,5 +125,33 @@ export class UsersController {
       .catch(() => {
         throw new ImageNotFoundException()
       })
+  }
+
+  @Get('me/favorites')
+  @UseGuards(AuthenticatedGuard)
+  async findFavorites(@GetCurrentUser() user: User) {
+    return await this.usersService.findFavorites(user.id)
+  }
+
+  @Post('me/favorites')
+  @UseGuards(AuthenticatedGuard)
+  async addFavorite(
+    @GetCurrentUser() user: User,
+    @Body('productId') productId: string,
+  ) {
+    return await this.usersService.addFavorite(user.id, productId)
+  }
+
+  @Delete('me/favorites')
+  async removeFavorite(
+    @GetCurrentUser() user: User,
+    @Body('id', ParseIntPipe) id: number,
+  ) {
+    return await this.usersService.removeFavorite(user.id, id)
+  }
+
+  @Get(':id/favorites')
+  async findFavoritesById(@Param('id') id: string) {
+    return await this.usersService.findFavorites(id)
   }
 }

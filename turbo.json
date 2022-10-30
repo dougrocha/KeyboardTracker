@@ -12,7 +12,7 @@
       "cache": false
     },
     "web#build": {
-      "dependsOn": ["^build", "$NEXT_PUBLIC_API_URL"],
+      "dependsOn": ["^build", "$NEXT_PUBLIC_API_URL", "$NEXT_PUBLIC_WEB_URL"],
       "outputs": [".next/**"]
     }
   },

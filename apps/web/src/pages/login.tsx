@@ -1,5 +1,5 @@
 import Link from "next/link"
-import React, { ChangeEvent, useState } from "react"
+import React, { ChangeEvent, ReactElement, useEffect, useState } from "react"
 import { useForm, UseFormHandleSubmit } from "react-hook-form"
 
 import { FaDiscord, FaGoogle } from "react-icons/fa"
@@ -7,6 +7,9 @@ import MainViewLayout from "../layouts/MainViewLayout"
 import schema from "../utils/schemas/loginForm"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { LoginFormData } from "../types/user"
+import { localLogin } from "../libs/api/LocalLogin"
+import useAuth from "../hooks/useAuth"
+import { useRouter } from "next/router"
 
 // Icon must always be capitalized
 const LoginSources = [
@@ -28,6 +31,11 @@ const LoginSources = [
 ]
 
 const LoginPage = () => {
+  const { push } = useRouter()
+  const { data } = useAuth()
+
+  if (data?.user) push("/profile")
+
   const [showPassword, setShowPassword] = useState(false)
 
   const {
@@ -44,36 +52,32 @@ const LoginPage = () => {
 
   const onSubmit = handleSubmit((data) => {
     console.log("success", data)
+    // localLogin(data.email, data.password)
   })
 
   return (
-    <MainViewLayout
-      footer={false}
-      className="mt-20 h-full flex-col items-center justify-start space-y-5 md:flex-row md:justify-between md:space-y-0"
-    >
+    <>
       <section className="text-center text-xl font-bold md:m-0 md:flex md:h-full md:w-1/2 md:flex-col md:items-center md:justify-center md:text-start">
         <h1>STAY UP TO DATE ON THE LATEST GROUP BUYS</h1>
       </section>
 
-      <div className="mx-4 hidden h-80 w-[1px] border-l border-solid border-x-slate-700 md:block" />
+      <section className="flex flex-col items-center justify-center gap-y-2 md:w-1/2">
+        <h2 className="hidden text-4xl font-medium md:block">Login</h2>
 
-      <section className="flex flex-col items-center justify-center space-y-2 md:h-full md:w-1/2">
-        <h2 className="hidden text-3xl font-medium md:mb-10 md:block">Login</h2>
-
-        <ul className="flex space-x-2 md:flex-col md:space-x-0 md:space-y-2">
+        <ul className="my-5 flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-2">
           {LoginSources.map(({ name, href, Icon }) => (
             <li
               key={`login-source-${name}`}
-              className="w-full rounded bg-blue-600 px-4 py-2 text-white"
+              className="w-full rounded bg-blue-600  text-white"
             >
               <Link
                 href={href}
-                className="flex flex-grow-0 items-center justify-center "
+                className="flex flex-grow-0 items-center justify-center px-4 py-2 "
               >
                 {/* Icon from LoginSources */}
-                <Icon className="h-6 w-6 md:mr-4" />
-                <p className="hidden whitespace-nowrap md:flex md:items-center md:text-lg">
-                  <span className="hidden md:block">Continue with&nbsp;</span>
+                <Icon className="h-6 w-6 lg:mr-4" />
+                <p className="hidden whitespace-nowrap lg:flex lg:items-center lg:text-lg">
+                  <span className="hidden lg:block">Continue with&nbsp;</span>
                   {name}
                 </p>
               </Link>
@@ -82,11 +86,8 @@ const LoginPage = () => {
         </ul>
 
         <p className="text-sm">Or use your email to login:</p>
-        <form
-          className="flex flex-col items-center space-y-6"
-          onSubmit={onSubmit}
-        >
-          <div className="flex w-full flex-col space-y-1 dark:text-white">
+        <form className="w-80 space-y-6 lg:w-96" onSubmit={onSubmit}>
+          <div className="flex flex-col space-y-1 dark:text-white">
             <label htmlFor="email" className="text-sm font-medium">
               Email
             </label>
@@ -97,14 +98,14 @@ const LoginPage = () => {
               type={"email"}
               {...register("email")}
             />
-            {errors.email && (
+            {errors.email ? (
               <span className="text-sm text-red-500">
                 {errors.email.message}
               </span>
-            )}
+            ) : null}
           </div>
 
-          <div className="flex w-full flex-col space-y-1">
+          <div className="flex flex-col space-y-1">
             <label htmlFor="password" className="text-sm font-medium">
               Password
             </label>
@@ -114,12 +115,12 @@ const LoginPage = () => {
               type={showPassword ? "text" : "password"}
               {...register("password")}
             />
-            {errors.password && (
+            {errors.password ? (
               <span className="text-sm text-red-500">
                 {errors.password.message}
               </span>
-            )}
-            <div className="flex w-full items-center">
+            ) : null}
+            <span className="flex w-full items-center">
               <input
                 id={"showPassword"}
                 type={"checkbox"}
@@ -129,19 +130,28 @@ const LoginPage = () => {
               <label htmlFor="showPassword" className="ml-2 select-none">
                 Show Password
               </label>
-            </div>
+            </span>
           </div>
 
           <button
-            className="h-12 w-80 rounded-md bg-blue-600 px-4 text-white"
+            className="h-20 w-full rounded-md bg-blue-600 px-4 text-white"
             type="submit"
           >
             Login
           </button>
         </form>
       </section>
-    </MainViewLayout>
+    </>
   )
 }
+
+LoginPage.getLayout = (page: ReactElement) => (
+  <MainViewLayout
+    footer={false}
+    className="flex h-full flex-col items-center justify-center divide-slate-700 md:flex-row md:justify-start md:space-y-0 md:divide-x-[1px] lg:justify-between lg:space-y-5"
+  >
+    {page}
+  </MainViewLayout>
+)
 
 export default LoginPage
