@@ -1,5 +1,5 @@
 import { Designer } from "./designer"
-import { Image } from "./product"
+import { Image, Product } from "./product"
 
 export interface User {
   id: string
@@ -11,7 +11,17 @@ export interface User {
   createdAt: Date
   updatedAt: Date
   designer?: Designer
+  favorites?: UserFavorite[]
   images?: Image[]
+}
+
+export interface UserFavorite {
+  id: string
+  userId: string
+  user: User
+  productId: string
+  product: Product
+  createdAt: Date
 }
 
 export type LoginFormData = Required<Pick<User, "email" | "password">>

@@ -53,6 +53,12 @@ export class UsersController {
     return user
   }
 
+  @Get('me/connections')
+  @UseGuards(AuthenticatedGuard)
+  async findAllConnections(@GetCurrentUser() user: User) {
+    return this.usersService.findAllConnections(user.id)
+  }
+
   @Patch('me')
   @UseGuards(AuthenticatedGuard)
   async update(
@@ -135,11 +141,8 @@ export class UsersController {
 
   @Post('me/favorites')
   @UseGuards(AuthenticatedGuard)
-  async addFavorite(
-    @GetCurrentUser() user: User,
-    @Body('productId') productId: string,
-  ) {
-    return await this.usersService.addFavorite(user.id, productId)
+  async addFavorite(@GetCurrentUser() user: User, @Body('id') id: string) {
+    return await this.usersService.addFavorite(user.id, id)
   }
 
   @Delete('me/favorites')

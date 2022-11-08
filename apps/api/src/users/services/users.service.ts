@@ -42,7 +42,9 @@ export class UsersService {
   async findFavorites(userId: string) {
     return await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { favorites: { select: { productId: true } } },
+      select: {
+        favorites: { select: { id: true, createdAt: true, product: true } },
+      },
     })
   }
 
@@ -51,11 +53,15 @@ export class UsersService {
       where: { id: userId },
       data: {
         favorites: {
-          connectOrCreate: {
-            where: { userId_productId: { userId, productId } },
-            create: { productId },
+          create: {
+            product: {
+              connect: { id: productId },
+            },
           },
         },
+      },
+      select: {
+        favorites: { select: { id: true, createdAt: true, product: true } },
       },
     })
   }
@@ -68,6 +74,16 @@ export class UsersService {
           delete: { id: favoritesId },
         },
       },
+      select: {
+        favorites: { select: { id: true, createdAt: true, product: true } },
+      },
+    })
+  }
+
+  async findAllConnections(userId: string) {
+    return await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { discord: true },
     })
   }
 }
