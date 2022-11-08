@@ -1,9 +1,15 @@
 import { HeartIcon } from "@heroicons/react/24/outline"
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/router"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import {
+  AddProductToFavorites,
+  RemoveProductFromFavorites,
+} from "../libs/api/AddProductToFavorites"
+import { GetProfileInformation } from "../libs/api/GetMe"
+import { GetUserFavorites } from "../libs/api/GetUserFavorites"
 import { Product } from "../types/product"
 
 interface CardProps {
@@ -11,21 +17,55 @@ interface CardProps {
   className?: string
 }
 
-/**
- * Card Component
- * @property @interface CardProps
- */
 const Card = ({ product, className }: CardProps) => {
-  const { id, name, description, type, status, brand, coverImage } = product
+  const { data: user } = useQuery(["user"], GetProfileInformation)
 
-  const [favorite, setFavorite] = useState(false)
+  const { data } = useQuery(["favorites"], GetUserFavorites, {
+    enabled: !!user?.id,
+  })
 
-  const addCurrentToFavorite = (
+  const favoriteProduct = data?.favorites?.find(
+    (fav) => fav.product.id === product.id
+  )
+
+  const [isFavorite, setIsFavorite] = useState(false)
+
+  useEffect(() => {
+    setIsFavorite(favoriteProduct?.product ? true : false)
+  }, [favoriteProduct])
+
+  const { id, name, coverImage } = product
+
+  const addFavorite = useMutation(
+    ["favorites", { id }],
+    AddProductToFavorites,
+    {
+      onError: () => handleMutationError(),
+    }
+  )
+
+  const removeFavorite = useMutation(
+    ["favorites", { id }],
+    RemoveProductFromFavorites,
+    { onError: () => handleMutationError() }
+  )
+  const handleMutationError = () => {
+    setIsFavorite(favoriteProduct ? true : false)
+  }
+
+  const changeOnFavorite = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault()
-    setFavorite(!favorite)
-    console.log(`Added to favorites: ${id}-${name}`)
+
+    if (isFavorite) {
+      if (!favoriteProduct) return
+      removeFavorite.mutate(favoriteProduct?.id)
+      setIsFavorite(false)
+    } else {
+      addFavorite.mutate(id)
+      setIsFavorite(true)
+    }
   }
 
   return (
@@ -37,12 +77,12 @@ const Card = ({ product, className }: CardProps) => {
           src={coverImage ?? "/hero.jpg"}
           alt={`card image for ${name}`}
           fill
-          sizes="100vw"
+          sizes="(max-width: 640px) 320px"
           className="h-full object-cover object-center"
         />
-        {/* This is trick is so the link can extend to the parent object */}
       </div>
 
+      {/* This is trick is so the link can extend to the parent object */}
       <Link
         href={`products/${id}`}
         className="after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0"
@@ -62,11 +102,11 @@ const Card = ({ product, className }: CardProps) => {
           <button
             className="relative"
             onClick={(e) => {
-              addCurrentToFavorite(e)
+              changeOnFavorite(e)
             }}
           >
-            {favorite ? (
-              <SolidHeartIcon className="right-6 bottom-1/4 h-5 w-5 text-black dark:text-white" />
+            {isFavorite ? (
+              <SolidHeartIcon className="right-6 bottom-1/4 h-5 w-5 text-red-500 dark:text-white" />
             ) : (
               <HeartIcon className="right-6 bottom-1/4 h-5 w-5 text-black dark:text-white" />
             )}

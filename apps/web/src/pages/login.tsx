@@ -1,17 +1,15 @@
 import Link from "next/link"
-import React, { ChangeEvent, ReactElement, useEffect, useState } from "react"
-import { useForm, UseFormHandleSubmit } from "react-hook-form"
+import React, { ChangeEvent, ReactElement, useState } from "react"
+import { useForm } from "react-hook-form"
 
 import { FaDiscord, FaGoogle } from "react-icons/fa"
 import MainViewLayout from "../layouts/MainViewLayout"
 import schema from "../utils/schemas/loginForm"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { LoginFormData } from "../types/user"
-import { localLogin } from "../libs/api/LocalLogin"
 import useAuth from "../hooks/useAuth"
 import { useRouter } from "next/router"
 
-// Icon must always be capitalized
 const LoginSources = [
   // {
   //   name: "Github",
@@ -32,9 +30,7 @@ const LoginSources = [
 
 const LoginPage = () => {
   const { push } = useRouter()
-  const { data } = useAuth()
-
-  if (data?.user) push("/profile")
+  const { data, isLoading } = useAuth()
 
   const [showPassword, setShowPassword] = useState(false)
 
@@ -54,6 +50,13 @@ const LoginPage = () => {
     console.log("success", data)
     // localLogin(data.email, data.password)
   })
+
+  if (isLoading) return <div>Loading...</div>
+
+  if (data?.user) {
+    push("/profile")
+    return <div>Redirecting...</div>
+  }
 
   return (
     <>

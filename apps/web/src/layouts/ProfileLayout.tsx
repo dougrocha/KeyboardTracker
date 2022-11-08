@@ -1,14 +1,28 @@
+import { NextSeo, NextSeoProps } from "next-seo"
 import Link from "next/link"
 import MainViewLayout from "./MainViewLayout"
 
-const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
+const ProfileLayout = ({
+  children,
+  seo,
+}: {
+  children: React.ReactNode
+  seo?: NextSeoProps
+}) => {
   return (
-    <MainViewLayout footer={false} className="flex flex-row pb-10">
-      <ProfileSidebar />
-      <section className="min-h-full w-full bg-zinc-700 px-2 py-10">
-        {children}
-      </section>
-    </MainViewLayout>
+    <>
+      <NextSeo {...seo} />
+      <MainViewLayout
+        className="flex flex-row pb-10"
+        footer={false}
+        footerContent={ProfileFooter()}
+      >
+        <ProfileSidebar />
+        <section className="min-h-full w-full px-2 py-10 dark:bg-zinc-700">
+          {children}
+        </section>
+      </MainViewLayout>
+    </>
   )
 }
 
@@ -20,7 +34,7 @@ const ProfileSidebar = () => {
           {SidebarTags.map((tag) => (
             <li
               key={tag.name}
-              className="relative flex h-12 w-full flex-row items-center justify-start px-4 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+              className="relative flex h-12 w-full flex-row items-center justify-start rounded px-4 text-sm font-medium text-gray-500 hover:bg-gray-200 hover:text-gray-900"
             >
               <Link
                 href={tag.href}
@@ -35,7 +49,7 @@ const ProfileSidebar = () => {
           {SidebarFooterTags.map((tag) => (
             <li
               key={tag.name}
-              className="relative flex h-12 w-full flex-row items-center justify-start px-4 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+              className="relative flex h-12 w-full flex-row items-center justify-start rounded px-4 text-sm font-medium text-gray-500 hover:bg-gray-200 hover:text-gray-900"
             >
               <Link
                 href={tag.href}
@@ -48,6 +62,18 @@ const ProfileSidebar = () => {
         </ul>
       </section>
     </>
+  )
+}
+
+const ProfileFooter = () => {
+  return (
+    <div className="container mx-auto mb-2 flex justify-between px-2 text-sm text-gray-700 sm:px-6">
+      <p>
+        &copy; {new Date().getFullYear()} Modified by Meka Group Buys. All
+        rights reserved.
+      </p>
+      <p>By accessing this page, you agree to our Terms.</p>
+    </div>
   )
 }
 

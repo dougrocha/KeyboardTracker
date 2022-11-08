@@ -22,13 +22,13 @@ async function main() {
       name: 'Doug Rocha',
       discord: {
         create: {
-          discordId: '9238475183022',
-          username: 'douger',
-          discriminator: '1234',
+          discordId: '571520537587875851',
+          username: 'slash',
+          discriminator: '0001',
           accessToken: '38394bf98nqe9ap9v',
           refreshToken: 'adsjhasdlh2893123587',
           connectedAt: new Date(),
-          email: 'doug.discord@gmail.com',
+          email: 'douglas_junior@.com',
           mfaEnabled: false,
         },
       },
@@ -505,6 +505,27 @@ async function main() {
       {
         responseId: formAnswer8,
         valueId: formListValue5,
+      },
+    ],
+  })
+
+  await prisma.userProductFavorite.createMany({
+    data: [
+      {
+        userId: user1.id,
+        productId: product1.id,
+      },
+      {
+        userId: user1.id,
+        productId: product2.id,
+      },
+      {
+        userId: user1.id,
+        productId: product3.id,
+      },
+      {
+        userId: user1.id,
+        productId: product4.id,
       },
     ],
   })
