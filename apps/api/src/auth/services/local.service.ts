@@ -5,7 +5,6 @@ import { USERS_SERVICE } from '../../common/constants'
 import { CreateUserDto } from '../../users/dto/create-user.dto'
 import { UsersService } from '../../users/services/users.service'
 
-
 @Injectable()
 export class LocalAuthService {
   constructor(
