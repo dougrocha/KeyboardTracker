@@ -1,4 +1,4 @@
-import { DragEndEvent } from "@dnd-kit/core"
+import type { DragEndEvent } from "@dnd-kit/core"
 import { Dispatch, SetStateAction } from "react"
 
 export default function handleDragEnd<T extends unknown[]>(
@@ -17,9 +17,9 @@ export default function handleDragEnd<T extends unknown[]>(
     }
 
     setState((items) => {
-      const activeId = active.id as unknown as String
+      const activeId = active.id as unknown as string
       const oldIndex = items.indexOf(activeId)
-      const newIndex = items.indexOf(over?.id as unknown as String)
+      const newIndex = items.indexOf(over?.id as unknown as string)
       const newItems = [...items]
       newItems.splice(oldIndex, 1)
       newItems.splice(newIndex, 0, activeId)

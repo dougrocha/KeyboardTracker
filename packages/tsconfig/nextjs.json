@@ -6,7 +6,6 @@
     "target": "ES2021",
     "module": "esnext",
     "lib": ["ES6", "ES7", "dom", "dom.iterable", "esnext"],
-
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

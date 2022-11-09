@@ -25,7 +25,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
 
-  theme Theme @default(SYSTEM)
+  theme Theme? @default(SYSTEM)
 
   isFavoritesPrivate Boolean @default(false)
 

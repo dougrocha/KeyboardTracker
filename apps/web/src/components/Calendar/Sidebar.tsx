@@ -1,5 +1,5 @@
-import { format, isEqual } from "date-fns"
 import { CalendarIcon } from "@heroicons/react/24/solid"
+import { format, isEqual } from "date-fns"
 
 import { SelectedDates } from "./Calender"
 

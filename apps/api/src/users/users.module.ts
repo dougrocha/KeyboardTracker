@@ -1,16 +1,18 @@
+import { BullModule } from '@nestjs/bull'
 import { Module } from '@nestjs/common'
+import { PrismaService } from 'nestjs-prisma'
+
+import { DiscordUsersService } from './services/discord.service'
+import { UsersService } from './services/users.service'
+import { UsersController } from './users.controller'
+import { UsersImagesProcessor } from './usersImages.processor'
+
 import {
   DISCORD_USERS_SERVICE,
   PRISMA_SERVICE,
   USERS_SERVICE,
 } from '../common/constants'
-import { UsersService } from './services/users.service'
-import { UsersController } from './users.controller'
-import { PrismaService } from 'nestjs-prisma'
-import { DiscordUsersService } from './services/discord.service'
 import { ImagesModule } from '../images/images.module'
-import { BullModule } from '@nestjs/bull'
-import { UsersImagesProcessor } from './usersImages.processor'
 
 @Module({
   imports: [

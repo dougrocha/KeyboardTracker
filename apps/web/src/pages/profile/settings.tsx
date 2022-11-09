@@ -1,5 +1,6 @@
 import { useTheme } from "next-themes"
 import React, { MouseEvent } from "react"
+
 import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileSection from "../../components/Profile/ProfileSection"
 import ProfileLayout from "../../layouts/ProfileLayout"

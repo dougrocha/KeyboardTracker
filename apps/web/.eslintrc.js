@@ -1,4 +1,13 @@
 module.exports = {
-  root: true,
-  extends: ["custom"],
-};
+  ...require("config/eslint-dashboard"),
+  overrides: [
+    {
+      files: ["*.ts", "*.tsx"],
+      parserOptions: {
+        project: "./tsconfig.json",
+        tsconfigRootDir: __dirname,
+        sourceType: "module",
+      },
+    },
+  ],
+}

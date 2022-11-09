@@ -1,16 +1,17 @@
-import Image from "next/image"
-import React, { ChangeEvent, useEffect, useState } from "react"
-import { FieldValues, useForm, UseFormRegister } from "react-hook-form"
-import { IconType } from "react-icons"
-import { FaDiscord, FaGithub, FaGoogle } from "react-icons/fa"
-import { GetProfileInformation } from "../../libs/api/GetMe"
-import ProfileHeader from "../../components/Profile/ProfileHeader"
-import ProfileLayout from "../../layouts/ProfileLayout"
-import classNames from "../../utils/classNames"
 import { useQuery } from "@tanstack/react-query"
-import { User } from "../../types/user"
-import { GetUserConnections } from "../../libs/api/GetUserConnections"
+import Image from "next/image"
+import React, { ChangeEvent, useState } from "react"
+import { FieldValues, useForm, UseFormRegister } from "react-hook-form"
+import type { IconType } from "react-icons"
+import { FaDiscord, FaGithub, FaGoogle } from "react-icons/fa"
+
+import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileSection from "../../components/Profile/ProfileSection"
+import ProfileLayout from "../../layouts/ProfileLayout"
+import { GetProfileInformation } from "../../libs/api/GetMe"
+import { GetUserConnections } from "../../libs/api/GetUserConnections"
+import { User } from "../../types/user"
+import classNames from "../../utils/classNames"
 
 const ProfilePage = () => {
   const { data, isLoading } = useQuery(["profile"], GetProfileInformation)
@@ -104,7 +105,7 @@ const SocialConnector = ({
   name,
   connected = false,
 }: SocialConnectorProps) => {
-  let Icon = icon
+  const Icon = icon
 
   return (
     <div className="relative">

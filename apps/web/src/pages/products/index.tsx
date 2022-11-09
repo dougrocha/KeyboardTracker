@@ -1,5 +1,6 @@
 import { GetStaticPropsResult } from "next"
 import React from "react"
+
 import Card from "../../components/Card"
 import SearchBox from "../../components/SearchBox"
 import MainViewLayout from "../../layouts/MainViewLayout"

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
-import * as FlakeId from 'flake-idgen'
 import * as intFormat from 'biguint-format'
+import * as FlakeId from 'flake-idgen'
 
 const prisma = new PrismaClient()
 

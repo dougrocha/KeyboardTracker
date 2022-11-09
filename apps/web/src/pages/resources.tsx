@@ -1,4 +1,5 @@
 import React from "react"
+
 import MainViewLayout from "../layouts/MainViewLayout"
 
 const ResourcesPage = () => {

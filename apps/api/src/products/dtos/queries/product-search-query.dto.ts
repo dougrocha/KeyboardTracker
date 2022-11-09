@@ -1,5 +1,6 @@
 import { GroupBuyStatus, ProductType } from '@prisma/client'
 import { IsEnum, IsOptional, IsString } from 'class-validator'
+
 import { SearchQuery } from '../../../common/dto/search-query.dto'
 
 export class ProductSearchQuery extends SearchQuery {

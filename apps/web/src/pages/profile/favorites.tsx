@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
+
 import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileLayout from "../../layouts/ProfileLayout"
 import { GetUserFavorites } from "../../libs/api/GetUserFavorites"

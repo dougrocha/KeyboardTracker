@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import Image from "next/image"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
+
 import {
   AddProductToFavorites,
   RemoveProductFromFavorites,

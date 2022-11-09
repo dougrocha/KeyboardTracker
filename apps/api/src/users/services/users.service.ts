@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaClient, User } from '@prisma/client'
+
 import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants'
 import { SnowflakeService } from '../../snowflake/snowflake.module'
 import { CreateUserDto } from '../dto/create-user.dto'

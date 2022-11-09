@@ -1,6 +1,7 @@
 import { Process, Processor } from '@nestjs/bull'
 import { Inject } from '@nestjs/common'
 import { Job } from 'bull'
+
 import { IMAGES_SERVICE } from '../common/constants'
 import { ImagesService } from '../images/images.service'
 

@@ -1,8 +1,9 @@
 import { HttpStatus, Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
-import { PrismaClientExceptionFilter } from 'nestjs-prisma'
 import * as compression from 'compression'
+import { PrismaClientExceptionFilter } from 'nestjs-prisma'
+
 import { AppModule } from './app.module'
 
 async function bootstrap() {

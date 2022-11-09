@@ -10,15 +10,16 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { User } from '@prisma/client'
 import { Request, Response } from 'express'
-import { CreateUserDto } from '../../users/dto/create-user.dto'
+
+import { LOCAL_AUTH_SERVICE } from '../../common/constants'
+import { GetCurrentUser } from '../../common/decorators/getCurrentUser.decorator'
 import { LocalAuthGuard } from '../../common/guards/auth.guard'
 import { AuthenticatedGuard } from '../../common/guards/authenticated.guard'
-import { User } from '@prisma/client'
-import { ConfigService } from '@nestjs/config'
-import { LOCAL_AUTH_SERVICE } from '../../common/constants'
+import { CreateUserDto } from '../../users/dto/create-user.dto'
 import { LocalAuthService } from '../services/local.service'
-import { GetCurrentUser } from '../../common/decorators/getCurrentUser.decorator'
 
 @Controller()
 export class LocalAuthController {

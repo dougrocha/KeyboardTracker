@@ -2,6 +2,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/router"
 import React, { ChangeEvent, useEffect, useState, useTransition } from "react"
 import { useForm } from "react-hook-form"
+
 import { SearchProducts } from "../libs/api/SearchProducts"
 import { Product } from "../types/product"
 

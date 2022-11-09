@@ -1,18 +1,18 @@
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
-import { HeartIcon } from "@heroicons/react/24/outline"
-import Image from "next/image"
-import React from "react"
-import MainViewLayout from "../../layouts/MainViewLayout"
 import { GetStaticPropsContext, GetStaticPropsResult } from "next"
-import { GetAllProductIds } from "../../libs/api/GetAllProducts"
+import Image from "next/image"
+import Link from "next/link"
+import React from "react"
+
+import MainViewLayout from "../../../layouts/MainViewLayout"
 import {
   FindOneProduct,
   FindProductVendors,
-} from "../../libs/api/FindOneProduct"
-import { Image as ProductImage, Product } from "../../types/product"
-import { Vendor } from "../../types/image"
-import Link from "next/link"
-import { StatusString } from "../../utils/statusStrings"
+} from "../../../libs/api/FindOneProduct"
+import { GetAllProductIds } from "../../../libs/api/GetAllProducts"
+import { Vendor } from "../../../types/image"
+import { Image as ProductImage, Product } from "../../../types/product"
+import { StatusString } from "../../../utils/statusStrings"
 
 interface ProductPageProps {
   product: Product

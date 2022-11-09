@@ -1,4 +1,4 @@
-import { NextSeoProps } from "next-seo"
+import type { NextSeoProps } from "next-seo"
 
 export default {
   titleTemplate: "MEKA | %s",

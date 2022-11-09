@@ -4,10 +4,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { RouterModule } from '@nestjs/core'
 import { ScheduleModule } from '@nestjs/schedule'
 import { ThrottlerModule } from '@nestjs/throttler'
-import { PrismaModule } from 'nestjs-prisma'
-import * as session from 'express-session'
 import * as RedisStore from 'connect-redis'
+import * as session from 'express-session'
+import { PrismaModule } from 'nestjs-prisma'
 import * as passport from 'passport'
+
+import { AuthModule } from './auth/auth.module'
+import { REDIS } from './common/constants'
 import { BullConfigService } from './config/bull.config'
 import { AppConfigService } from './config/config.service'
 import { PrismaConfigService } from './config/database/prisma/configuration'
@@ -15,14 +18,11 @@ import { validate } from './config/env.validation'
 import { routes } from './config/routes'
 import { ThrottlerConfigService } from './config/throttler.config'
 import { DesignersModule } from './designers/designers.module'
-import { KeycapsModule } from './keycaps/keycaps.module'
 import { ProductsModule } from './products/products.module'
 import { RedisModule } from './redis/redis.module'
 import { SnowflakeModule } from './snowflake/snowflake.module'
 import { UsersModule } from './users/users.module'
 import { VendorsModule } from './vendors/vendors.module'
-import { AuthModule } from './auth/auth.module'
-import { REDIS } from './common/constants'
 
 @Module({
   imports: [
@@ -59,7 +59,6 @@ import { REDIS } from './common/constants'
     UsersModule,
     RedisModule,
     ProductsModule,
-    KeycapsModule,
     VendorsModule,
     DesignersModule,
   ],

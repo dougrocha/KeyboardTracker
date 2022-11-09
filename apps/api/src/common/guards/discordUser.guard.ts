@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common'
 import { Inject } from '@nestjs/common/decorators/core/inject.decorator'
+
 import { DiscordUsersService } from '../../users/services/discord.service'
 import { DISCORD_USERS_SERVICE } from '../constants'
 

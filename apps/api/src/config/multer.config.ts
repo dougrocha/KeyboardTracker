@@ -1,5 +1,5 @@
-import { memoryStorage } from 'multer'
 import { HttpException, HttpStatus } from '@nestjs/common'
+import { memoryStorage } from 'multer'
 
 export const multerConfig = {
   dest: process.env.UPLOADS_PATH,

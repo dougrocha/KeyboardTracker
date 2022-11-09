@@ -1,12 +1,15 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { access, mkdir, unlink } from 'fs/promises'
 import { join } from 'path'
+
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import * as sharp from 'sharp'
+
+import { ImagesModuleOptions } from './images.module'
+
 import { SNOWFLAKE_SERVICE } from '../common/constants'
 import { SupportedFiles, SupportedFilesType } from '../config/multer.config'
 import { SnowflakeService } from '../snowflake/snowflake.module'
-import { ImagesModuleOptions } from './images.module'
 
 @Injectable()
 export class ImagesService {

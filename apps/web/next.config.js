@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const withTM = require("next-transpile-modules")(["ui"])
 
 /**
@@ -11,6 +12,11 @@ const nextConfig = {
         destination: `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
         permanent: true,
       },
+      {
+        source: "/product",
+        destination: "/products",
+        permanent: true,
+      },
     ]
   },
   reactStrictMode: true,
@@ -18,7 +24,6 @@ const nextConfig = {
     domains: ["localhost"],
     formats: ["image/webp"],
   },
-  experimental: {},
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },

@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
+
 import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants'
 import { SnowflakeService } from '../../snowflake/snowflake.module'
 import { CreateFormFieldValueDto } from '../dtos/create-form-field-values.dto'
@@ -67,6 +68,26 @@ export class FormsService {
   async findOne(id: string) {
     return await this.prisma.form.findUnique({
       where: { id },
+    })
+  }
+
+  async findOneByProductId(id: string) {
+    return await this.prisma.form.findUnique({
+      where: { productId: id },
+      include: {
+        fields: {
+          select: {
+            id: true,
+            description: true,
+            name: true,
+            type: true,
+            required: true,
+            position: true,
+            values: true,
+            _count: true,
+          },
+        },
+      },
     })
   }
 

@@ -1,11 +1,12 @@
 import "../styles/global.css"
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { NextPage } from "next"
 import { DefaultSeo } from "next-seo"
 import { ThemeProvider } from "next-themes"
 import type { AppProps } from "next/app"
 import type { ReactElement, ReactNode } from "react"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+
 import defaultSEO from "../utils/defaultSEO"
 
 type NextPageWithLayout = NextPage & {

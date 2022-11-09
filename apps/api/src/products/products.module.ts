@@ -1,20 +1,19 @@
 import { Module } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
+
+import { FormsController } from './controllers/forms.controller'
+import { ProductsController } from './controllers/products.controller'
+import { FormsService } from './services/forms.service'
+import { ProductsService } from './services/products.service'
+
 import {
   PRODUCTS_SERVICE,
-  KEYCAPS_SERVICE,
   PRISMA_SERVICE,
   FORMS_SERVICE,
 } from '../common/constants'
-import { KeycapsService } from '../keycaps/keycaps.service'
-import { ProductsController } from './controllers/products.controller'
-import { ProductsService } from './services/products.service'
-import { FormsService } from './services/forms.service'
-import { FormsController } from './controllers/forms.controller'
 
 @Module({
   providers: [
-    { provide: KEYCAPS_SERVICE, useClass: KeycapsService },
     { provide: PRISMA_SERVICE, useClass: PrismaService },
     { provide: PRODUCTS_SERVICE, useClass: ProductsService },
     { provide: FORMS_SERVICE, useClass: FormsService },
