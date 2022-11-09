@@ -2,6 +2,7 @@ import { Controller, Get, Res, UseGuards } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { User } from '@prisma/client'
 import { Response } from 'express'
+
 import { GetCurrentUser } from '../../common/decorators/getCurrentUser.decorator'
 import { DiscordAuthGuard } from '../../common/guards/auth.guard'
 import { AuthenticatedGuard } from '../../common/guards/authenticated.guard'

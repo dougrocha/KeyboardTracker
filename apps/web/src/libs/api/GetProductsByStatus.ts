@@ -1,8 +1,10 @@
 import { takeCoverage } from "v8"
+
+import { PaginationParams } from "./types"
+
 import { GroupBuyStatus } from "../../types/groupBuyStatus"
 import { Product } from "../../types/product"
 import AxiosClient from "../AxiosClient"
-import { PaginationParams } from "./types"
 
 /**
  *

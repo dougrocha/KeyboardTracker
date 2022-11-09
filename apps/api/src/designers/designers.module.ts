@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
-import {
-  DESIGNERS_SERVICE,
-  KEYCAPS_SERVICE,
-  PRISMA_SERVICE,
-} from '../common/constants'
-import { KeycapsService } from '../keycaps/keycaps.service'
+
 import { DesignersController } from './designers.controller'
 import { DesignersService } from './designers.service'
+
+import { DESIGNERS_SERVICE, PRISMA_SERVICE } from '../common/constants'
 
 @Module({
   controllers: [DesignersController],
@@ -19,10 +16,6 @@ import { DesignersService } from './designers.service'
     {
       provide: PRISMA_SERVICE,
       useClass: PrismaService,
-    },
-    {
-      provide: KEYCAPS_SERVICE,
-      useClass: KeycapsService,
     },
   ],
 })

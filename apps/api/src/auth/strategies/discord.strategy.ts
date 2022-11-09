@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { Profile, Strategy } from 'passport-discord'
+
 import { DISCORD_AUTH_SERVICE } from '../../common/constants'
 import { DiscordAuthService } from '../services/discord.service'
 

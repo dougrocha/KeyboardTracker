@@ -1,5 +1,7 @@
-import { NextSeo, NextSeoProps } from "next-seo"
+import { NextSeo } from "next-seo"
+import type { NextSeoProps } from "next-seo"
 import Link from "next/link"
+
 import MainViewLayout from "./MainViewLayout"
 
 const ProfileLayout = ({

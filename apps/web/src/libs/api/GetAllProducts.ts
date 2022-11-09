@@ -1,6 +1,7 @@
+import { PaginationParams } from "./types"
+
 import { Product } from "../../types/product"
 import AxiosClient from "../AxiosClient"
-import { PaginationParams } from "./types"
 
 type ProductId = Pick<Product, "id">
 

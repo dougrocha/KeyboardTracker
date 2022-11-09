@@ -1,7 +1,9 @@
-import { DynamicModule } from '@nestjs/common'
-import { Module } from '@nestjs/common'
-import { IMAGES_SERVICE } from '../common/constants'
+import { DynamicModule , Module } from '@nestjs/common'
+
 import { ImagesService } from './images.service'
+
+import { IMAGES_SERVICE } from '../common/constants'
+
 
 export interface ImagesModuleOptions {
   path: string[]

@@ -1,3 +1,6 @@
+import { createReadStream } from 'fs'
+import { access, constants } from 'fs/promises'
+
 import { InjectQueue } from '@nestjs/bull'
 import {
   Body,
@@ -22,8 +25,10 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { User } from '@prisma/client'
 import { Queue } from 'bull'
 import { Response } from 'express'
-import { createReadStream } from 'fs'
-import { access, constants } from 'fs/promises'
+
+import { UpdateUserDto } from './dto/update-user.dto'
+import { UsersService } from './services/users.service'
+
 import {
   IMAGES_SERVICE,
   SNOWFLAKE_SERVICE,
@@ -35,8 +40,6 @@ import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
 import { multerImageOptions } from '../config/multer.config'
 import { ImagesService } from '../images/images.service'
 import { SnowflakeService } from '../snowflake/snowflake.module'
-import { UpdateUserDto } from './dto/update-user.dto'
-import { UsersService } from './services/users.service'
 
 @Controller()
 export class UsersController {

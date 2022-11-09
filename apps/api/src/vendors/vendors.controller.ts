@@ -1,6 +1,8 @@
 import { Controller, Get, Inject, Param } from '@nestjs/common'
-import { VENDORS_SERVICE } from '../common/constants'
+
 import { VendorsService } from './vendors.service'
+
+import { VENDORS_SERVICE } from '../common/constants'
 
 @Controller('vendors')
 export class VendorsController {

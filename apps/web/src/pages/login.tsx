@@ -1,14 +1,15 @@
+import { yupResolver } from "@hookform/resolvers/yup"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import React, { ChangeEvent, ReactElement, useState } from "react"
 import { useForm } from "react-hook-form"
-
 import { FaDiscord, FaGoogle } from "react-icons/fa"
-import MainViewLayout from "../layouts/MainViewLayout"
-import schema from "../utils/schemas/loginForm"
-import { yupResolver } from "@hookform/resolvers/yup"
-import { LoginFormData } from "../types/user"
+
 import useAuth from "../hooks/useAuth"
-import { useRouter } from "next/router"
+import MainViewLayout from "../layouts/MainViewLayout"
+import { LoginFormData } from "../types/user"
+import schema from "../utils/schemas/loginForm"
+
 
 const LoginSources = [
   // {

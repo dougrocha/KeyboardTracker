@@ -1,7 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common'
-import * as FlakeId from 'flake-idgen'
 import * as intFormat from 'biguint-format'
+import * as FlakeId from 'flake-idgen'
 import { nanoid } from 'nanoid/non-secure'
+
 import { SNOWFLAKE_SERVICE } from '../common/constants'
 
 interface FlakeOptions {

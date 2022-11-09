@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { useRouter } from "next/router"
 import React from "react"
+
 import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileLayout from "../../layouts/ProfileLayout"
 import { GetProfileInformation } from "../../libs/api/GetMe"
