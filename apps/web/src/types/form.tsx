@@ -46,7 +46,7 @@ export interface FormField {
   values?: FieldValue[]
 
   form?: Form
-  formId?: String
+  formId?: string
 
   createdAt: Date
   updatedAt: Date

@@ -10,7 +10,6 @@ import MainViewLayout from "../layouts/MainViewLayout"
 import { LoginFormData } from "../types/user"
 import schema from "../utils/schemas/loginForm"
 
-
 const LoginSources = [
   // {
   //   name: "Github",

@@ -7,9 +7,7 @@ import ProfileLayout from "../../layouts/ProfileLayout"
 import { GetProfileInformation } from "../../libs/api/GetMe"
 
 const DesignerPage = () => {
-  const router = useRouter()
-
-  const { data, isLoading } = useQuery(["profile"], GetProfileInformation)
+  const { data } = useQuery(["profile"], GetProfileInformation)
 
   if (!data?.designer) return <DesignerCreatePage />
 

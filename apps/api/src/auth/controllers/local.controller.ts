@@ -35,7 +35,9 @@ export class LocalAuthController {
    */
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async login() {}
+  async login() {
+    return
+  }
 
   /**
    * GET /api/auth/signup
