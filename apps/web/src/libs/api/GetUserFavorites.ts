@@ -1,4 +1,3 @@
-import { Product } from "../../types/product"
 import { User } from "../../types/user"
 import AxiosClient from "../AxiosClient"
 

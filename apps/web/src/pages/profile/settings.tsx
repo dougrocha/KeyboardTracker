@@ -65,8 +65,8 @@ const DropdownSelect = ({
   return (
     <div className="relative">
       <select className="focus:shadow-outline block w-full appearance-none rounded border border-gray-400 bg-white px-4 py-2 pr-8 leading-tight shadow hover:border-gray-500 focus:outline-none">
-        {options.map((option) => (
-          <option defaultValue={value} onClick={onChange}>
+        {options.map((option, i) => (
+          <option key={i} defaultValue={value} onClick={onChange}>
             {option}
           </option>
         ))}

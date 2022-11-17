@@ -16,8 +16,6 @@ const ThemeToggle = () => {
     return null
   }
 
-  console.log(theme)
-
   return (
     <div
       className="h-6 w-6 transition-all"

@@ -30,6 +30,7 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { UsersService } from './services/users.service'
 
 import {
+  DESIGNERS_SERVICE,
   IMAGES_SERVICE,
   SNOWFLAKE_SERVICE,
   USERS_SERVICE,
@@ -38,6 +39,7 @@ import { GetCurrentUser } from '../common/decorators/getCurrentUser.decorator'
 import { ImageNotFoundException } from '../common/exceptions/imageNotFound.exception'
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
 import { multerImageOptions } from '../config/multer.config'
+import { DesignersService } from '../designers/designers.service'
 import { ImagesService } from '../images/images.service'
 import { SnowflakeService } from '../snowflake/snowflake.module'
 
@@ -45,6 +47,8 @@ import { SnowflakeService } from '../snowflake/snowflake.module'
 export class UsersController {
   constructor(
     @Inject(USERS_SERVICE) private readonly usersService: UsersService,
+    @Inject(DESIGNERS_SERVICE)
+    private readonly designersService: DesignersService,
     @Inject(IMAGES_SERVICE) private readonly imagesService: ImagesService,
     @InjectQueue('images') private readonly imagesQueue: Queue,
     @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
@@ -54,6 +58,12 @@ export class UsersController {
   @UseGuards(AuthenticatedGuard)
   async findById(@GetCurrentUser() user: User) {
     return user
+  }
+
+  @Get('me/designer')
+  @UseGuards(AuthenticatedGuard)
+  async getDesignerInfo(@GetCurrentUser() user: User) {
+    return await this.designersService.findByUserId(user.id)
   }
 
   @Get('me/connections')
@@ -68,6 +78,12 @@ export class UsersController {
     @GetCurrentUser() user: User,
     @Body() updateUserDto: UpdateUserDto,
   ) {
+    if (user.id != updateUserDto.id)
+      throw new HttpException(
+        'You can only update your own profile',
+        HttpStatus.FORBIDDEN,
+      )
+
     const updatedUser = await this.usersService.update(user.id, updateUserDto)
     return { ...updatedUser, password: undefined }
   }

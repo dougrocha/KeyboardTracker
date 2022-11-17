@@ -24,7 +24,7 @@ export interface Form {
 }
 
 export const FieldType = {
-  TEXT: "Q1",
+  TEXT: "TEXT",
   TEXTAREA: "TEXTAREA",
   BOOLEAN: "BOOLEAN",
   SELECT: "SELECT",

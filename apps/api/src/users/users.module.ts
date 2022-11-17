@@ -8,10 +8,12 @@ import { UsersController } from './users.controller'
 import { UsersImagesProcessor } from './usersImages.processor'
 
 import {
+  DESIGNERS_SERVICE,
   DISCORD_USERS_SERVICE,
   PRISMA_SERVICE,
   USERS_SERVICE,
 } from '../common/constants'
+import { DesignersService } from '../designers/designers.service'
 import { ImagesModule } from '../images/images.module'
 
 @Module({
@@ -40,6 +42,7 @@ import { ImagesModule } from '../images/images.module'
     { provide: USERS_SERVICE, useClass: UsersService },
     { provide: PRISMA_SERVICE, useClass: PrismaService },
     { provide: DISCORD_USERS_SERVICE, useClass: DiscordUsersService },
+    { provide: DESIGNERS_SERVICE, useClass: DesignersService },
     UsersImagesProcessor,
   ],
   exports: [{ provide: USERS_SERVICE, useClass: UsersService }],

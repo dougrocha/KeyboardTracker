@@ -1,5 +1,3 @@
-import { takeCoverage } from "v8"
-
 import { PaginationParams } from "./types"
 
 import { GroupBuyStatus } from "../../types/groupBuyStatus"

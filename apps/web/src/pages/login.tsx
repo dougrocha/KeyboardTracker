@@ -1,13 +1,17 @@
 import { yupResolver } from "@hookform/resolvers/yup"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import React, { ChangeEvent, ReactElement, useState } from "react"
-import { useForm } from "react-hook-form"
+import React, { ReactElement } from "react"
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
 import { FaDiscord, FaGoogle } from "react-icons/fa"
 
+import Input from "../components/Forms/Input"
+import HiddenInput from "../components/Forms/PasswordInput"
 import useAuth from "../hooks/useAuth"
 import MainViewLayout from "../layouts/MainViewLayout"
-import { LoginFormData } from "../types/user"
+import { UseLocalLogin } from "../libs/api/LocalLogin"
+import { LoginFormData, User } from "../types/user"
+import classNames from "../utils/classNames"
 import schema from "../utils/schemas/loginForm"
 
 const LoginSources = [
@@ -30,30 +34,24 @@ const LoginSources = [
 
 const LoginPage = () => {
   const { push } = useRouter()
-  const { data, isLoading } = useAuth()
+  const { user, isLoading } = useAuth()
 
-  const [showPassword, setShowPassword] = useState(false)
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<LoginFormData>({
+  const methods = useForm<LoginFormData>({
     resolver: yupResolver(schema),
   })
+  const { handleSubmit } = methods
 
-  const onShowPassword = (e: ChangeEvent<HTMLInputElement>) => {
-    setShowPassword(e.target.checked)
+  const { mutate: login, isLoading: isLoggingIn } = UseLocalLogin()
+
+  const onSubmit: SubmitHandler<
+    Required<Pick<User, "email" | "password">>
+  > = async (data) => {
+    login(data, { onSuccess: () => push("/") })
   }
-
-  const onSubmit = handleSubmit((data) => {
-    console.log("success", data)
-    // localLogin(data.email, data.password)
-  })
 
   if (isLoading) return <div>Loading...</div>
 
-  if (data?.user) {
+  if (user) {
     push("/profile")
     return <div>Redirecting...</div>
   }
@@ -89,60 +87,25 @@ const LoginPage = () => {
         </ul>
 
         <p className="text-sm">Or use your email to login:</p>
-        <form className="w-80 space-y-6 lg:w-96" onSubmit={onSubmit}>
-          <div className="flex flex-col space-y-1 dark:text-white">
-            <label htmlFor="email" className="text-sm font-medium">
-              Email
-            </label>
-
-            <input
-              className="w-full rounded bg-[#dcdcdc] px-4 py-2 focus:border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="john@mail.com"
-              type={"email"}
-              {...register("email")}
-            />
-            {errors.email ? (
-              <span className="text-sm text-red-500">
-                {errors.email.message}
-              </span>
-            ) : null}
-          </div>
-
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="password" className="text-sm font-medium">
-              Password
-            </label>
-            <input
-              className="w-full rounded bg-[#dcdcdc] px-4 py-2 focus:border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;"
-              type={showPassword ? "text" : "password"}
-              {...register("password")}
-            />
-            {errors.password ? (
-              <span className="text-sm text-red-500">
-                {errors.password.message}
-              </span>
-            ) : null}
-            <span className="flex w-full items-center">
-              <input
-                id={"showPassword"}
-                type={"checkbox"}
-                onChange={onShowPassword}
-                checked={showPassword}
-              />
-              <label htmlFor="showPassword" className="ml-2 select-none">
-                Show Password
-              </label>
-            </span>
-          </div>
-
-          <button
-            className="h-20 w-full rounded-md bg-blue-600 px-4 text-white"
-            type="submit"
+        <FormProvider {...methods}>
+          <form
+            className="w-80 space-y-6 lg:w-96"
+            onSubmit={handleSubmit(onSubmit)}
           >
-            Login
-          </button>
-        </form>
+            <Input id="email" label="Email" placeholder="jsmith3@mail.com" />
+            <HiddenInput id="password" label="Password" />
+
+            <button
+              className={classNames(
+                "h-20 w-full rounded-md bg-blue-600 px-4 text-white",
+                isLoggingIn && "cursor-not-allowed opacity-50"
+              )}
+              type="submit"
+            >
+              Login
+            </button>
+          </form>
+        </FormProvider>
       </section>
     </>
   )

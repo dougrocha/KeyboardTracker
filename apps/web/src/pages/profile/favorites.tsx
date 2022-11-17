@@ -39,7 +39,7 @@ const FavoritesContainer = () => {
         <>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {data.favorites.map((favorite) => (
-              <Link href={`/products/${favorite.product.id}`}>
+              <Link key={favorite.id} href={`/products/${favorite.product.id}`}>
                 <div className="rounded bg-white p-4 shadow-md">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">

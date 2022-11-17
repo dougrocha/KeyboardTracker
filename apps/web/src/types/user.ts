@@ -10,6 +10,7 @@ export interface User {
   avatar?: string
   createdAt: Date
   updatedAt: Date
+  discordIdentity?: DiscordIdentity
   designer?: Designer
   favorites?: UserFavorite[]
   images?: Image[]

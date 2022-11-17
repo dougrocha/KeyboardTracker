@@ -1,6 +1,11 @@
+import { DiscordIdentity } from "../../types/user"
 import AxiosClient from "../AxiosClient"
 
-export async function GetUserConnections(): Promise<any> {
-  const res = await AxiosClient.get<any>(`/users/me/connections`)
+interface UserConnections {
+  discord: DiscordIdentity
+}
+
+export async function GetUserConnections(): Promise<UserConnections> {
+  const res = await AxiosClient.get<UserConnections>(`/users/me/connections`)
   return res.data
 }

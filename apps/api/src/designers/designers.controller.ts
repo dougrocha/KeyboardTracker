@@ -1,24 +1,66 @@
-import { Controller, Get, Inject, Patch, Post } from '@nestjs/common'
-import { PrismaClient } from '@prisma/client'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common'
+import { User } from '@prisma/client'
 
-import { PRISMA_SERVICE } from '../common/constants'
+import { DesignersService } from './designers.service'
+import { CreateDesignerDto } from './dtos/create-designer'
+import { UpdateDesignerDto } from './dtos/update-designer.dto'
+
+import { DESIGNERS_SERVICE } from '../common/constants'
+import { GetCurrentUser } from '../common/decorators/getCurrentUser.decorator'
+import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
 
 @Controller('designers')
 export class DesignersController {
-  constructor(@Inject(PRISMA_SERVICE) private readonly prisma: PrismaClient) {}
+  constructor(
+    @Inject(DESIGNERS_SERVICE)
+    private readonly designersService: DesignersService,
+  ) {}
 
   @Post()
-  async createAccount() {
-    return
+  @UseGuards(AuthenticatedGuard)
+  async createAccount(
+    @GetCurrentUser() user: User,
+    @Body() createDesignerBody: CreateDesignerDto,
+  ) {
+    return await this.designersService.create(user.id, createDesignerBody)
   }
 
-  @Get()
-  async getAccount() {
-    return
+  @Get(':id')
+  async getAccount(@Param('id') id: string) {
+    return await this.designersService.findById(id)
   }
 
-  @Patch()
-  async updateAccount() {
-    return
+  @Patch(':id')
+  @UseGuards(AuthenticatedGuard)
+  async updateAccount(
+    @Param('id') id: string,
+    @Body() updateDesignerBody: UpdateDesignerDto,
+  ) {
+    return await this.designersService.update(id, updateDesignerBody)
+  }
+
+  @Delete(':id')
+  async deleteAccount(@Param('id') id: string) {
+    return await this.designersService.delete(id)
+  }
+
+  @Get(':id/products')
+  async getProducts(
+    @Param('id') id: string,
+    @Query('page', ParseIntPipe) page?: number,
+  ) {
+    return await this.designersService.getProducts(id, page)
   }
 }
