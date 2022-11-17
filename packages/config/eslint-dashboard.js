@@ -7,8 +7,9 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
     "plugin:import/typescript",
-    // "plugin:@next/next/recommended",
-    // "plugin:@next/next/core-web-vitals",
+    "plugin:@next/next/recommended",
+    "plugin:@next/next/core-web-vitals",
+    "next",
   ],
 
   parserOptions: {
@@ -24,6 +25,9 @@ module.exports = {
   settings: {
     react: {
       version: "detect",
+    },
+    next: {
+      rootDir: ["apps/*/"],
     },
   },
 

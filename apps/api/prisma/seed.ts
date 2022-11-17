@@ -32,6 +32,20 @@ async function main() {
           mfaEnabled: false,
         },
       },
+      designerAccount: {
+        create: {
+          id: nextId(),
+          name: 'DOUG R Design',
+          username: 'dougdesignes',
+          discordServerUrl: 'https://discord.gg/1234123',
+          redditUsername: 'dougdesignes',
+          twitterHandle: 'dougdesignes',
+        },
+      },
+    },
+    include: {
+      discord: true,
+      designerAccount: true,
     },
   })
 
@@ -44,6 +58,7 @@ async function main() {
       password: 'password',
       designerAccount: {
         create: {
+          id: nextId(),
           name: 'Billy Bob Design',
           username: 'billybobdesign',
           discordServerUrl: 'https://discord.gg/1234',
@@ -51,6 +66,9 @@ async function main() {
           twitterHandle: 'billybobdesign',
         },
       },
+    },
+    include: {
+      designerAccount: true,
     },
   })
 
@@ -62,10 +80,14 @@ async function main() {
       username: 'dave',
       designerAccount: {
         create: {
+          id: nextId(),
           username: 'davedesign',
           name: 'Dave Design',
         },
       },
+    },
+    include: {
+      designerAccount: true,
     },
   })
 
@@ -103,9 +125,9 @@ async function main() {
       status: 'INTEREST_CHECK',
       type: 'KEYBOARD',
       brand: 'GMK',
-      designer: {
-        connect: {
-          id: user2.id,
+      designers: {
+        create: {
+          designerId: user2.designerAccount.id,
         },
       },
     },
@@ -125,10 +147,12 @@ async function main() {
       status: 'INTEREST_CHECK',
       type: 'KEYCAP_SET',
       brand: 'GMK',
-      designer: {
-        connect: {
-          id: user3.id,
-        },
+      designers: {
+        create: [
+          {
+            designerId: user3.designerAccount.id,
+          },
+        ],
       },
     },
   })
@@ -221,6 +245,51 @@ async function main() {
       product: {
         connect: {
           id: product5.id,
+        },
+      },
+    },
+  })
+
+  const productDesigner1 = await prisma.productDesigner.create({
+    data: {
+      product: {
+        connect: {
+          id: product1.id,
+        },
+      },
+      designer: {
+        connect: {
+          id: user1.designerAccount.id,
+        },
+      },
+    },
+  })
+
+  const productDesigner2 = await prisma.productDesigner.create({
+    data: {
+      product: {
+        connect: {
+          id: product2.id,
+        },
+      },
+      designer: {
+        connect: {
+          id: user1.designerAccount.id,
+        },
+      },
+    },
+  })
+
+  const productDesigner3 = await prisma.productDesigner.create({
+    data: {
+      product: {
+        connect: {
+          id: product3.id,
+        },
+      },
+      designer: {
+        connect: {
+          id: user1.designerAccount.id,
         },
       },
     },

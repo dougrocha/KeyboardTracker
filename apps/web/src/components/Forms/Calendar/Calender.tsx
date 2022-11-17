@@ -20,8 +20,8 @@ import type { Holidays } from "date-fns-holiday-us"
 import dynamic from "next/dynamic"
 import { useCallback, useState } from "react"
 
-import classNames from "../../utils/classNames"
-import ToolTip from "../ToolTip"
+import classNames from "../../../utils/classNames"
+import ToolTip from "../../ToolTip"
 
 const CalendarSidebar = dynamic(() => import("./Sidebar"), {
   ssr: false,

@@ -16,7 +16,9 @@ export class LocalAuthService {
   }
 
   private async comparePasswords(password: string, hashedPassword: string) {
-    return await compare(password, hashedPassword)
+    const isValid = await compare(hashedPassword, password)
+    if (!isValid) throw new UnauthorizedException('Incorrect email or password')
+    return isValid
   }
 
   async register(user: CreateUserDto, password: string) {
@@ -26,14 +28,14 @@ export class LocalAuthService {
 
   async validate(email: string, password: string) {
     const user = await this.usersService.findByEmail(email)
-
     if (!user) throw new UnauthorizedException('Incorrect email or password')
+    await this.comparePasswords(user.password, password)
+    user.password = undefined
+    return user
+  }
 
-    const isPasswordValid = await this.comparePasswords(password, user.password)
-
-    if (!isPasswordValid)
-      throw new UnauthorizedException('Incorrect email or password')
-
-    return { ...user, password: undefined }
+  async login(email: string, password: string) {
+    const user = await this.validate(email, password)
+    return user
   }
 }

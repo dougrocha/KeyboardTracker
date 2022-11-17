@@ -36,6 +36,6 @@ export class DiscordAuthController {
   @Get('profile')
   @UseGuards(AuthenticatedGuard, FillDiscordUser)
   profile(@GetCurrentUser() user: User) {
-    console.log('user', user)
+    return user
   }
 }

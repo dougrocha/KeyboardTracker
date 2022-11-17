@@ -14,6 +14,20 @@ import React, { useRef, useState } from "react"
 import { User } from "../../types/user"
 import { capitalizeFirstLetter } from "../../utils/string"
 
+const MenuList = [
+  {
+    name: "Profile",
+    href: "/profile",
+  },
+  {
+    name: "Favorites",
+    href: "/profile/favorites",
+  },
+  {
+    name: "Logout",
+    href: "/logout",
+  },
+]
 interface AvatarProps {
   user: User
 }
@@ -118,20 +132,5 @@ const Avatar = ({ user }: AvatarProps) => {
     </button>
   )
 }
-
-const MenuList = [
-  {
-    name: "Profile",
-    href: "/profile",
-  },
-  {
-    name: "Favorites",
-    href: "/favorites",
-  },
-  {
-    name: "Logout",
-    href: "/logout",
-  },
-]
 
 export default Avatar

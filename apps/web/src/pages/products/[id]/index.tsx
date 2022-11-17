@@ -94,7 +94,7 @@ const ProductPage = ({ product, vendors }: ProductPageProps) => {
             }`}
           >
             {vendors.map((vendor) => (
-              <VendorButton vendor={vendor} />
+              <VendorButton key={vendor.id} vendor={vendor} />
             ))}
           </div>
         </section>
@@ -134,7 +134,6 @@ const ProductImage = ({
 }) => {
   return (
     <div
-      key={image?.id}
       className={`relative w-full lg:w-1/2 ${size == "sm" ? "h-52" : "h-96"}
   }`}
     >
@@ -165,6 +164,7 @@ const InfoColumn = ({
       {React.Children.map(children, (child) => {
         return (
           <li
+            key={(child as any).props.title}
             className={`flex space-x-2 ${
               center ? "items-center" : "items-start"
             }`}
