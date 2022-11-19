@@ -1,6 +1,5 @@
+import classNames from "classnames"
 import React from "react"
-
-import classNames from "../../utils/classNames"
 
 const ProfileSection = ({
   flex = "col",
