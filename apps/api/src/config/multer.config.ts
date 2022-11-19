@@ -1,13 +1,15 @@
 import { HttpException, HttpStatus } from '@nestjs/common'
+import { MulterModuleOptions } from '@nestjs/platform-express'
 import { memoryStorage } from 'multer'
 
 export const multerConfig = {
   dest: process.env.UPLOADS_PATH,
+  fileSize: +process.env.MAX_FILE_UPLOAD_SIZE,
 }
 
-export const multerImageOptions = {
+export const multerImageOptions: MulterModuleOptions = {
   limits: {
-    fileSize: +process.env.MAX_FILE_UPLOAD_SIZE,
+    fileSize: multerConfig.fileSize,
   },
   fileFilter: (req, file, cb) => {
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif|webp)$/)) {
