@@ -1,4 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid"
+import classNames from "classnames"
 import {
   add,
   eachDayOfInterval,
@@ -20,7 +21,6 @@ import type { Holidays } from "date-fns-holiday-us"
 import dynamic from "next/dynamic"
 import { useCallback, useState } from "react"
 
-import classNames from "../../../utils/classNames"
 import ToolTip from "../../ToolTip"
 
 const CalendarSidebar = dynamic(() => import("./Sidebar"), {
