@@ -1,4 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup"
+import classNames from "classnames"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { ReactElement } from "react"
@@ -11,7 +12,6 @@ import useAuth from "../hooks/useAuth"
 import MainViewLayout from "../layouts/MainViewLayout"
 import { UseLocalLogin } from "../libs/api/LocalLogin"
 import { LoginFormData, User } from "../types/user"
-import classNames from "../utils/classNames"
 import schema from "../utils/schemas/loginForm"
 
 const LoginSources = [
