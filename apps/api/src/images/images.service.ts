@@ -80,6 +80,8 @@ export class ImagesService {
 
     const filePath = this.joinFilePath(...folder, fileName) + '.webp'
 
+    console.log(filePath)
+
     try {
       await access(filePath)
       await unlink(filePath)
