@@ -1,5 +1,5 @@
 module.exports = {
-  ...require('config/eslint-preset'),
+  ...require('@meka/config/eslint-preset'),
   overrides: [
     {
       files: ['*.ts', '*.tsx'],

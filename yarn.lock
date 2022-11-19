@@ -1082,6 +1082,162 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@meka/api@workspace:apps/api":
+  version: 0.0.0-use.local
+  resolution: "@meka/api@workspace:apps/api"
+  dependencies:
+    "@elastic/elasticsearch": ^8.4.0
+    "@meka/config": "*"
+    "@meka/tsconfig": "*"
+    "@nestjs/bull": ^0.6.1
+    "@nestjs/cli": ^9.1.5
+    "@nestjs/common": ^9.2.0
+    "@nestjs/config": ^2.2.0
+    "@nestjs/core": ^9.2.0
+    "@nestjs/elasticsearch": ^9.0.0
+    "@nestjs/mapped-types": ^1.1.0
+    "@nestjs/passport": ^9.0.0
+    "@nestjs/platform-express": ^9.1.1
+    "@nestjs/schedule": ^2.1.0
+    "@nestjs/schematics": ^9.0.3
+    "@nestjs/testing": ^9.2.0
+    "@nestjs/throttler": ^3.0.0
+    "@prisma/client": ^4.6.1
+    "@types/bcrypt": ^5.0.0
+    "@types/bull": ^4.10.0
+    "@types/connect-redis": ^0.0.19
+    "@types/cron": ^2.0.0
+    "@types/express": ^4.17.14
+    "@types/express-session": ^1.17.5
+    "@types/flake-idgen": ^0.1.31
+    "@types/jest": ^29.0.2
+    "@types/multer": ^1.4.7
+    "@types/node": ^18.7.18
+    "@types/passport-discord": ^0.1.6
+    "@types/passport-local": ^1.0.34
+    "@types/redis": ^4.0.11
+    "@types/sharp": ^0.31.0
+    "@types/supertest": ^2.0.12
+    "@types/uuid": ^8.3.4
+    "@typescript-eslint/eslint-plugin": ^5.37.0
+    "@typescript-eslint/parser": ^5.37.0
+    bcrypt: ^5.0.1
+    biguint-format: ^1.0.2
+    bull: ^4.10.1
+    class-transformer: ^0.5.1
+    class-validator: ^0.13.2
+    compression: ^1.7.4
+    connect-redis: ^6.1.3
+    eslint: ^8.23.1
+    eslint-config-prettier: ^8.5.0
+    eslint-plugin-prettier: ^4.2.1
+    express-session: ^1.17.3
+    flake-idgen: ^1.4.0
+    jest: ^29.0.3
+    nanoid: 3.3.4
+    nestjs-prisma: ^0.19.0
+    passport: ^0.6.0
+    passport-discord: ^0.1.4
+    passport-local: ^1.0.0
+    prettier: ^2.7.1
+    prisma: ^4.6.1
+    redis: ^4.3.1
+    reflect-metadata: ^0.1.13
+    rimraf: ^3.0.2
+    rxjs: ^7.5.6
+    sharp: ^0.31.0
+    source-map-support: ^0.5.21
+    supertest: ^6.2.4
+    ts-jest: ^29.0.1
+    ts-loader: ^9.3.1
+    ts-node: ^10.9.1
+    tsconfig-paths: ^4.1.0
+    typescript: ^4.8.3
+    uuid: ^9.0.0
+  languageName: unknown
+  linkType: soft
+
+"@meka/config@*, @meka/config@workspace:packages/config":
+  version: 0.0.0-use.local
+  resolution: "@meka/config@workspace:packages/config"
+  dependencies:
+    "@next/eslint-plugin-next": ^13.0.2
+    "@tailwindcss/line-clamp": ^0.4.2
+    "@typescript-eslint/eslint-plugin": ^5.42.1
+    "@typescript-eslint/parser": ^5.42.1
+    eslint: ^8.27.0
+    eslint-config-next: ^13.0.2
+    eslint-plugin-import: ^2.26.0
+  languageName: unknown
+  linkType: soft
+
+"@meka/tsconfig@*, @meka/tsconfig@workspace:packages/tsconfig":
+  version: 0.0.0-use.local
+  resolution: "@meka/tsconfig@workspace:packages/tsconfig"
+  languageName: unknown
+  linkType: soft
+
+"@meka/ui@*, @meka/ui@workspace:packages/ui":
+  version: 0.0.0-use.local
+  resolution: "@meka/ui@workspace:packages/ui"
+  dependencies:
+    "@meka/config": "*"
+    "@meka/tsconfig": "*"
+    "@types/react": ^18.0.20
+    "@types/react-dom": ^18.0.6
+    eslint: ^8.23.1
+    react: ^18.2.0
+    typescript: ^4.8.3
+  languageName: unknown
+  linkType: soft
+
+"@meka/web@workspace:apps/web":
+  version: 0.0.0-use.local
+  resolution: "@meka/web@workspace:apps/web"
+  dependencies:
+    "@dnd-kit/core": ^6.0.5
+    "@dnd-kit/sortable": ^7.0.1
+    "@floating-ui/react-dom-interactions": ^0.10.3
+    "@formkit/auto-animate": ^1.0.0-beta.3
+    "@heroicons/react": ^2.0.12
+    "@hookform/resolvers": ^2.9.10
+    "@meka/config": "*"
+    "@meka/tsconfig": "*"
+    "@meka/ui": "*"
+    "@next/font": ^13.0.0
+    "@tailwindcss/forms": 0.5.3
+    "@tailwindcss/line-clamp": ^0.4.2
+    "@tanstack/react-query": ^4.13.0
+    "@tanstack/react-query-devtools": ^4.16.1
+    "@tanstack/react-table": ^8.5.30
+    "@types/node": ^18.11.9
+    "@types/react": ^18.0.25
+    autoprefixer: ^10.4.13
+    axios: ^1.1.3
+    classnames: ^2.3.2
+    date-fns: ^2.29.3
+    date-fns-holiday-us: ^1.1.0
+    jotai: ^1.8.6
+    lodash: ^4.17.21
+    next: ^13.0.2
+    next-seo: ^5.14.0
+    next-themes: ^0.2.1
+    next-transpile-modules: 10.0.0
+    postcss: ^8.4.18
+    prettier-plugin-tailwindcss: ^0.1.13
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    react-hook-form: ^7.39.1
+    react-icons: ^4.6.0
+    react-merge-refs: ^2.0.1
+    sharp: ^0.31.2
+    tailwindcss: ^3.2.2
+    typescript: ^4.8.4
+    yup: ^0.32.11
+    zustand: ^4.1.4
+  languageName: unknown
+  linkType: soft
+
 "@msgpackr-extract/msgpackr-extract-darwin-arm64@npm:2.1.2":
   version: 2.1.2
   resolution: "@msgpackr-extract/msgpackr-extract-darwin-arm64@npm:2.1.2"
@@ -3715,19 +3871,6 @@ __metadata:
   checksum: 1ef77032cb4459dcd5187bd710d6fc962b067b64ec6a505810de3d2b8cc0605638551b42f8ec91edf6fcd26141b32ef19ad749239b58fae3aba99187adc32285
   languageName: node
   linkType: hard
-
-"config@*, config@workspace:packages/config":
-  version: 0.0.0-use.local
-  resolution: "config@workspace:packages/config"
-  dependencies:
-    "@next/eslint-plugin-next": ^13.0.2
-    "@typescript-eslint/eslint-plugin": ^5.42.1
-    "@typescript-eslint/parser": ^5.42.1
-    eslint: ^8.27.0
-    eslint-config-next: ^13.0.2
-    eslint-plugin-import: ^2.26.0
-  languageName: unknown
-  linkType: soft
 
 "connect-redis@npm:^6.1.3":
   version: 6.1.3
@@ -6626,79 +6769,6 @@ __metadata:
   checksum: a2ed78cac49a0f0c4be8b1eafe3c5257a1411341d8e7f1ac740debae003de04e5f6372bfcfbd9d082e954ffd99aac85bcda85b7c6bc11609992483f4cdc0f745
   languageName: node
   linkType: hard
-
-"keyboard-tracker-api@workspace:apps/api":
-  version: 0.0.0-use.local
-  resolution: "keyboard-tracker-api@workspace:apps/api"
-  dependencies:
-    "@elastic/elasticsearch": ^8.4.0
-    "@nestjs/bull": ^0.6.1
-    "@nestjs/cli": ^9.1.5
-    "@nestjs/common": ^9.2.0
-    "@nestjs/config": ^2.2.0
-    "@nestjs/core": ^9.2.0
-    "@nestjs/elasticsearch": ^9.0.0
-    "@nestjs/mapped-types": ^1.1.0
-    "@nestjs/passport": ^9.0.0
-    "@nestjs/platform-express": ^9.1.1
-    "@nestjs/schedule": ^2.1.0
-    "@nestjs/schematics": ^9.0.3
-    "@nestjs/testing": ^9.2.0
-    "@nestjs/throttler": ^3.0.0
-    "@prisma/client": ^4.6.1
-    "@types/bcrypt": ^5.0.0
-    "@types/bull": ^4.10.0
-    "@types/connect-redis": ^0.0.19
-    "@types/cron": ^2.0.0
-    "@types/express": ^4.17.14
-    "@types/express-session": ^1.17.5
-    "@types/flake-idgen": ^0.1.31
-    "@types/jest": ^29.0.2
-    "@types/multer": ^1.4.7
-    "@types/node": ^18.7.18
-    "@types/passport-discord": ^0.1.6
-    "@types/passport-local": ^1.0.34
-    "@types/redis": ^4.0.11
-    "@types/sharp": ^0.31.0
-    "@types/supertest": ^2.0.12
-    "@types/uuid": ^8.3.4
-    "@typescript-eslint/eslint-plugin": ^5.37.0
-    "@typescript-eslint/parser": ^5.37.0
-    bcrypt: ^5.0.1
-    biguint-format: ^1.0.2
-    bull: ^4.10.1
-    class-transformer: ^0.5.1
-    class-validator: ^0.13.2
-    compression: ^1.7.4
-    connect-redis: ^6.1.3
-    eslint: ^8.23.1
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-prettier: ^4.2.1
-    express-session: ^1.17.3
-    flake-idgen: ^1.4.0
-    jest: ^29.0.3
-    nanoid: 3.3.4
-    nestjs-prisma: ^0.19.0
-    passport: ^0.6.0
-    passport-discord: ^0.1.4
-    passport-local: ^1.0.0
-    prettier: ^2.7.1
-    prisma: ^4.6.1
-    redis: ^4.3.1
-    reflect-metadata: ^0.1.13
-    rimraf: ^3.0.2
-    rxjs: ^7.5.6
-    sharp: ^0.31.0
-    source-map-support: ^0.5.21
-    supertest: ^6.2.4
-    ts-jest: ^29.0.1
-    ts-loader: ^9.3.1
-    ts-node: ^10.9.1
-    tsconfig-paths: ^4.1.0
-    typescript: ^4.8.3
-    uuid: ^9.0.0
-  languageName: unknown
-  linkType: soft
 
 "keyboard-tracker@workspace:.":
   version: 0.0.0-use.local
@@ -9659,12 +9729,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsconfig@*, tsconfig@workspace:packages/tsconfig":
-  version: 0.0.0-use.local
-  resolution: "tsconfig@workspace:packages/tsconfig"
-  languageName: unknown
-  linkType: soft
-
 "tslib@npm:2.4.0":
   version: 2.4.0
   resolution: "tslib@npm:2.4.0"
@@ -9843,20 +9907,6 @@ turbo@latest:
   checksum: 301459fc3eb3b1a38fe91bf96d98eb55da88a9cb17b4ef80b4d105d620f4d547ba776cc27b44cc2ef58b66eda23fe0a74142feb5e79a6fb99f54fc018a696afa
   languageName: node
   linkType: hard
-
-"ui@*, ui@workspace:packages/ui":
-  version: 0.0.0-use.local
-  resolution: "ui@workspace:packages/ui"
-  dependencies:
-    "@types/react": ^18.0.20
-    "@types/react-dom": ^18.0.6
-    config: "*"
-    eslint: ^8.23.1
-    react: ^18.2.0
-    tsconfig: "*"
-    typescript: ^4.8.3
-  languageName: unknown
-  linkType: soft
 
 "uid-safe@npm:~2.1.5":
   version: 2.1.5
@@ -10050,53 +10100,6 @@ turbo@latest:
   checksum: 814e9d1ddcc9798f7377ffa448a5a3892232b9275ebb30a41b529607691c0491de47cba426e917a4d08ded3ee7e9ba2f3fe32e62ee3cd9c7d3bafb7754bd553c
   languageName: node
   linkType: hard
-
-"web@workspace:apps/web":
-  version: 0.0.0-use.local
-  resolution: "web@workspace:apps/web"
-  dependencies:
-    "@dnd-kit/core": ^6.0.5
-    "@dnd-kit/sortable": ^7.0.1
-    "@floating-ui/react-dom-interactions": ^0.10.3
-    "@formkit/auto-animate": ^1.0.0-beta.3
-    "@heroicons/react": ^2.0.12
-    "@hookform/resolvers": ^2.9.10
-    "@next/font": ^13.0.0
-    "@tailwindcss/forms": 0.5.3
-    "@tailwindcss/line-clamp": ^0.4.2
-    "@tanstack/react-query": ^4.13.0
-    "@tanstack/react-query-devtools": ^4.16.1
-    "@tanstack/react-table": ^8.5.30
-    "@types/node": ^18.11.9
-    "@types/react": ^18.0.25
-    autoprefixer: ^10.4.13
-    axios: ^1.1.3
-    classnames: ^2.3.2
-    config: "*"
-    date-fns: ^2.29.3
-    date-fns-holiday-us: ^1.1.0
-    jotai: ^1.8.6
-    lodash: ^4.17.21
-    next: ^13.0.2
-    next-seo: ^5.14.0
-    next-themes: ^0.2.1
-    next-transpile-modules: 10.0.0
-    postcss: ^8.4.18
-    prettier-plugin-tailwindcss: ^0.1.13
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    react-hook-form: ^7.39.1
-    react-icons: ^4.6.0
-    react-merge-refs: ^2.0.1
-    sharp: ^0.31.2
-    tailwindcss: ^3.2.2
-    tsconfig: "*"
-    typescript: ^4.8.4
-    ui: "*"
-    yup: ^0.32.11
-    zustand: ^4.1.4
-  languageName: unknown
-  linkType: soft
 
 "webidl-conversions@npm:^3.0.0":
   version: 3.0.1

@@ -1,5 +1,5 @@
 {
-  "name": "keyboard-tracker-api",
+  "name": "@meka/api",
   "private": true,
   "version": "1.0.0",
   "description": "Meck API for keyboard tracker",
@@ -58,6 +58,8 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@meka/config": "*",
+    "@meka/tsconfig": "*",
     "@nestjs/cli": "^9.1.5",
     "@nestjs/schematics": "^9.0.3",
     "@nestjs/testing": "^9.2.0",
