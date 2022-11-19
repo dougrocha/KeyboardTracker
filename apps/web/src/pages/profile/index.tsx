@@ -1,25 +1,17 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import Image from "next/image"
 import React, { ChangeEvent, useState } from "react"
-import {
-  FormProvider,
-  SubmitErrorHandler,
-  SubmitHandler,
-  useForm,
-  useFormContext,
-} from "react-hook-form"
-import type { IconType } from "react-icons"
-import { FaDiscord, FaGithub, FaGoogle } from "react-icons/fa"
+import { FormProvider, useForm, useFormContext } from "react-hook-form"
 
 import Input from "../../components/Forms/Input"
 import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileSection from "../../components/Profile/ProfileSection"
+import ConnectionsSection from "../../components/Socials/ConnectionSection"
 import useAuth from "../../hooks/useAuth"
 import ProfileLayout from "../../layouts/ProfileLayout"
 import { UseUpdateUser } from "../../libs/api/GetMe"
-import { GetUserConnections } from "../../libs/api/GetUserConnections"
+import { GetUserAvatar } from "../../libs/api/Images"
 import { User } from "../../types/user"
-import classNames from "../../utils/classNames"
 
 const ProfilePage = () => {
   const { user, isLoading } = useAuth()
@@ -106,69 +98,9 @@ const UserSection = ({ user }: { user: User }) => {
           </div>
         </form>
 
-        <ImageField src={user.avatar} />
+        <ImageField src={GetUserAvatar(user.id, user.avatar)} />
       </FormProvider>
     </ProfileSection>
-  )
-}
-
-const ConnectionsSection = () => {
-  const { data, isLoading } = useQuery(["connections"], GetUserConnections)
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-  return (
-    <ProfileSection flex="row" className="mt-10">
-      {/* <SocialConnector
-        name="Github"
-        icon={FaGithub}
-        connected={data["github"]}
-      /> */}
-      <SocialConnector
-        name="Discord"
-        icon={FaDiscord}
-        connected={data?.discord !== undefined}
-      />
-      {/* <SocialConnector
-        name="Google"
-        icon={FaGoogle}
-        connected={data["google"]}
-      /> */}
-    </ProfileSection>
-  )
-}
-
-interface SocialConnectorProps {
-  name: string
-  icon: IconType
-  connected?: boolean
-}
-
-const SocialConnector = ({
-  icon,
-  name,
-  connected = false,
-}: SocialConnectorProps) => {
-  const Icon = icon
-
-  return (
-    <div className="relative">
-      <div className="group flex flex-col items-center justify-center space-y-2 after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 after:cursor-pointer">
-        <span className="sr-only">{name}</span>
-        <Icon className="h-8 w-8" />
-        <div
-          className={classNames(
-            connected && "bg-blue-500",
-            !connected && "bg-gray-400",
-            "rounded px-2 py-1 text-white"
-          )}
-        >
-          {connected ? "Connected" : "Connect"}
-        </div>
-      </div>
-    </div>
   )
 }
 
@@ -183,7 +115,7 @@ const ImageField = ({
 }) => {
   const { register } = useFormContext()
 
-  const [previewImage, setPreviewImage] = useState<string>(src ?? "/hero.jpg")
+  const [previewImage, setPreviewImage] = useState<string | null>(src ?? null)
 
   return (
     <div>
@@ -192,13 +124,17 @@ const ImageField = ({
       <form className="mt-5 flex items-start">
         <div className="flex cursor-pointer flex-col items-center">
           <div className="relative h-32 w-32 select-none rounded-full">
-            <Image
-              src={previewImage}
-              alt={alt ?? "Profile Picture"}
-              fill
-              sizes="128px"
-              className="rounded-full object-cover object-center"
-            />
+            {previewImage ? (
+              <Image
+                src={previewImage}
+                alt={alt ?? "Profile Picture"}
+                fill
+                sizes="128px"
+                className="rounded-full object-cover object-center"
+              />
+            ) : (
+              <div className="h-32 w-32 rounded-full bg-gray-400" />
+            )}
           </div>
         </div>
 
