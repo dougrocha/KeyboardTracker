@@ -8,6 +8,7 @@ export interface User {
   name?: string
   password?: string
   avatar?: string
+  theme?: UserTheme
   createdAt: Date
   updatedAt: Date
   discordIdentity?: DiscordIdentity
@@ -15,6 +16,14 @@ export interface User {
   favorites?: UserFavorite[]
   images?: Image[]
 }
+
+export const UserTheme = {
+  LIGHT: "Light",
+  DARK: "Dark",
+  SYSTEM: "System",
+} as const
+
+export type UserTheme = typeof UserTheme[keyof typeof UserTheme]
 
 export interface UserFavorite {
   id: string
