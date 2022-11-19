@@ -291,11 +291,11 @@ model Form {
 
 enum FieldType {
   TEXT
-  TEXTAREA
   BOOLEAN
+  NUMBER
+  TEXTAREA
   SELECT
   RADIO
-  NUMBER
 }
 
 // Each form page is a FormField
@@ -344,6 +344,7 @@ model FormResponse {
   booleanValue Boolean?
   numberValue  Int?
   textValue    String?
+  radioValue   String?
 
   fieldValueResponses FieldValueResponse[]
 
@@ -357,6 +358,12 @@ model FormResponse {
   userId String
 
   answeredAt DateTime @default(now())
+
+  // Must all be unique, cannot have multiple responses for the same field
+  @@unique([fieldId, radioValue, userId], name: "fieldId_radioValue_userId")
+  @@unique([fieldId, textValue, userId], name: "fieldId_textValue_userId")
+  @@unique([fieldId, booleanValue, userId], name: "fieldId_booleanValue_userId")
+  @@unique([fieldId, numberValue, userId], name: "fieldId_numberValue_userId")
 }
 
 model FieldValueResponse {
