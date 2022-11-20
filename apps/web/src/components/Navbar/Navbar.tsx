@@ -23,7 +23,7 @@ const NavLinks = [
 ]
 
 const Navbar = () => {
-  const { user } = useAuth()
+  const { user, isLoading } = useAuth()
 
   return (
     <nav className="container mx-auto mb-5 flex h-20 w-full items-center justify-between px-2 py-8 sm:px-6">
@@ -51,7 +51,7 @@ const Navbar = () => {
             <HeartIcon className="icon cursor-pointer text-gray-800 hover:text-gray-500 dark:text-white dark:hover:text-gray-400" />
           </div>
         )}
-        {!user && (
+        {!user && !isLoading && (
           <Link
             href={"/login"}
             className="flex h-12 items-center justify-center rounded-lg bg-blue-600 px-4 font-medium text-gray-200 transition-colors hover:bg-blue-900 hover:text-black dark:text-white"
