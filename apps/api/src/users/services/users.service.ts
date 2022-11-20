@@ -26,7 +26,7 @@ export class UsersService {
     return await this.prisma.user.update({ where: { id }, data: user })
   }
 
-  async findById(id: string, password = false) {
+  async findById(id: string) {
     return await this.prisma.user.findUnique({
       where: { id },
     })

@@ -28,8 +28,14 @@ import { Response } from 'express'
 
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UsersService } from './services/users.service'
+import {
+  DELETE_AVATAR,
+  JobImageType,
+  OPTIMIZE_AVATAR,
+} from './usersImages.processor'
 
 import {
+  DESIGNERS_SERVICE,
   IMAGES_SERVICE,
   SNOWFLAKE_SERVICE,
   USERS_SERVICE,
@@ -38,6 +44,7 @@ import { GetCurrentUser } from '../common/decorators/getCurrentUser.decorator'
 import { ImageNotFoundException } from '../common/exceptions/imageNotFound.exception'
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
 import { multerImageOptions } from '../config/multer.config'
+import { DesignersService } from '../designers/designers.service'
 import { ImagesService } from '../images/images.service'
 import { SnowflakeService } from '../snowflake/snowflake.module'
 
@@ -45,8 +52,10 @@ import { SnowflakeService } from '../snowflake/snowflake.module'
 export class UsersController {
   constructor(
     @Inject(USERS_SERVICE) private readonly usersService: UsersService,
+    @Inject(DESIGNERS_SERVICE)
+    private readonly designersService: DesignersService,
     @Inject(IMAGES_SERVICE) private readonly imagesService: ImagesService,
-    @InjectQueue('images') private readonly imagesQueue: Queue,
+    @InjectQueue('images') private readonly imagesQueue: Queue<JobImageType>,
     @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
   ) {}
 
@@ -54,6 +63,12 @@ export class UsersController {
   @UseGuards(AuthenticatedGuard)
   async findById(@GetCurrentUser() user: User) {
     return user
+  }
+
+  @Get('me/designer')
+  @UseGuards(AuthenticatedGuard)
+  async getDesignerInfo(@GetCurrentUser() user: User) {
+    return await this.designersService.findByUserId(user.id)
   }
 
   @Get('me/connections')
@@ -68,6 +83,12 @@ export class UsersController {
     @GetCurrentUser() user: User,
     @Body() updateUserDto: UpdateUserDto,
   ) {
+    if (user.id != updateUserDto.id)
+      throw new HttpException(
+        'You can only update your own profile',
+        HttpStatus.FORBIDDEN,
+      )
+
     const updatedUser = await this.usersService.update(user.id, updateUserDto)
     return { ...updatedUser, password: undefined }
   }
@@ -80,7 +101,7 @@ export class UsersController {
     return { ...deletedUser, password: undefined }
   }
 
-  @Post('avatars')
+  @Post('me/avatar')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthenticatedGuard)
   @UseInterceptors(FileInterceptor('avatar', multerImageOptions))
@@ -88,30 +109,33 @@ export class UsersController {
     @GetCurrentUser() user: User,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const id = this.snowflake.nano()
+    const currAvatar = await this.usersService.findById(user.id)
+
+    if (currAvatar) {
+      await this.imagesQueue.add(DELETE_AVATAR, {
+        folder: [user.id],
+        fileName: currAvatar.avatar,
+      })
+    }
+
+    const fileName = this.snowflake.nextId()
 
     // Add image to Optimization queue
-    await this.imagesQueue.add('optimize-avatar', {
+    await this.imagesQueue.add(OPTIMIZE_AVATAR, {
       file,
       folder: [user.id],
-      fileName: id,
-    })
-
-    // Delete the old image from the disk
-    await this.imagesQueue.add('delete-avatar', {
-      file,
-      folder: [user.id],
-      fileName: user.avatar,
+      fileName,
     })
 
     // Update User with new avatar id
     await this.usersService.update(user.id, {
-      avatar: id,
+      avatar: fileName,
     })
-    return { fileId: id }
+
+    return { fileId: fileName }
   }
 
-  @Get('avatars/:id/:avatar_id')
+  @Get('/:id/avatar/:avatar_id')
   @HttpCode(HttpStatus.OK)
   async findProfileImage(
     @Param('id') id: string,

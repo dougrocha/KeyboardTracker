@@ -1,14 +1,11 @@
 import { HeartIcon } from "@heroicons/react/24/outline"
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import Image from "next/image"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 
-import {
-  AddProductToFavorites,
-  RemoveProductFromFavorites,
-} from "../libs/api/AddProductToFavorites"
+import { UseFavorites } from "../libs/api/AddProductToFavorites"
 import { GetProfileInformation } from "../libs/api/GetMe"
 import { GetUserFavorites } from "../libs/api/GetUserFavorites"
 import { Product } from "../types/product"
@@ -37,36 +34,21 @@ const Card = ({ product, className }: CardProps) => {
 
   const { id, name, coverImage } = product
 
-  const addFavorite = useMutation(
-    ["favorites", { id }],
-    AddProductToFavorites,
-    {
-      onError: () => handleMutationError(),
-    }
-  )
-
-  const removeFavorite = useMutation(
-    ["favorites", { id }],
-    RemoveProductFromFavorites,
-    { onError: () => handleMutationError() }
-  )
-  const handleMutationError = () => {
-    setIsFavorite(favoriteProduct ? true : false)
-  }
+  const { addFavorite, removeFavorite } = UseFavorites({
+    onError: (err) => {
+      setIsFavorite(favoriteProduct ? true : false)
+      console.error(err)
+    },
+  })
 
   const changeOnFavorite = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault()
 
-    if (isFavorite) {
-      if (!favoriteProduct) return
-      removeFavorite.mutate(favoriteProduct?.id)
-      setIsFavorite(false)
-    } else {
-      addFavorite.mutate(id)
-      setIsFavorite(true)
-    }
+    isFavorite && favoriteProduct
+      ? (removeFavorite.mutate(favoriteProduct.id), setIsFavorite(false))
+      : (addFavorite.mutate(product.id), setIsFavorite(true))
   }
 
   return (

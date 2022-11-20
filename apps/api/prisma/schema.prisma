@@ -34,6 +34,7 @@ model User {
   formResponses   FormResponse[]
   forms           Form[]
   favorites       UserProductFavorite[]
+  userVendor      UserVendor[]
 }
 
 enum Theme {
@@ -102,6 +103,9 @@ model Designer {
 
   name String?
 
+  avatarUrl String?
+  bannerUrl String?
+
   joinedAt DateTime @default(now())
 
   twitterHandle  String?
@@ -109,8 +113,10 @@ model Designer {
 
   discordServerUrl String?
 
-  user     User      @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  products Product[]
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique
+
+  productDesigner ProductDesigner[]
 }
 
 model Image {
@@ -134,6 +140,7 @@ enum GroupBuyStatus {
   UPCOMING
   INTEREST_CHECK
   WAITING_GROUP_BUY
+  HIDDEN
   DELAYED
   GROUP_BUY
   GROUP_BUY_ENDED
@@ -157,6 +164,7 @@ model Vendor {
   updatedAt DateTime @updatedAt()
 
   productVendor ProductVendor[]
+  userVendor    UserVendor[]
 }
 
 model Keyboard {
@@ -186,6 +194,30 @@ model ProductVendor {
   @@unique([vendorId, productId])
 }
 
+model UserVendor {
+  id Int @id @default(autoincrement())
+
+  vendor   Vendor @relation(fields: [vendorId], references: [id])
+  vendorId String
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  @@unique([vendorId, userId])
+}
+
+model ProductDesigner {
+  id Int @id @default(autoincrement())
+
+  designer   Designer? @relation(fields: [designerId], references: [id])
+  designerId String?
+
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+
+  @@unique([productId, designerId])
+}
+
 model Product {
   id String @id
 
@@ -193,7 +225,7 @@ model Product {
 
   description String?
   policy      String?
-  status      GroupBuyStatus @default(UPCOMING)
+  status      GroupBuyStatus @default(HIDDEN)
   type        ProductType
 
   brand String?
@@ -220,11 +252,9 @@ model Product {
   keyboard  Keyboard?
   keycapSet KeycapSet?
 
-  vendors ProductVendor[]
-
-  designer      Designer?             @relation(fields: [designerId], references: [id])
-  designerId    String?
   form          Form?
+  vendors       ProductVendor[]
+  designers     ProductDesigner[]
   userFavorites UserProductFavorite[]
 
   @@index([name, description, type, brand, status])
@@ -261,13 +291,14 @@ model Form {
 
 enum FieldType {
   TEXT
-  TEXTAREA
   BOOLEAN
+  NUMBER
+  TEXTAREA
   SELECT
   RADIO
-  NUMBER
 }
 
+// Each form page is a FormField
 model FormField {
   id String @id @default(uuid())
 
@@ -289,6 +320,7 @@ model FormField {
   @@unique([formId, position])
 }
 
+// Values for select, radio, and checkbox fields
 model FieldValue {
   id String @id @default(uuid())
 
@@ -312,6 +344,7 @@ model FormResponse {
   booleanValue Boolean?
   numberValue  Int?
   textValue    String?
+  radioValue   String?
 
   fieldValueResponses FieldValueResponse[]
 
@@ -325,6 +358,12 @@ model FormResponse {
   userId String
 
   answeredAt DateTime @default(now())
+
+  // Must all be unique, cannot have multiple responses for the same field
+  @@unique([fieldId, radioValue, userId], name: "fieldId_radioValue_userId")
+  @@unique([fieldId, textValue, userId], name: "fieldId_textValue_userId")
+  @@unique([fieldId, booleanValue, userId], name: "fieldId_booleanValue_userId")
+  @@unique([fieldId, numberValue, userId], name: "fieldId_numberValue_userId")
 }
 
 model FieldValueResponse {

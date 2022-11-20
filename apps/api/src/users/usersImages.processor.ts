@@ -5,11 +5,14 @@ import { Job } from 'bull'
 import { IMAGES_SERVICE } from '../common/constants'
 import { ImagesService } from '../images/images.service'
 
-interface JobImageType {
-  file: Express.Multer.File
+export interface JobImageType {
+  file?: Express.Multer.File
   folder: string[]
   fileName: string
 }
+
+export const OPTIMIZE_AVATAR = 'OPTIMIZE_AVATAR'
+export const DELETE_AVATAR = 'DELETE_AVATAR'
 
 @Processor('images')
 export class UsersImagesProcessor {
@@ -17,7 +20,7 @@ export class UsersImagesProcessor {
     @Inject(IMAGES_SERVICE) private readonly imagesService: ImagesService,
   ) {}
 
-  @Process('optimize-avatar')
+  @Process(OPTIMIZE_AVATAR)
   async optimizeAvatar(job: Job<JobImageType>) {
     await this.imagesService.saveImage({
       file: job.data.file,
@@ -26,8 +29,9 @@ export class UsersImagesProcessor {
     })
   }
 
-  @Process('delete-avatar')
+  @Process(DELETE_AVATAR)
   async deleteAvatar(job: Job<JobImageType>) {
+    console.log(job.data)
     await this.imagesService.deleteImage({
       file: job.data.file,
       folder: job.data.folder,

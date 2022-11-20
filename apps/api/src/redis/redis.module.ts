@@ -9,13 +9,13 @@ import { REDIS } from '../common/constants'
     {
       provide: REDIS,
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      useFactory: async (configService: ConfigService) => {
         const redisClient = Redis.createClient({
           url: configService.get('REDIS_URL'),
           legacyMode: true,
         })
 
-        redisClient.connect()
+        await redisClient.connect()
 
         redisClient.on('error', (err) =>
           Logger.error('Could not establish a connection with redis. ' + err),

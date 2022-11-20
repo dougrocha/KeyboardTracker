@@ -5,7 +5,9 @@ import { User } from '@prisma/client'
 import { UsersService } from '../../users/services/users.service'
 import { USERS_SERVICE } from '../constants'
 
-type Done = (err: Error | null, user: User | null) => void
+type UserWithoutPassword = Omit<User, 'password'>
+
+type Done = (err: Error | null, user: UserWithoutPassword | null) => void
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
@@ -15,13 +17,13 @@ export class SessionSerializer extends PassportSerializer {
     super()
   }
 
-  serializeUser(user: User, done: Done) {
+  serializeUser(user: UserWithoutPassword, done: Done) {
     done(null, user)
   }
 
-  async deserializeUser(user: any, done: Done) {
-    const idToSearch = user.userId ? user.userId : user.id
-    const validUser = await this.usersService.findById(idToSearch, true)
+  async deserializeUser(user: User, done: Done) {
+    const validUser = await this.usersService.findById(user.id)
+
     return user ? done(null, validUser) : done(null, null)
   }
 }

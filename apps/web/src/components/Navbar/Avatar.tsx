@@ -11,9 +11,24 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { useRef, useState } from "react"
 
+import { GetUserAvatar } from "../../libs/api/Images"
 import { User } from "../../types/user"
 import { capitalizeFirstLetter } from "../../utils/string"
 
+const MenuList = [
+  {
+    name: "Profile",
+    href: "/profile",
+  },
+  {
+    name: "Favorites",
+    href: "/profile/favorites",
+  },
+  {
+    name: "Logout",
+    href: "/logout",
+  },
+]
 interface AvatarProps {
   user: User
 }
@@ -59,8 +74,8 @@ const Avatar = ({ user }: AvatarProps) => {
     >
       {user.avatar ? (
         <Image
-          src={`http://localhost:3001/users/avatars/${user.id}/${user.avatar}`}
-          alt="user profile image"
+          src={GetUserAvatar(user.id, user.avatar)}
+          alt={`${user.username} profile image`}
           fill
           className="rounded-full"
         />
@@ -118,20 +133,5 @@ const Avatar = ({ user }: AvatarProps) => {
     </button>
   )
 }
-
-const MenuList = [
-  {
-    name: "Profile",
-    href: "/profile",
-  },
-  {
-    name: "Favorites",
-    href: "/favorites",
-  },
-  {
-    name: "Logout",
-    href: "/logout",
-  },
-]
 
 export default Avatar

@@ -13,6 +13,7 @@ export const SearchProducts = async (
   { take, skip }: PaginationParams = { take: 10, skip: 0 }
 ): Promise<Product[]> => {
   if (!search) return []
+
   const res = await AxiosClient.get(`/products`, {
     params: { search, take, skip },
   })
