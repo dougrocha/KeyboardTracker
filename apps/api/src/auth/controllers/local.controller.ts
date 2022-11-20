@@ -35,18 +35,22 @@ export class LocalAuthController {
    */
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async login() {
-    return
+  @HttpCode(HttpStatus.OK)
+  async login(
+    @Body('email') email: string,
+    @Body('password') password: string,
+  ) {
+    return await this.authService.login(email, password)
   }
 
   /**
-   * GET /api/auth/signup
+   * GET /api/auth/register
    *
    * This is the route for registration.
    */
-  @Post('signup')
+  @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async signUp(
+  async register(
     @Body() createUserDto: CreateUserDto,
     @Body('password') password: string,
   ) {

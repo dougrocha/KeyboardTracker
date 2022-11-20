@@ -70,7 +70,7 @@ export class ProductsService {
       vendors: {
         include: { vendor: true },
       },
-      designer: true,
+      designers: true,
       images: true,
     },
   ) {

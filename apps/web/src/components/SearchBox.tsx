@@ -1,8 +1,9 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/router"
-import React, { ChangeEvent, useState, useTransition } from "react"
+import React, { useEffect, useState, useTransition } from "react"
 import { useForm } from "react-hook-form"
 
+import useDebounce from "../hooks/useDebounce"
 import { SearchProducts } from "../libs/api/SearchProducts"
 import { Product } from "../types/product"
 
@@ -15,35 +16,43 @@ const SearchBox = ({
 }) => {
   const { register, handleSubmit } = useForm()
   const [isPending, startTransition] = useTransition()
-  const [searchTerm, setSearchTerm] = useState("")
+  const [query, setQuery] = useState("")
+
+  const debouncedSearch = useDebounce(query, 500)
 
   const [searchResults, setSearchResults] = useState<
     Pick<Product, "id" | "name">[]
   >([])
 
-  const { query, push } = useRouter()
+  const { push } = useRouter()
 
-  const handleSearch = async (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
+  useEffect(() => {
+    if (debouncedSearch.length < 0) {
+      setSearchResults([])
+      return
+    }
 
-    const { value } = e.target
+    const getResults = async () => {
+      const res = await SearchProducts(debouncedSearch)
+      startTransition(() => {
+        setSearchResults(res)
+      })
+    }
 
-    setSearchTerm(value)
+    getResults()
 
-    const results = await SearchProducts(value)
-
-    startTransition(() => {
-      setSearchResults(results)
-    })
-  }
+    return () => {
+      setSearchResults([])
+    }
+  }, [debouncedSearch])
 
   const onSubmit = () => {
-    if (!searchTerm) {
+    if (!query) {
       push("/products")
       return
     }
 
-    push(`/products?search=${searchTerm}`)
+    push(`/products?search=${query}`)
     setSearchResults([])
   }
 
@@ -64,15 +73,39 @@ const SearchBox = ({
           type="text"
           placeholder={placeholder}
           className="w-full appearance-none bg-inherit outline-none"
-          onChange={handleSearch}
+          {...register("search", {
+            onChange: (e) => {
+              const { value } = e.target
+              setQuery(value)
+            },
+          })}
         />
         {searchResults.length > 0 && (
           <div className="absolute top-full left-0 w-full rounded-b-md bg-white text-black shadow-md dark:bg-gray-700 dark:text-white">
-            {searchResults.map((p) => (
-              <div key={p.id} className="p-2">
-                {p.name}
-              </div>
-            ))}
+            <>
+              {searchResults
+                .filter((val) => {
+                  if (!query) return null
+                  return val.name.toLowerCase().includes(query.toLowerCase())
+                })
+                .map((p, i) => {
+                  i === 0 ? (
+                    <div key={p.id} className="p-2">
+                      {p.name}
+                    </div>
+                  ) : null
+                })}
+              {searchResults
+                .filter((val) => {
+                  if (!query) return val
+                  return val.name.toLowerCase().includes(query.toLowerCase())
+                })
+                .map((p) => (
+                  <div key={p.id} className="p-2">
+                    {p.name}
+                  </div>
+                ))}
+            </>
           </div>
         )}
       </form>

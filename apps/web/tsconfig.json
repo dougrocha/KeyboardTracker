@@ -1,5 +1,5 @@
 {
-  "extends": "tsconfig/nextjs.json",
+  "extends": "@meka/tsconfig/nextjs.json",
   "compilerOptions": {
     "baseUrl": "src"
   },

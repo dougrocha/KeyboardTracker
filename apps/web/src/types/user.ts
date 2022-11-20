@@ -8,12 +8,22 @@ export interface User {
   name?: string
   password?: string
   avatar?: string
+  theme?: UserTheme
   createdAt: Date
   updatedAt: Date
+  discordIdentity?: DiscordIdentity
   designer?: Designer
   favorites?: UserFavorite[]
   images?: Image[]
 }
+
+export const UserTheme = {
+  LIGHT: "Light",
+  DARK: "Dark",
+  SYSTEM: "System",
+} as const
+
+export type UserTheme = typeof UserTheme[keyof typeof UserTheme]
 
 export interface UserFavorite {
   id: string
@@ -25,6 +35,10 @@ export interface UserFavorite {
 }
 
 export type LoginFormData = Required<Pick<User, "email" | "password">>
+
+export type RegisterFormData = Required<
+  Pick<User, "username" | "email" | "password" | "name">
+>
 
 export interface ProtectedAuth {
   user?: User

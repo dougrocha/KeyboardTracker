@@ -1,6 +1,7 @@
 import "../styles/global.css"
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { NextPage } from "next"
 import { DefaultSeo } from "next-seo"
 import { ThemeProvider } from "next-themes"
@@ -32,6 +33,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
           ) : (
             <Component {...pageProps} />
           )}
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </ThemeProvider>
     </>

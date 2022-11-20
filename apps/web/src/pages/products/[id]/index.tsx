@@ -27,7 +27,7 @@ interface ProductPageProps {
  */
 
 const ProductPage = ({ product, vendors }: ProductPageProps) => {
-  const { name, status: productStatus, images, coverImage } = product
+  const { id, name, status: productStatus, images } = product
 
   const status = StatusString(productStatus)
 
@@ -66,6 +66,7 @@ const ProductPage = ({ product, vendors }: ProductPageProps) => {
               <InfoTag title="Brand" value={product.brand} />
               <InfoTag title="Status" value={status} />
             </InfoColumn>
+
             <InfoColumn>
               <InfoTag
                 title="End Date"
@@ -79,38 +80,38 @@ const ProductPage = ({ product, vendors }: ProductPageProps) => {
               <InfoTag title="Material" value={product.keycapSet?.material} />
             </InfoColumn>
           </div>
-          <button className="mt-10 rounded bg-blue-700 px-4 py-2 text-white md:mt-0">
-            Interest Check
-          </button>
+          {productStatus === "INTEREST_CHECK" ? (
+            <Link href={`${id}/form`}>
+              <button className="mt-10 rounded bg-blue-700 px-4 py-2 text-white md:mt-0">
+                Interest Check
+              </button>
+            </Link>
+          ) : null}
         </div>
       </section>
 
-      {vendors ? (
-        <section className="mt-24">
-          <h3 className="text-3xl font-semibold">Vendors</h3>
-          <div
-            className={`mt-10 flex space-x-4 ${
-              vendors.length > 3 ? "justify-start" : "justify-center"
-            }`}
-          >
-            {vendors.map((vendor) => (
-              <VendorButton vendor={vendor} />
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      {product.images ? (
-        <section className="mt-24 mb-20">
-          <h3 className="text-3xl font-semibold">Kits</h3>
-          <div className="mt-10 grid grid-cols-3 space-x-4">
-            {product.images.map((image) => (
-              <ProductImage key={image.id} image={image} />
-            ))}
-          </div>
-        </section>
-      ) : null}
+      <VendorsSection vendors={vendors} />
+      <ImagesSection images={images} />
     </MainViewLayout>
+  )
+}
+
+const VendorsSection = ({ vendors }: { vendors?: Vendor[] }) => {
+  if (!vendors) return null
+
+  return (
+    <section className="mt-24">
+      <h3 className="text-3xl font-semibold">Vendors</h3>
+      <div
+        className={`mt-10 flex space-x-4 ${
+          vendors.length > 3 ? "justify-start" : "justify-center"
+        }`}
+      >
+        {vendors.map((vendor) => (
+          <VendorButton key={vendor.id} vendor={vendor} />
+        ))}
+      </div>
+    </section>
   )
 }
 
@@ -125,6 +126,21 @@ const VendorButton = ({ vendor }: { vendor: Vendor }) => {
   )
 }
 
+const ImagesSection = ({ images }: { images?: ProductImage[] }) => {
+  if (!images) return null
+
+  return (
+    <section className="mt-24 mb-20">
+      <h3 className="text-3xl font-semibold">Kits</h3>
+      <div className="mt-10 grid grid-cols-3 space-x-4">
+        {images.map((image) => (
+          <ProductImage key={image.id} image={image} />
+        ))}
+      </div>
+    </section>
+  )
+}
+
 const ProductImage = ({
   image,
   size = "lg",
@@ -134,7 +150,6 @@ const ProductImage = ({
 }) => {
   return (
     <div
-      key={image?.id}
       className={`relative w-full lg:w-1/2 ${size == "sm" ? "h-52" : "h-96"}
   }`}
     >
@@ -165,6 +180,7 @@ const InfoColumn = ({
       {React.Children.map(children, (child) => {
         return (
           <li
+            key={(child as any).props.title}
             className={`flex space-x-2 ${
               center ? "items-center" : "items-start"
             }`}

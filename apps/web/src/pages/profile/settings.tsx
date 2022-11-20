@@ -3,10 +3,14 @@ import React, { MouseEvent } from "react"
 
 import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileSection from "../../components/Profile/ProfileSection"
+import useAuth from "../../hooks/useAuth"
 import ProfileLayout from "../../layouts/ProfileLayout"
+import { UserTheme } from "../../types/user"
 
 const SettingsPage = () => {
   const { theme, setTheme } = useTheme()
+
+  const { user } = useAuth()
 
   return (
     <ProfileSection>
@@ -21,18 +25,16 @@ const SettingsPage = () => {
             </p>
           </div>
           <DropdownSelect
-            options={["Light", "Dark"]}
-            value={theme}
+            options={[UserTheme.LIGHT, UserTheme.DARK, UserTheme.SYSTEM]}
+            defaultValue={user?.theme ?? theme}
             onChange={(e) => {
               setTheme(e.currentTarget.value.toLowerCase())
             }}
           />
-
           <button
-            className="rounded bg-gray-600 px-4 py-1.5 text-center text-white"
+            className="ml-4 rounded bg-gray-600 px-4 py-1.5 text-center text-white"
             onClick={() => {
-              // TODO: If darkmode is good reset to light
-              setTheme("light")
+              setTheme("system")
             }}
           >
             Reset
@@ -46,41 +48,37 @@ const SettingsPage = () => {
               Choose between English and Spanish.
             </p>
           </div>
-          <DropdownSelect options={["English", "Spanish"]} value={"English"} />
+          <DropdownSelect
+            options={["English", "Spanish"]}
+            defaultValue={"English"}
+          />
         </div>
       </div>
     </ProfileSection>
   )
 }
 
+/**
+ * Default Value will default to first item on options if not set.
+ */
 const DropdownSelect = ({
-  value,
   options,
   onChange,
+  defaultValue = options[0],
 }: {
   options: string[]
-  value?: string
+  defaultValue?: string
   onChange?: (e: MouseEvent<HTMLOptionElement>) => void
 }) => {
   return (
     <div className="relative">
       <select className="focus:shadow-outline block w-full appearance-none rounded border border-gray-400 bg-white px-4 py-2 pr-8 leading-tight shadow hover:border-gray-500 focus:outline-none">
-        {options.map((option) => (
-          <option defaultValue={value} onClick={onChange}>
+        {options.map((option, i) => (
+          <option key={i} defaultValue={defaultValue} onClick={onChange}>
             {option}
           </option>
         ))}
       </select>
-
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-        <svg
-          className="h-4 w-4 fill-current"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-        >
-          <path d="M7 7l3-3 3 3v2H7V7zm0 6h6v2H7v-2z" />
-        </svg>
-      </div>
     </div>
   )
 }
