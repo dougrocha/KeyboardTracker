@@ -10,7 +10,7 @@ import Input from "../components/Forms/Input"
 import HiddenInput from "../components/Forms/PasswordInput"
 import useAuth from "../hooks/useAuth"
 import MainViewLayout from "../layouts/MainViewLayout"
-import { UseLocalLogin } from "../libs/api/LocalLogin"
+import { UseLocalLogin } from "../libs/api/Auth"
 import { LoginFormData, User } from "../types/user"
 import schema from "../utils/schemas/loginForm"
 
@@ -43,9 +43,7 @@ const LoginPage = () => {
 
   const { mutate: login, isLoading: isLoggingIn } = UseLocalLogin()
 
-  const onSubmit: SubmitHandler<
-    Required<Pick<User, "email" | "password">>
-  > = async (data) => {
+  const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     login(data, { onSuccess: () => push("/") })
   }
 

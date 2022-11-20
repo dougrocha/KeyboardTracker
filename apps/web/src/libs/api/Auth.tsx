@@ -1,12 +1,9 @@
 import { useMutation } from "@tanstack/react-query"
 
-import { User } from "../../types/user"
+import { LoginFormData, RegisterFormData } from "../../types/user"
 import AxiosClient from "../AxiosClient"
 
-export const localLoginUrl = async ({
-  email,
-  password,
-}: Required<Pick<User, "email" | "password">>) => {
+export const localLoginUrl = async ({ email, password }: LoginFormData) => {
   const { data } = await AxiosClient.post("/auth/login", {
     email,
     password,
@@ -23,7 +20,7 @@ export const localRegister = async ({
   password,
   name,
   username,
-}: Required<Pick<User, "email" | "password" | "name" | "username">>) => {
+}: RegisterFormData) => {
   const { data } = await AxiosClient.post("/auth/register", {
     email,
     password,
@@ -31,4 +28,8 @@ export const localRegister = async ({
     username,
   })
   return data
+}
+
+export const UseLocalRegister = () => {
+  return useMutation(["user"], localRegister)
 }
