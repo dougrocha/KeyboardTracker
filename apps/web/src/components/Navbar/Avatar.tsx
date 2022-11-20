@@ -75,7 +75,7 @@ const Avatar = ({ user }: AvatarProps) => {
       {user.avatar ? (
         <Image
           src={GetUserAvatar(user.id, user.avatar)}
-          alt="user profile image"
+          alt={`${user.username} profile image`}
           fill
           className="rounded-full"
         />
