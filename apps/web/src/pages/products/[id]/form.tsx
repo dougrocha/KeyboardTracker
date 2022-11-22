@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import dynamic from "next/dynamic"
 import React from "react"
-import { useFormContext } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import create, { useStore } from "zustand"
 import { devtools } from "zustand/middleware"
 
@@ -88,7 +88,8 @@ interface FormPageProps {
 }
 
 const FormPage = ({ form }: FormPageProps) => {
-  const { handleSubmit, getValues, watch } = useFormContext()
+  const methods = useForm()
+  const { getValues } = methods
 
   const { addResponse } = useStore(useFormStore)
 
@@ -110,57 +111,82 @@ const FormPage = ({ form }: FormPageProps) => {
     }
   }
 
-  console.log(watch())
-
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = (data: unknown) => {
     console.log(data)
-  })
+  }
 
   return (
-    <Form>
-      <form
-        onSubmit={onSubmit}
-        className="flex h-screen w-full items-center justify-center p-2 lg:p-10"
-      >
-        asdasdasd
-        {form.fields.map((field, index) => {
-          if (field.position === page) {
-            return (
-              <div
-                key={index}
-                className="flex h-full w-full flex-col items-center justify-center"
-              >
-                <header className="flex h-40 w-full max-w-screen-2xl flex-col items-start bg-red-500 p-10">
-                  <h1 className="mb-4 text-5xl font-bold">{field.name}</h1>
-                  <p className="mb-4">{field.description}</p>
-                </header>
+    <>
+      <Form<FormResponse> onSubmit={onSubmit}>
+        {form.fields.map((field, index) =>
+          field.position === page ? (
+            <>
+              <PageDisplay key={index} field={field} />
+              <div className="flex w-full max-w-md items-end justify-between">
+                <button
+                  className="rounded px-4 py-2"
+                  onClick={() => changePage("PREV")}
+                >
+                  Go Back
+                </button>
+                <button
+                  className="rounded px-4 py-2"
+                  onClick={() => {
+                    savePage(field)
+                    changePage("NEXT")
+                  }}
+                >
+                  Go Next
+                </button>
+              </div>
+            </>
+          ) : null
+        )}
+      </Form>
+      {/* <FormProvider {...methods}>
+        <form
+          onSubmit={onSubmit}
+          className="flex h-screen w-full items-center justify-center p-2 lg:p-10"
+        >
+          {form.fields.map((field, index) => {
+            if (field.position === page) {
+              return (
+                <div
+                  key={index}
+                  className="flex h-full w-full flex-col items-center justify-center"
+                >
+                  <header className="flex h-40 w-full max-w-screen-2xl flex-col items-start bg-red-500 p-10">
+                    <h1 className="mb-4 text-5xl font-bold">{field.name}</h1>
+                    <p className="mb-4">{field.description}</p>
+                  </header>
 
-                <div className="flex h-full w-full flex-col items-center justify-center space-y-10 bg-blue-500 p-1">
-                  <PageDisplay field={field} />
-                  <div className="flex w-full max-w-md items-end justify-between">
-                    <button
-                      className="rounded px-4 py-2"
-                      onClick={() => changePage("PREV")}
-                    >
-                      Go Back
-                    </button>
-                    <button
-                      className="rounded px-4 py-2"
-                      onClick={() => {
-                        savePage(field)
-                        changePage("NEXT")
-                      }}
-                    >
-                      Go Next
-                    </button>
+                  <div className="flex h-full w-full flex-col items-center justify-center space-y-10 bg-blue-500 p-1">
+                    <PageDisplay field={field} />
+                    <div className="flex w-full max-w-md items-end justify-between">
+                      <button
+                        className="rounded px-4 py-2"
+                        onClick={() => changePage("PREV")}
+                      >
+                        Go Back
+                      </button>
+                      <button
+                        className="rounded px-4 py-2"
+                        onClick={() => {
+                          savePage(field)
+                          changePage("NEXT")
+                        }}
+                      >
+                        Go Next
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          }
-        })}
-      </form>
-    </Form>
+              )
+            }
+          })}
+        </form>
+      </FormProvider> */}
+    </>
   )
 }
 
