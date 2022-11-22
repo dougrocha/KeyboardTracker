@@ -1,4 +1,5 @@
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
+import classNames from "classnames"
 import { GetStaticPropsContext, GetStaticPropsResult } from "next"
 import Image from "next/image"
 import Link from "next/link"
@@ -150,8 +151,11 @@ const ProductImage = ({
 }) => {
   return (
     <div
-      className={`relative w-full lg:w-1/2 ${size == "sm" ? "h-52" : "h-96"}
-  }`}
+      className={classNames(
+        `relative w-full lg:w-1/2`,
+        size === "sm" && "h-52",
+        size === "lg" && "h-96"
+      )}
     >
       <Image
         src={"/hero.jpg"}
@@ -173,14 +177,14 @@ const InfoColumn = ({
   children,
 }: {
   center?: boolean
-  children: React.ReactNode
+  children: JSX.Element[]
 }) => {
   return (
     <div className="flex flex-col space-y-5">
       {React.Children.map(children, (child) => {
         return (
           <li
-            key={(child as any).props.title}
+            key={child.props.title}
             className={`flex space-x-2 ${
               center ? "items-center" : "items-start"
             }`}
