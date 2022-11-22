@@ -148,10 +148,26 @@ export class ProductsService {
    * @param id Product id
    * @returns Product
    */
-  async findProductVendors(id: string) {
+  async findProductVendors(productId: string) {
     return await this.prisma.productVendor.findMany({
-      where: { productId: id },
+      where: { productId },
       include: { vendor: true },
+    })
+  }
+
+  async findDesignerProducts(designerId: string) {
+    return await this.prisma.productDesigner.findMany({
+      where: { designerId },
+      include: { product: true },
+    })
+  }
+
+  async findByProductAndDesignerId(productId: string, designerId: string) {
+    return await this.prisma.productDesigner.findFirst({
+      where: {
+        productId,
+        designerId,
+      },
     })
   }
 }

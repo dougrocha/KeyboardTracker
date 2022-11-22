@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class CreateFormDto {
   @IsNotEmpty()
@@ -12,6 +12,14 @@ export class CreateFormDto {
   @IsNotEmpty()
   @IsString()
   productId: string
+
+  @IsOptional()
+  @IsDate()
+  startDate: Date
+
+  @IsOptional()
+  @IsDate()
+  endDate: Date
 
   @IsNotEmpty()
   @IsString()

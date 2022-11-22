@@ -3,10 +3,10 @@ import { ConfigService } from '@nestjs/config'
 import { User } from '@prisma/client'
 import { Response } from 'express'
 
-import { GetCurrentUser } from '../../common/decorators/getCurrentUser.decorator'
+import { GetCurrentUser } from '../../common/decorators/current-user.decorator'
 import { DiscordAuthGuard } from '../../common/guards/auth.guard'
 import { AuthenticatedGuard } from '../../common/guards/authenticated.guard'
-import { FillDiscordUser } from '../../common/guards/discordUser.guard'
+import { FillDiscordUser } from '../../common/guards/discord-user.guard'
 
 @Controller('discord')
 export class DiscordAuthController {
