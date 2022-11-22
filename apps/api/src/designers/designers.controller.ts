@@ -18,7 +18,7 @@ import { CreateDesignerDto } from './dtos/create-designer'
 import { UpdateDesignerDto } from './dtos/update-designer.dto'
 
 import { DESIGNERS_SERVICE } from '../common/constants'
-import { GetCurrentUser } from '../common/decorators/getCurrentUser.decorator'
+import { GetCurrentUser } from '../common/decorators/current-user.decorator'
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
 
 @Controller('designers')

@@ -15,7 +15,7 @@ import { User } from '@prisma/client'
 import { Request, Response } from 'express'
 
 import { LOCAL_AUTH_SERVICE } from '../../common/constants'
-import { GetCurrentUser } from '../../common/decorators/getCurrentUser.decorator'
+import { GetCurrentUser } from '../../common/decorators/current-user.decorator'
 import { LocalAuthGuard } from '../../common/guards/auth.guard'
 import { AuthenticatedGuard } from '../../common/guards/authenticated.guard'
 import { CreateUserDto } from '../../users/dto/create-user.dto'

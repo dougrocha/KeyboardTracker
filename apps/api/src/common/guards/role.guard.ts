@@ -7,10 +7,9 @@ const RoleGuard = (role: RoleType): Type<CanActivate> => {
   class RoleGuardMixin implements CanActivate {
     canActivate(context: ExecutionContext) {
       const request = context.switchToHttp().getRequest()
-      const user = request.user as User
+      const user = request.user as any
 
-      // Return user?.role.includes(role)
-      return true
+      return user?.role.includes(role)
     }
   }
 

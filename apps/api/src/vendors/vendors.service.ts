@@ -39,6 +39,14 @@ export class VendorsService {
     })
   }
 
+  async findByUserId(userId: string) {
+    return await this.prisma.userVendor.findMany({
+      where: {
+        userId,
+      },
+    })
+  }
+
   async findAllByCountry(country: string) {
     return await this.prisma.vendor.findMany({
       where: {
@@ -74,6 +82,15 @@ export class VendorsService {
     return await this.prisma.vendor.delete({
       where: {
         id,
+      },
+    })
+  }
+
+  async findUserAndVendor(userId: string, vendorId: string) {
+    return await this.prisma.userVendor.findFirst({
+      where: {
+        userId,
+        vendorId,
       },
     })
   }

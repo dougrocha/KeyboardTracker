@@ -40,7 +40,7 @@ import {
   SNOWFLAKE_SERVICE,
   USERS_SERVICE,
 } from '../common/constants'
-import { GetCurrentUser } from '../common/decorators/getCurrentUser.decorator'
+import { GetCurrentUser } from '../common/decorators/current-user.decorator'
 import { ImageNotFoundException } from '../common/exceptions/imageNotFound.exception'
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
 import { multerImageOptions } from '../config/multer.config'
