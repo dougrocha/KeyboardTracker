@@ -5,8 +5,6 @@ import { FormProvider, useForm } from "react-hook-form"
 import create, { useStore } from "zustand"
 import { devtools } from "zustand/middleware"
 
-import Form from "../../../components/Forms/Form"
-import { useFormPages } from "../../../hooks/useFormPages"
 import { GetFormByProductId } from "../../../libs/api/GetFormByProductId"
 import { FieldType, Form as FormType, FormField } from "../../../types/form"
 
@@ -93,8 +91,6 @@ const FormPage = ({ form }: FormPageProps) => {
 
   const { addResponse } = useStore(useFormStore)
 
-  const { page, changePage } = useFormPages({ formLength: form.fields.length })
-
   const savePage = (field: FormField) => {
     if (field.type === FieldType.SELECT) {
       addResponse({
@@ -112,85 +108,42 @@ const FormPage = ({ form }: FormPageProps) => {
   }
 
   const onSubmit = (data: unknown) => {
-    console.log(data)
+    console.log("data", data)
+
+    form.fields.map((field) => {
+      savePage(field)
+    })
   }
 
   return (
-    <>
-      <Form<FormResponse> onSubmit={onSubmit}>
-        {form.fields.map((field, index) =>
-          field.position === page ? (
-            <>
-              <PageDisplay key={index} field={field} />
-              <div className="flex w-full max-w-md items-end justify-between">
-                <button
-                  className="rounded px-4 py-2"
-                  onClick={() => changePage("PREV")}
-                >
-                  Go Back
-                </button>
-                <button
-                  className="rounded px-4 py-2"
-                  onClick={() => {
-                    savePage(field)
-                    changePage("NEXT")
-                  }}
-                >
-                  Go Next
-                </button>
-              </div>
-            </>
-          ) : null
-        )}
-      </Form>
-      {/* <FormProvider {...methods}>
-        <form
-          onSubmit={onSubmit}
-          className="flex h-screen w-full items-center justify-center p-2 lg:p-10"
-        >
-          {form.fields.map((field, index) => {
-            if (field.position === page) {
-              return (
-                <div
-                  key={index}
-                  className="flex h-full w-full flex-col items-center justify-center"
-                >
-                  <header className="flex h-40 w-full max-w-screen-2xl flex-col items-start bg-red-500 p-10">
-                    <h1 className="mb-4 text-5xl font-bold">{field.name}</h1>
-                    <p className="mb-4">{field.description}</p>
-                  </header>
+    <div className="mx-auto h-full w-full max-w-screen-sm">
+      <header className="flex h-40 flex-col justify-center">
+        <h1 className="text-4xl font-bold text-gray-800">{form.name}</h1>
 
-                  <div className="flex h-full w-full flex-col items-center justify-center space-y-10 bg-blue-500 p-1">
-                    <PageDisplay field={field} />
-                    <div className="flex w-full max-w-md items-end justify-between">
-                      <button
-                        className="rounded px-4 py-2"
-                        onClick={() => changePage("PREV")}
-                      >
-                        Go Back
-                      </button>
-                      <button
-                        className="rounded px-4 py-2"
-                        onClick={() => {
-                          savePage(field)
-                          changePage("NEXT")
-                        }}
-                      >
-                        Go Next
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )
-            }
-          })}
+        <p className="text-gray-600">{form.description}</p>
+
+        <p className="mt-2 text-gray-500">{form.fields.length} questions</p>
+      </header>
+      <FormProvider {...methods}>
+        <form onSubmit={onSubmit} className="space-y-10 p-2">
+          {form.fields.map((field) => (
+            <div key={field.id} className="rounded bg-gray-200 px-10 py-6">
+              <h2 className="text-xl font-bold text-gray-800">
+                {field.position + 1}. {field.name}
+              </h2>
+
+              <p className="mb-4 px-1 text-gray-600">{field.description}</p>
+
+              <FormDisplay field={field} />
+            </div>
+          ))}
         </form>
-      </FormProvider> */}
-    </>
+      </FormProvider>
+    </div>
   )
 }
 
-const PageDisplay = ({ field }: { field: FormField }) => {
+const FormDisplay = ({ field }: { field: FormField }) => {
   switch (field.type) {
     case FieldType.TEXT:
       return <Input id={`fields.${field?.position}.value`} label={field.name} />
