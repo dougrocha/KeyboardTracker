@@ -86,6 +86,9 @@ export class FormsService {
             values: true,
             _count: true,
           },
+          orderBy: {
+            position: 'asc',
+          },
         },
       },
     })
