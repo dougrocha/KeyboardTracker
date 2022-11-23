@@ -1,5 +1,3 @@
-import Checkbox from "./Checkbox"
-
 interface MultiSelectProps {
   label: string
   children: React.ReactNode
@@ -7,7 +5,7 @@ interface MultiSelectProps {
 
 const MultiSelect = ({ label, children }: MultiSelectProps) => {
   return (
-    <fieldset className="flex h-40 flex-col px-4">
+    <fieldset className="flex h-full flex-col px-4">
       <legend className="block text-sm font-medium text-gray-700">
         {label}
       </legend>

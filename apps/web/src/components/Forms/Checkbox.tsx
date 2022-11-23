@@ -1,10 +1,12 @@
 import classNames from "classnames"
+import { get } from "lodash"
 import { ComponentPropsWithoutRef } from "react"
 import { RegisterOptions, useFormContext } from "react-hook-form"
 
 interface CheckboxProps extends ComponentPropsWithoutRef<"input"> {
   label: string
   id: string
+  flipped?: boolean
   placeholder?: string
   helperText?: string
   readOnly?: boolean
@@ -18,6 +20,7 @@ const Checkbox = ({
   helperText,
   readOnly = false,
   validation,
+  flipped = false,
   ...rest
 }: CheckboxProps) => {
   const {
@@ -26,18 +29,20 @@ const Checkbox = ({
   } = useFormContext()
 
   return (
-    <div>
-      <label htmlFor={id} className="block text-sm">
-        {label}
-      </label>
-      <div className="relative mt-1 w-full">
+    <div
+      className={classNames(
+        "flex flex-row items-center space-x-4",
+        flipped && "flex-row-reverse"
+      )}
+    >
+      <div className="mt-1">
         <input
           type="checkbox"
           id={id}
           readOnly={readOnly}
           placeholder={placeholder}
           className={classNames(
-            "block w-full rounded border-none font-medium shadow-sm",
+            "block h-5 w-5 rounded border-none font-medium shadow-sm",
             readOnly &&
               "cursor-not-allowed border-gray-300 bg-gray-100 focus:border-gray-300 focus:ring-0",
             !readOnly &&
@@ -52,11 +57,14 @@ const Checkbox = ({
           {...rest}
         />
       </div>
+      <label htmlFor={id} className="block text-sm">
+        {label}
+      </label>
       <div className="mt-1">
         {helperText && <p className="text-xs text-gray-500">{helperText}</p>}
-        {errors[id] ? (
+        {get(errors, id) ? (
           <span className="text-sm text-red-500">
-            {errors[id]?.message as string}
+            {get(errors, id)?.message as string}
           </span>
         ) : null}
       </div>
