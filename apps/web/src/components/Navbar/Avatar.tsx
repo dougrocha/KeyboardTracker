@@ -77,7 +77,16 @@ const Avatar = ({ user }: AvatarProps) => {
           src={GetUserAvatar(user.id, user.avatar)}
           alt={`${user.username} profile image`}
           fill
+          quality={80}
+          draggable={false}
+          blurDataURL={GetUserAvatar(user.id, user.avatar)}
+          placeholder="blur"
           className="rounded-full"
+          sizes="
+          (max-width: 640px) 24px,
+          (max-width: 768px) 32px,
+          (max-width: 1024px) 40px,
+          48px"
         />
       ) : (
         <span className="text-lg font-medium text-gray-200">
