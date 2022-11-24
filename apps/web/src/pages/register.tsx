@@ -36,10 +36,10 @@ const RegisterPage = () => {
 
   if (isLoading) return <div>Loading...</div>
 
-  //   if (user) {
-  //     push("/profile")
-  //     return <div>Redirecting...</div>
-  //   }
+  // if (user) {
+  //   push("/profile")
+  //   return <div>Redirecting...</div>
+  // }
 
   return (
     <>

@@ -142,6 +142,7 @@ const FormPage = ({ form }: FormPageProps) => {
               <FormDisplay field={field} />
             </div>
           ))}
+
           <footer className="mt-10 flex justify-end">
             <button
               type="submit"
