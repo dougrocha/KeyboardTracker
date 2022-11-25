@@ -1,15 +1,19 @@
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
 import classNames from "classnames"
 import { get } from "lodash"
 import React, { ComponentPropsWithoutRef } from "react"
 import { RegisterOptions, useFormContext } from "react-hook-form"
 
+import BaseInput from "./BaseInput"
+import InputErrorIcon from "./InputErrorIcon"
+
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
-  label: string
+  label?: string
   id: string
   placeholder?: string
   helperText?: string
   readOnly?: boolean
+  hideLabel?: boolean
+  icon?: JSX.Element
   validation?: RegisterOptions
 }
 
@@ -21,7 +25,8 @@ const Input = ({
   helperText,
   readOnly = false,
   validation,
-
+  icon,
+  hideLabel = true,
   ...rest
 }: InputProps) => {
   const {
@@ -30,46 +35,37 @@ const Input = ({
   } = useFormContext()
 
   return (
-    <div className="w-full">
-      <label htmlFor={id} className="block text-sm">
-        {label}
-      </label>
-      <div className="relative mt-1 w-full">
-        <input
-          type={type}
-          id={id}
-          readOnly={readOnly}
-          placeholder={placeholder}
-          className={classNames(
-            "block w-full rounded border-none font-medium shadow-sm",
-            readOnly &&
-              "cursor-not-allowed border-gray-300 bg-gray-100 focus:border-gray-300 focus:ring-0",
-            !readOnly &&
-              get(errors, id) &&
-              "border-red-300 bg-red-50 focus:border-red-300 focus:ring-0",
-            !readOnly &&
-              !get(errors, id) &&
-              "focus:ring-primary-500 focus:border-primary-500 border-gray-300"
-          )}
-          aria-describedby={id}
-          {...register?.(id, validation)}
-          {...rest}
-        />
-        {get(errors, id) && (
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <ExclamationCircleIcon className="h-6 w-6 text-red-600" />
-          </div>
+    <BaseInput
+      id={id}
+      label={label}
+      helperText={helperText}
+      hideLabel={hideLabel}
+    >
+      <input
+        type={type}
+        id={id}
+        readOnly={readOnly}
+        placeholder={placeholder}
+        className={classNames(
+          "block w-full rounded border-none font-medium shadow-sm",
+          readOnly &&
+            "cursor-not-allowed border-gray-300 bg-gray-100 focus:border-gray-300 focus:ring-0",
+          !readOnly &&
+            get(errors, id) &&
+            "border-red-300 bg-red-50 focus:border-red-300 focus:ring-0",
+          !readOnly &&
+            !get(errors, id) &&
+            "focus:ring-primary-500 focus:border-primary-500 border-gray-300"
         )}
-      </div>
-      <div className="mt-1">
-        {helperText && <p className="text-xs text-gray-500">{helperText}</p>}
-        {get(errors, id) ? (
-          <span className="text-sm text-red-500">
-            {get(errors, id)?.message as string}
-          </span>
-        ) : null}
-      </div>
-    </div>
+        aria-describedby={rest.name ?? id}
+        {...register?.(id, {
+          required: rest.required,
+          ...validation,
+        })}
+        {...rest}
+      />
+      {icon ? React.cloneElement(icon) : <InputErrorIcon id={id} />}
+    </BaseInput>
   )
 }
 
