@@ -6,6 +6,6 @@ interface UserConnections {
 }
 
 export async function GetUserConnections(): Promise<UserConnections> {
-  const res = await AxiosClient.get<UserConnections>(`/users/me/connections`)
+  const res = await AxiosClient.get<UserConnections>(`/user/me/connections`)
   return res.data
 }

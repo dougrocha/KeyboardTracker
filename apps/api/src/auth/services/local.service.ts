@@ -1,14 +1,14 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { compare, hash } from 'bcrypt'
 
-import { USERS_SERVICE } from '../../common/constants'
-import { CreateUserDto } from '../../users/dto/create-user.dto'
-import { UsersService } from '../../users/services/users.service'
+import { USER_SERVICE } from '../../common/constants'
+import { CreateUserDto } from '../../user/dto/create-user.dto'
+import { UserService } from '../../user/services/user.service'
 
 @Injectable()
 export class LocalAuthService {
   constructor(
-    @Inject(USERS_SERVICE) private readonly usersService: UsersService,
+    @Inject(USER_SERVICE) private readonly UserService: UserService,
   ) {}
 
   private async hashData(data: string) {
@@ -23,11 +23,11 @@ export class LocalAuthService {
 
   async register(user: CreateUserDto, password: string) {
     const hashedPassword = await this.hashData(password)
-    return await this.usersService.create({ ...user, password: hashedPassword })
+    return await this.UserService.create({ ...user, password: hashedPassword })
   }
 
   async validate(email: string, password: string) {
-    const user = await this.usersService.findByEmail(email)
+    const user = await this.UserService.findByEmail(email)
     if (!user) throw new UnauthorizedException('Incorrect email or password')
     await this.comparePasswords(user.password, password)
     user.password = undefined

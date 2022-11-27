@@ -3,7 +3,7 @@ import { ProductVendors } from "../../types/productVendors"
 import AxiosClient from "../AxiosClient"
 
 export const FindOneProduct = async (id: string) => {
-  const data = await AxiosClient.get<Product>(`/products/${id}`)
+  const data = await AxiosClient.get<Product>(`/product/${id}`)
   return data.data
 }
 
@@ -13,7 +13,7 @@ type ProductVendorsResponse = Required<
 
 export const FindProductVendors = async (id: string) => {
   const data = await AxiosClient.get<ProductVendorsResponse[]>(
-    `/products/${id}/vendors`
+    `/product/${id}/vendors`
   )
   return data.data
 }

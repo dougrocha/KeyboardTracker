@@ -33,7 +33,9 @@ const SearchBox = ({
     }
 
     const getResults = async () => {
-      const res = await SearchProducts(debouncedSearch)
+      const res = await SearchProducts(debouncedSearch, {
+        perPage: 5,
+      })
       startTransition(() => {
         setSearchResults(res)
       })

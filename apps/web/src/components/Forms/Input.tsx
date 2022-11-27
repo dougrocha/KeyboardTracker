@@ -26,7 +26,7 @@ const Input = ({
   readOnly = false,
   validation,
   icon,
-  hideLabel = true,
+  hideLabel,
   ...rest
 }: InputProps) => {
   const {

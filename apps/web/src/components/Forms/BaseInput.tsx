@@ -13,7 +13,7 @@ const BaseInput = ({
   id,
   label,
   helperText,
-  hideLabel = true,
+  hideLabel = false,
   children,
 }: BaseInputProps) => (
   <div className="relative">

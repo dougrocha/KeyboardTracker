@@ -14,10 +14,10 @@ import AxiosClient from "../AxiosClient"
  */
 export default async function GetProductsByStatus(
   status: GroupBuyStatus,
-  { skip, take }: PaginationParams = { skip: 0, take: 10 }
+  { perPage, page }: PaginationParams = { perPage: 100, page: 1 }
 ): Promise<Product[]> {
   const res = await AxiosClient.get<Product[]>(
-    `/products/status/${status}?skip=${skip}&take=${take}`
+    `/product/status/${status}?perPage=${perPage}&page=${page}`
   )
   return res.data
 }

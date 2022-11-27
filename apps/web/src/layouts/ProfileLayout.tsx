@@ -31,7 +31,7 @@ const ProfileLayout = ({
 const ProfileSidebar = () => {
   return (
     <>
-      <section className="sticky top-10 flex h-[calc(100vh_-_100px)] w-80 flex-col justify-between px-4 transition-colors">
+      <section className="sticky top-10 flex h-[calc(100vh_-_100px)] w-52 flex-shrink-0 flex-col justify-between px-4 transition-colors">
         <ul className="flex flex-col">
           {SidebarTags.map((tag) => (
             <li

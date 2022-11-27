@@ -1,25 +1,25 @@
 import { Inject, Injectable } from '@nestjs/common'
 
-import { DISCORD_USERS_SERVICE } from '../../common/constants'
-import { CreateDiscordUserDto } from '../../users/dto/create-discord-user.dto'
-import { DiscordUsersService } from '../../users/services/discord.service'
+import { DISCORD_USER_SERVICE } from '../../common/constants'
+import { CreateDiscordUserDto } from '../../user/dto/create-discord-user.dto'
+import { DiscordUserService } from '../../user/services/discord.service'
 
 @Injectable()
 export class DiscordAuthService {
   constructor(
-    @Inject(DISCORD_USERS_SERVICE)
-    private readonly discordUsersService: DiscordUsersService,
+    @Inject(DISCORD_USER_SERVICE)
+    private readonly discordUserService: DiscordUserService,
   ) {}
 
   async validateUser(details: CreateDiscordUserDto) {
-    const discordUser = await this.discordUsersService.findUserByDiscordId(
+    const discordUser = await this.discordUserService.findUserByDiscordId(
       details.discordId,
     )
 
     if (discordUser) {
-      return await this.discordUsersService.update(discordUser.id, details)
+      return await this.discordUserService.update(discordUser.id, details)
     } else {
-      return await this.discordUsersService.create(details)
+      return await this.discordUserService.create(details)
     }
   }
 }
