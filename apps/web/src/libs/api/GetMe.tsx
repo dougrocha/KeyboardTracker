@@ -4,12 +4,12 @@ import { User } from "../../types/user"
 import AxiosClient from "../AxiosClient"
 
 export async function GetProfileInformation(): Promise<User> {
-  const res = await AxiosClient.get<User>(`/users/me`)
+  const res = await AxiosClient.get<User>(`/user/me`)
   return res.data
 }
 
 export async function UpdateMe(data: User): Promise<User> {
-  const res = await AxiosClient.patch<User>(`/users/me`, data)
+  const res = await AxiosClient.patch<User>(`/user/me`, data)
   return res.data
 }
 

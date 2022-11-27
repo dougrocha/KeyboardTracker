@@ -10,12 +10,12 @@ import AxiosClient from "../AxiosClient"
  */
 export const SearchProducts = async (
   search: string,
-  { take, skip }: PaginationParams = { take: 10, skip: 0 }
+  { perPage = 100, page = 1 }: PaginationParams
 ): Promise<Product[]> => {
   if (!search) return []
 
-  const res = await AxiosClient.get(`/products`, {
-    params: { search, take, skip },
+  const res = await AxiosClient.get(`/products/search`, {
+    params: { search, perPage, page },
   })
 
   return res.data

@@ -6,19 +6,19 @@ import {
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 
-import { DesignersService } from '../../designers/designers.service'
-import { ProductsService } from '../../products/services/products.service'
-import { DESIGNERS_SERVICE, PRODUCTS_SERVICE } from '../constants'
+import { DesignerService } from '../../designer/designer.service'
+import { ProductService } from '../../product/services/product.service'
+import { DESIGNER_SERVICE, PRODUCT_SERVICE } from '../constants'
 import { RoleType } from '../enums/roles.enum'
 
 @Injectable()
 export class CanEditDesigner implements CanActivate {
   constructor(
     private reflector: Reflector,
-    @Inject(PRODUCTS_SERVICE)
-    private readonly productsService: ProductsService,
-    @Inject(DESIGNERS_SERVICE)
-    private readonly designersService: DesignersService,
+    @Inject(PRODUCT_SERVICE)
+    private readonly productService: ProductService,
+    @Inject(DESIGNER_SERVICE)
+    private readonly designerService: DesignerService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -29,10 +29,10 @@ export class CanEditDesigner implements CanActivate {
     const user = request.user
     const productId = request.params.id
 
-    const designer = await this.designersService.findByUserId(user.id)
+    const designer = await this.designerService.findByUserId(user.id)
 
     const productAndDesigner =
-      await this.productsService.findByProductAndDesignerId(
+      await this.productService.findByProductAndDesignerId(
         productId,
         designer.id,
       )

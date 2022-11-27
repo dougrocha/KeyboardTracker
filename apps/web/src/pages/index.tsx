@@ -73,7 +73,7 @@ export async function getStaticProps(): Promise<
     GroupBuyStatus.INTEREST_CHECK
   )
   const groupBuys = await GetProductsByStatus(GroupBuyStatus.GROUP_BUY)
-  const mostRecentProducts = await GetAllProducts({ take: 15 })
+  const mostRecentProducts = await GetAllProducts({ perPage: 10 })
 
   return {
     props: {

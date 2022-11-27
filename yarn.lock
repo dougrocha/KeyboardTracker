@@ -766,6 +766,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^7.6.0":
+  version: 7.6.0
+  resolution: "@faker-js/faker@npm:7.6.0"
+  checksum: 942af6221774e8c98a0eb6bc75265e05fb81a941170377666c3439aab9495dd321d6beedc5406f07e6ad44262b3e43c20961f666d116ad150b78e7437dd1bb2b
+  languageName: node
+  linkType: hard
+
 "@floating-ui/core@npm:^1.0.1":
   version: 1.0.1
   resolution: "@floating-ui/core@npm:1.0.1"
@@ -1336,6 +1343,7 @@ __metadata:
   dependencies:
     "@dnd-kit/core": ^6.0.5
     "@dnd-kit/sortable": ^7.0.1
+    "@faker-js/faker": ^7.6.0
     "@floating-ui/react-dom-interactions": ^0.10.3
     "@formkit/auto-animate": ^1.0.0-beta.3
     "@heroicons/react": ^2.0.12
@@ -1370,6 +1378,7 @@ __metadata:
     react-icons: ^4.6.0
     react-merge-refs: ^2.0.1
     react-select: ^5.6.1
+    react-spinners: ^0.13.6
     sharp: ^0.31.2
     tailwindcss: ^3.2.2
     typescript: ^4.8.4
@@ -8740,6 +8749,16 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: 89daa3c121beea1ae1e003018c38b57c7a63571def105678d1aa0d9ad36d9fb8c2697bdac941778b9662a0cb605f7e1f3b8490c6a9a6ce83032ab0945f8e0f91
+  languageName: node
+  linkType: hard
+
+"react-spinners@npm:^0.13.6":
+  version: 0.13.6
+  resolution: "react-spinners@npm:0.13.6"
+  peerDependencies:
+    react: ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 0e557190b5811e62774de0000f91fdcc3afe845872084abd5620d16335eb8292ed3fb3fdb94527fe2802a8366ac4e5d42c8e5bffda9e8ed0d85d3c34b3829d8e
   languageName: node
   linkType: hard
 

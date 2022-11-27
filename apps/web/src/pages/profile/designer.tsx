@@ -1,7 +1,9 @@
+import { PaginationState } from "@tanstack/react-table"
 import React, { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 
 import Input from "../../components/Forms/Input"
+import ProductsTable from "../../components/ProductsTable"
 import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileSection from "../../components/Profile/ProfileSection"
 import ProfileLayout from "../../layouts/ProfileLayout"
@@ -21,11 +23,6 @@ const DesignerPage = () => {
       // On success, reset the form with the new data
       reset(data)
     },
-  })
-
-  const { products } = UseGetDesignerProducts({
-    id: designer?.id,
-    page: 1,
   })
 
   if (!designer) return <DesignerCreatePage />
@@ -78,6 +75,8 @@ const DesignerPage = () => {
           </form>
         </FormProvider>
       </ProfileSection>
+
+      <DesignerTable />
     </>
   )
 }
@@ -90,6 +89,48 @@ const DesignerCreatePage = () => {
   return (
     <>
       <ProfileHeader title="Create your designer today!" />
+    </>
+  )
+}
+
+const DesignerTable = () => {
+  const { designer } = UseGetMyDesigner()
+
+  const [{ pageIndex, pageSize }, setPagination] =
+    React.useState<PaginationState>({
+      pageIndex: 0,
+      pageSize: 10,
+    })
+
+  const pagination = React.useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+    }),
+    [pageIndex, pageSize]
+  )
+
+  const { data, isLoading, error, refetch, isRefetching } =
+    UseGetDesignerProducts({
+      id: designer?.id,
+      pagination: {
+        page: pagination.pageIndex + 1,
+        perPage: pagination.pageSize,
+      },
+    })
+
+  return (
+    <>
+      <ProductsTable
+        products={data?.products}
+        productCount={data?.count}
+        isLoading={isLoading}
+        error={error}
+        refetch={refetch}
+        isRefetching={isRefetching}
+        pagination={pagination}
+        setPagination={setPagination}
+      />
     </>
   )
 }

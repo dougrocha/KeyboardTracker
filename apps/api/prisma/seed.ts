@@ -208,6 +208,108 @@ async function main() {
     },
   })
 
+  const product6 = await prisma.product.create({
+    data: {
+      id: nextId(),
+      name: 'Product 5',
+      description: 'Product 5 description',
+      price: 500,
+      estimatedDeliveryQuarter: 'Q1',
+      estimatedDeliveryYear: '2026',
+      groupBuyStartDate: new Date('2021-05-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'GROUP_BUY',
+      type: 'KEYBOARD',
+      brand: 'JTK',
+    },
+  })
+
+  const product7 = await prisma.product.create({
+    data: {
+      id: nextId(),
+      name: 'Product 6',
+      description: 'Product 6 description',
+      price: 600,
+      estimatedDeliveryQuarter: 'Q2',
+      estimatedDeliveryYear: '2027',
+      groupBuyStartDate: new Date('2021-06-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'GROUP_BUY',
+      type: 'KEYBOARD',
+      brand: 'JTK',
+    },
+  })
+
+  const product8 = await prisma.product.create({
+    data: {
+      id: nextId(),
+      name: 'Product 7',
+      description: 'Product 7 description',
+      price: 700,
+      estimatedDeliveryQuarter: 'Q3',
+      estimatedDeliveryYear: '2028',
+      groupBuyStartDate: new Date('2021-07-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'GROUP_BUY',
+      type: 'KEYBOARD',
+      brand: 'JTK',
+    },
+  })
+
+  const product9 = await prisma.product.create({
+    data: {
+      id: nextId(),
+      name: 'Product 8',
+      description: 'Product 8 description',
+      price: 800,
+      estimatedDeliveryQuarter: 'Q4',
+      estimatedDeliveryYear: '2029',
+      groupBuyStartDate: new Date('2021-08-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'GROUP_BUY',
+      type: 'KEYBOARD',
+      brand: 'JTK',
+    },
+  })
+
+  const product10 = await prisma.product.create({
+    data: {
+      id: nextId(),
+      name: 'Product 9',
+      description: 'Product 9 description',
+      price: 900,
+      estimatedDeliveryQuarter: 'Q1',
+      estimatedDeliveryYear: '2030',
+      groupBuyStartDate: new Date('2021-09-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'GROUP_BUY',
+      type: 'KEYBOARD',
+      brand: 'JTK',
+    },
+  })
+
+  const product11 = await prisma.product.create({
+    data: {
+      id: nextId(),
+      name: 'Product 10',
+      description: 'Product 10 description',
+      price: 1000,
+      estimatedDeliveryQuarter: 'Q2',
+      estimatedDeliveryYear: '2031',
+      groupBuyStartDate: new Date('2021-10-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'GROUP_BUY',
+      type: 'KEYBOARD',
+      brand: 'JTK',
+    },
+  })
+
   const keycap1 = await prisma.keycapSet.create({
     data: {
       material: 'ABS',
@@ -295,6 +397,126 @@ async function main() {
     },
   })
 
+  const productDesigner4 = await prisma.productDesigner.create({
+    data: {
+      product: {
+        connect: {
+          id: product4.id,
+        },
+      },
+      designer: {
+        connect: {
+          id: user1.designerAccount.id,
+        },
+      },
+    },
+  })
+
+  const productDesigner5 = await prisma.productDesigner.create({
+    data: {
+      product: {
+        connect: {
+          id: product5.id,
+        },
+      },
+      designer: {
+        connect: {
+          id: user1.designerAccount.id,
+        },
+      },
+    },
+  })
+
+  const productDesigner6 = await prisma.productDesigner.create({
+    data: {
+      product: {
+        connect: {
+          id: product6.id,
+        },
+      },
+      designer: {
+        connect: {
+          id: user1.designerAccount.id,
+        },
+      },
+    },
+  })
+
+  const productDesigner7 = await prisma.productDesigner.create({
+    data: {
+      product: {
+        connect: {
+          id: product7.id,
+        },
+      },
+      designer: {
+        connect: {
+          id: user1.designerAccount.id,
+        },
+      },
+    },
+  })
+
+  const productDesigner8 = await prisma.productDesigner.create({
+    data: {
+      product: {
+        connect: {
+          id: product8.id,
+        },
+      },
+      designer: {
+        connect: {
+          id: user1.designerAccount.id,
+        },
+      },
+    },
+  })
+
+  const productDesigner9 = await prisma.productDesigner.create({
+    data: {
+      product: {
+        connect: {
+          id: product9.id,
+        },
+      },
+      designer: {
+        connect: {
+          id: user1.designerAccount.id,
+        },
+      },
+    },
+  })
+
+  const productDesigner10 = await prisma.productDesigner.create({
+    data: {
+      product: {
+        connect: {
+          id: product10.id,
+        },
+      },
+      designer: {
+        connect: {
+          id: user1.designerAccount.id,
+        },
+      },
+    },
+  })
+
+  const productDesigner11 = await prisma.productDesigner.create({
+    data: {
+      product: {
+        connect: {
+          id: product11.id,
+        },
+      },
+      designer: {
+        connect: {
+          id: user1.designerAccount.id,
+        },
+      },
+    },
+  })
+
   const productVendor1 = await prisma.productVendor.create({
     data: {
       product: {
@@ -319,7 +541,7 @@ async function main() {
       },
       vendor: {
         connect: {
-          id: vendor2.id,
+          id: vendor1.id,
         },
       },
     },
@@ -334,7 +556,7 @@ async function main() {
       },
       vendor: {
         connect: {
-          id: vendor1.id,
+          id: vendor2.id,
         },
       },
     },
@@ -364,7 +586,67 @@ async function main() {
       },
       vendor: {
         connect: {
+          id: vendor2.id,
+        },
+      },
+    },
+  })
+
+  const productVendor6 = await prisma.productVendor.create({
+    data: {
+      product: {
+        connect: {
+          id: product6.id,
+        },
+      },
+      vendor: {
+        connect: {
+          id: vendor2.id,
+        },
+      },
+    },
+  })
+
+  const productVendor7 = await prisma.productVendor.create({
+    data: {
+      product: {
+        connect: {
+          id: product7.id,
+        },
+      },
+      vendor: {
+        connect: {
           id: vendor1.id,
+        },
+      },
+    },
+  })
+
+  const userVendor1 = await prisma.userVendor.create({
+    data: {
+      user: {
+        connect: {
+          id: user1.id,
+        },
+      },
+      vendor: {
+        connect: {
+          id: vendor1.id,
+        },
+      },
+    },
+  })
+
+  const userVendor2 = await prisma.userVendor.create({
+    data: {
+      user: {
+        connect: {
+          id: user1.id,
+        },
+      },
+      vendor: {
+        connect: {
+          id: vendor2.id,
         },
       },
     },

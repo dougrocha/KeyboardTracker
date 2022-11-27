@@ -1,17 +1,17 @@
 import React from "react"
 import {
   useForm,
-  SubmitHandler,
   FieldValues,
   FormProvider,
   DeepPartial,
   Resolver,
+  SubmitHandler,
 } from "react-hook-form"
 
 interface FormProps<T extends FieldValues>
   extends Omit<React.HTMLAttributes<HTMLFormElement>, "onSubmit"> {
   defaultValues?: DeepPartial<T>
-  onSubmit: SubmitHandler<T>
+  onSubmit: SubmitHandler<FieldValues>
   resolver?: Resolver<T>
 }
 
@@ -19,7 +19,7 @@ function Form<T extends FieldValues>({
   defaultValues,
   onSubmit,
   children,
-  className,
+  className = "mt-8 max-w-sm space-y-4",
   resolver,
   ...rest
 }: React.PropsWithChildren<FormProps<T>>) {

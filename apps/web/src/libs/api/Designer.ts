@@ -1,10 +1,18 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 
+import { PaginationParams } from "./types"
+
 import { Designer } from "../../types/designer"
+import { Product } from "../../types/product"
 import AxiosClient from "../AxiosClient"
 
+interface DesignerProducts {
+  products: Product[]
+  count: number
+}
+
 const GetDesignerUrl = async () => {
-  const data = await AxiosClient.get<Designer>(`/users/me/designer`)
+  const data = await AxiosClient.get<Designer>(`/user/me/designer`)
   return data.data
 }
 
@@ -13,9 +21,12 @@ const GetOtherDesignerUrl = async (id: string) => {
   return data.data
 }
 
-const GetDesignerProductsUrl = async (id: string, page?: number) => {
-  const data = await AxiosClient.get<Designer>(
-    `/designers/${id}/products?page=${page ?? 1}`
+const GetDesignerProductsUrl = async (
+  id: string,
+  { page = 1, perPage = 10 }: PaginationParams
+) => {
+  const data = await AxiosClient.get<DesignerProducts>(
+    `/designer/${id}/products?page=${page}&perPage=${perPage}`
   )
   return data.data
 }
@@ -40,17 +51,16 @@ export const UseGetDesigner = (id: string) => {
 
 export const UseGetDesignerProducts = ({
   id,
-  page,
+  pagination,
 }: {
   id?: string
-  page?: number
+  pagination: PaginationParams
 }) => {
-  const { data, isLoading, error } = useQuery(
-    ["designer", id, "products", page],
-    () => GetDesignerProductsUrl(id ?? "", page),
+  return useQuery(
+    ["designer", id, "products", pagination?.page],
+    () => GetDesignerProductsUrl(id ?? "", pagination),
     {
       enabled: !!id,
     }
   )
-  return { products: data, isLoading, error }
 }

@@ -1,5 +1,4 @@
 import classNames from "classnames"
-import { get } from "lodash"
 import { ComponentPropsWithoutRef } from "react"
 import { RegisterOptions, useFormContext } from "react-hook-form"
 
@@ -16,7 +15,6 @@ const Checkbox = ({
   placeholder,
   readOnly = false,
   validation,
-  flipped = false,
   ...rest
 }: CheckboxProps) => {
   const {

@@ -11,22 +11,22 @@ import { LocalStrategy } from './strategies/local.strategy'
 
 import {
   LOCAL_AUTH_SERVICE,
-  DISCORD_USERS_SERVICE,
+  DISCORD_USER_SERVICE,
   PRISMA_SERVICE,
-  USERS_SERVICE,
+  USER_SERVICE,
   DISCORD_AUTH_SERVICE,
 } from '../common/constants'
 import { SessionSerializer } from '../common/serializers/session.serializer'
-import { DiscordUsersService } from '../users/services/discord.service'
-import { UsersService } from '../users/services/users.service'
+import { DiscordUserService } from '../user/services/discord.service'
+import { UserService } from '../user/services/user.service'
 
 @Module({
   imports: [PassportModule.register({ session: true })],
   providers: [
     { provide: LOCAL_AUTH_SERVICE, useClass: LocalAuthService },
     { provide: DISCORD_AUTH_SERVICE, useClass: DiscordAuthService },
-    { provide: USERS_SERVICE, useClass: UsersService },
-    { provide: DISCORD_USERS_SERVICE, useClass: DiscordUsersService },
+    { provide: USER_SERVICE, useClass: UserService },
+    { provide: DISCORD_USER_SERVICE, useClass: DiscordUserService },
     { provide: PRISMA_SERVICE, useClass: PrismaService },
     LocalStrategy,
     DiscordStrategy,

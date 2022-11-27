@@ -17,12 +17,12 @@ import { PrismaConfigService } from './config/database/prisma/configuration'
 import { validate } from './config/env.validation'
 import { routes } from './config/routes'
 import { ThrottlerConfigService } from './config/throttler.config'
-import { DesignersModule } from './designers/designers.module'
-import { ProductsModule } from './products/products.module'
+import { DesignerModule } from './designer/designer.module'
+import { ProductModule } from './product/product.module'
 import { RedisModule } from './redis/redis.module'
 import { SnowflakeModule } from './snowflake/snowflake.module'
-import { UsersModule } from './users/users.module'
-import { VendorsModule } from './vendors/vendors.module'
+import { UserModule } from './user/user.module'
+import { VendorModule } from './vendor/vendor.module'
 
 @Module({
   imports: [
@@ -56,11 +56,11 @@ import { VendorsModule } from './vendors/vendors.module'
       global: true,
     }),
     AuthModule,
-    UsersModule,
+    UserModule,
     RedisModule,
-    ProductsModule,
-    VendorsModule,
-    DesignersModule,
+    ProductModule,
+    VendorModule,
+    DesignerModule,
   ],
   providers: [AppConfigService],
 })

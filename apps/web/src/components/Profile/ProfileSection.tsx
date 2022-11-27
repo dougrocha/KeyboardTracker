@@ -15,7 +15,7 @@ const ProfileSection = ({
       className={classNames(
         flex === "row" && "flex flex-row justify-around",
         flex === "col" && "space-y-5",
-        `rounded bg-gray-200 p-10 shadow-md`,
+        `w-full rounded bg-gray-200 p-10`,
         className
       )}
     >

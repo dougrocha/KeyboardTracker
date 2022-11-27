@@ -16,7 +16,6 @@ const Radio = ({
   placeholder,
   readOnly = false,
   validation,
-  flipped = false,
   ...rest
 }: RadioProps) => {
   const {
