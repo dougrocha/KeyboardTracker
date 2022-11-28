@@ -11,8 +11,8 @@ import {
   FindProductVendors,
 } from "../../../libs/api/FindOneProduct"
 import { GetAllProductIds } from "../../../libs/api/GetAllProducts"
-import { Vendor } from "../../../types/vendor"
 import { Image as ProductImage, Product } from "../../../types/product"
+import { Vendor } from "../../../types/vendor"
 import { StatusString } from "../../../utils/statusStrings"
 
 interface ProductPageProps {
