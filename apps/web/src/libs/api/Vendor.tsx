@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 
 import { PaginationParams } from "./types"
 
-import { Vendor } from "../../types/image"
+import { Vendor } from "../../types/vendor"
 import { Product } from "../../types/product"
 import AxiosClient from "../AxiosClient"
 
@@ -11,8 +11,8 @@ interface VendorProducts {
   count: number
 }
 
-const GetVendorUrl = async () => {
-  const data = await AxiosClient.get<Vendor[]>(`user/me/vendor`)
+const GetMyVendorUrl = async () => {
+  const data = await AxiosClient.get<Vendor[]>(`user/me/vendors`)
   return data.data
 }
 
@@ -26,12 +26,17 @@ const GetVendorProducts = async (
   return data
 }
 
+const GetVendorUrl = async (id: string) => {
+  const data = await AxiosClient.get<Vendor>(`vendor/${id}`)
+  return data.data
+}
+
 export const UseGetVendors = (
   options: UseQueryOptions<Vendor[], Error, Vendor[], string[]> = {}
 ) => {
   const { data, ...rest } = useQuery(
     ["user", "vendors"],
-    () => GetVendorUrl(),
+    () => GetMyVendorUrl(),
     options
   )
 
@@ -55,4 +60,17 @@ export const UseGetVendorProducts = (
     count: data?.count,
     ...rest,
   }
+}
+
+export const UseGetVendor = (
+  id: string,
+  options: UseQueryOptions<Vendor, Error, Vendor, string[]> = {}
+) => {
+  const { data, ...rest } = useQuery(
+    ["vendor", id],
+    () => GetVendorUrl(id),
+    options
+  )
+
+  return { vendor: data, ...rest }
 }

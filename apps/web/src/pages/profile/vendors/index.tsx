@@ -4,15 +4,14 @@ import {
   GlobeAltIcon,
   ListBulletIcon,
 } from "@heroicons/react/24/outline"
-import React, { useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import Link from "next/link"
+import React from "react"
 
-import Input from "../../../components/Forms/Input"
 import ProfileHeader from "../../../components/Profile/ProfileHeader"
 import ProfileSection from "../../../components/Profile/ProfileSection"
 import ProfileLayout from "../../../layouts/ProfileLayout"
 import { UseGetVendors } from "../../../libs/api/Vendor"
-import { Vendor } from "../../../types/image"
+import { Vendor } from "../../../types/vendor"
 
 const VendorPage = () => {
   const { vendors } = UseGetVendors()
@@ -79,18 +78,39 @@ const VendorCard = ({ vendor }: { vendor: Vendor }) => {
       </div>
 
       <div className="flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-4 text-white">
-        <button className="flex items-center justify-center rounded bg-blue-700 px-4 py-2">
-          <ListBulletIcon className="mr-2 h-6 w-6" />
-          <span>Products</span>
-        </button>
-        <button className="flex items-center justify-center rounded bg-blue-700 px-4 py-2">
-          <AdjustmentsVerticalIcon className="mr-2 h-6 w-6" />
-          <span>Edit</span>
-        </button>
-        <button className="flex items-center justify-center rounded bg-blue-700 px-4 py-2">
-          <AdjustmentsVerticalIcon className="h-6 w-6" />
-          <span>Manage</span>
-        </button>
+        <Link
+          href={{
+            pathname: "/profile/vendors/[id]/products",
+            query: { id: vendor.id },
+          }}
+        >
+          <button className="flex items-center justify-center rounded bg-blue-700 px-4 py-2">
+            <ListBulletIcon className="mr-2 h-6 w-6" />
+            <span>Products</span>
+          </button>
+        </Link>
+        <Link
+          href={{
+            pathname: "/profile/vendors/[id]",
+            query: { id: vendor.id },
+          }}
+        >
+          <button className="flex items-center justify-center rounded bg-blue-700 px-4 py-2">
+            <AdjustmentsVerticalIcon className="h-6 w-6" />
+            <span>Manage</span>
+          </button>
+        </Link>
+        <Link
+          href={{
+            pathname: "/profile/vendors/[id]/settings",
+            query: { id: vendor.id },
+          }}
+        >
+          <button className="flex items-center justify-center rounded bg-blue-700 px-4 py-2">
+            <AdjustmentsVerticalIcon className="mr-2 h-6 w-6" />
+            <span>Edit</span>
+          </button>
+        </Link>
       </div>
     </div>
   )
@@ -101,58 +121,6 @@ const CreateVendorPage = () => {
     <>
       <ProfileHeader title="Create your vendor account today!" />
     </>
-  )
-}
-
-const VendorSpecificPage = () => {
-  const methods = useForm()
-  const { handleSubmit, reset } = methods
-
-  const { vendors } = UseGetVendors({
-    onSuccess: (data) => {
-      // On success, reset the form with the new data
-      reset(data)
-    },
-  })
-
-  const [readOnly, setReadOnly] = useState(true)
-
-  const onSubmit = handleSubmit((e) => {
-    console.log(e)
-  })
-
-  return (
-    <ProfileSection>
-      <FormProvider {...methods}>
-        <form onSubmit={onSubmit} className="mt-8 max-w-sm space-y-4">
-          <Input id="name" label="Name" readOnly={readOnly} />
-          <Input id="username" label="Username" readOnly={readOnly} />
-          <Input id="email" label="Email" readOnly={readOnly} />
-
-          <div className="flex flex-col space-y-2 text-white sm:flex-row sm:justify-between sm:space-y-0">
-            <button
-              className="w-32 rounded bg-gray-600 px-4 py-2 text-center text-white"
-              onClick={() => {
-                setReadOnly(!readOnly)
-                if (!readOnly) reset(vendors)
-              }}
-              type="button"
-            >
-              {readOnly ? "Edit" : "Cancel"}
-            </button>
-            {!readOnly && (
-              <button
-                className="w-32 cursor-pointer rounded bg-gray-600 px-4 py-2 text-white"
-                value="Save"
-                type="submit"
-              >
-                Save
-              </button>
-            )}
-          </div>
-        </form>
-      </FormProvider>
-    </ProfileSection>
   )
 }
 

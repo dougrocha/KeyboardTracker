@@ -11,7 +11,7 @@ import {
 interface FormProps<T extends FieldValues>
   extends Omit<React.HTMLAttributes<HTMLFormElement>, "onSubmit"> {
   defaultValues?: DeepPartial<T>
-  onSubmit: SubmitHandler<FieldValues>
+  onSubmit: SubmitHandler<T>
   resolver?: Resolver<T>
 }
 
@@ -19,7 +19,7 @@ function Form<T extends FieldValues>({
   defaultValues,
   onSubmit,
   children,
-  className = "mt-8 max-w-sm space-y-4",
+  className,
   resolver,
   ...rest
 }: React.PropsWithChildren<FormProps<T>>) {

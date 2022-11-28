@@ -46,7 +46,7 @@ import { ImageNotFoundException } from '../common/exceptions/imageNotFound.excep
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
 import { multerImageOptions } from '../config/multer.config'
 import { DesignerService } from '../designer/designer.service'
-import { ImagesService } from '../image/image.service'
+import { ImageService } from '../image/image.service'
 import { SnowflakeService } from '../snowflake/snowflake.module'
 import { VendorService } from '../vendor/vendor.service'
 
@@ -57,7 +57,7 @@ export class UsersController {
     @Inject(DESIGNER_SERVICE)
     private readonly designerService: DesignerService,
     @Inject(VENDOR_SERVICE) private readonly vendorService: VendorService,
-    @Inject(IMAGE_SERVICE) private readonly imagesService: ImagesService,
+    @Inject(IMAGE_SERVICE) private readonly imagesService: ImageService,
     @InjectQueue('images') private readonly imagesQueue: Queue<JobImageType>,
     @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
   ) {}
@@ -74,7 +74,7 @@ export class UsersController {
     return await this.designerService.findByUserId(user.id)
   }
 
-  @Get('me/vendor')
+  @Get('me/vendors')
   @UseGuards(AuthenticatedGuard)
   async getVendors(@GetCurrentUser() user: User) {
     return await this.vendorService.findByUserId(user.id)
@@ -110,7 +110,7 @@ export class UsersController {
     return { ...deletedUser, password: undefined }
   }
 
-  @Post('me/avatar')
+  @Patch('me/avatar')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthenticatedGuard)
   @UseInterceptors(FileInterceptor('avatar', multerImageOptions))
@@ -118,6 +118,9 @@ export class UsersController {
     @GetCurrentUser() user: User,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    if (!file)
+      throw new HttpException('No file uploaded', HttpStatus.BAD_REQUEST)
+
     const currAvatar = await this.userService.findById(user.id)
 
     if (currAvatar) {

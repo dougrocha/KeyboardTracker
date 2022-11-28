@@ -111,7 +111,7 @@ const LoginPage = () => {
 
 LoginPage.getLayout = (page: ReactElement) => (
   <MainViewLayout
-    footer={false}
+    hideFooter
     className="flex h-full flex-col items-center justify-center divide-slate-700 md:flex-row md:justify-start md:space-y-0 md:divide-x-[1px] lg:justify-between lg:space-y-5"
   >
     {page}

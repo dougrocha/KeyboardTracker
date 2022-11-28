@@ -14,7 +14,7 @@ export const SearchProducts = async (
 ): Promise<Product[]> => {
   if (!search) return []
 
-  const res = await AxiosClient.get(`/products/search`, {
+  const res = await AxiosClient.get(`/product/search/v1`, {
     params: { search, perPage, page },
   })
 

@@ -1,3 +1,4 @@
+import classNames from "classnames"
 import dynamic from "next/dynamic"
 
 import Navbar from "../components/Navbar/Navbar"
@@ -6,16 +7,14 @@ import { LayoutProps } from "../types/layoutProps"
 const Footer = dynamic(() => import("../components/Footer"))
 
 interface MainViewLayoutProps extends LayoutProps {
-  footer?: boolean
+  hideFooter?: boolean
   className?: string
   footerContent?: React.ReactNode
 }
 
-// container mx-auto mb-auto px-1 sm:px-6
-
 const MainViewLayout = ({
   children,
-  footer = true,
+  hideFooter = false,
   footerContent,
   className,
 }: MainViewLayoutProps) => {
@@ -23,13 +22,15 @@ const MainViewLayout = ({
     <div className="mx-auto flex min-h-screen flex-col">
       <Navbar />
       <main
-        className={`container mx-auto px-2 sm:px-6 ${
-          footer ? "mb-auto" : ""
-        } ${className}`}
+        className={classNames(
+          className,
+          hideFooter ? "" : "mb-auto",
+          `container mx-auto px-2 sm:px-6`
+        )}
       >
         {children}
       </main>
-      {footer ? <Footer /> : null}
+      {hideFooter ? null : <Footer />}
       {footerContent ? footerContent : null}
     </div>
   )

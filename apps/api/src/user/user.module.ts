@@ -15,12 +15,12 @@ import {
   VENDOR_SERVICE,
 } from '../common/constants'
 import { DesignerService } from '../designer/designer.service'
-import { ImagesModule } from '../image/image.module'
+import { ImageModule } from '../image/image.module'
 import { VendorService } from '../vendor/vendor.service'
 
 @Module({
   imports: [
-    ImagesModule.register({ path: ['users'] }),
+    ImageModule.register({ path: ['users'] }),
     BullModule.registerQueue(
       {
         name: 'images',

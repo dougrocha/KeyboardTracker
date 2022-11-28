@@ -1,4 +1,4 @@
-import { Vendor } from "./image"
+import { Vendor } from "./vendor"
 import { Product } from "./product"
 
 export interface ProductVendors {

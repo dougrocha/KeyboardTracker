@@ -1,26 +1,26 @@
 import { DynamicModule, Module } from '@nestjs/common'
 
-import { ImagesService } from './image.service'
+import { ImageService } from './image.service'
 
 import { IMAGE_SERVICE } from '../common/constants'
 
-export interface ImagesModuleOptions {
+export interface ImageModuleOptions {
   path: string[]
 }
 
 @Module({})
-export class ImagesModule {
-  static register(options: ImagesModuleOptions): DynamicModule {
+export class ImageModule {
+  static register(options: ImageModuleOptions): DynamicModule {
     return {
-      module: ImagesModule,
+      module: ImageModule,
       providers: [
         {
-          provide: 'IMAGES_CONFIG',
+          provide: 'IMAGE_CONFIG',
           useValue: options,
         },
         {
           provide: IMAGE_SERVICE,
-          useClass: ImagesService,
+          useClass: ImageService,
         },
       ],
       exports: [IMAGE_SERVICE],

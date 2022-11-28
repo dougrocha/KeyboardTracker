@@ -5,17 +5,17 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import * as sharp from 'sharp'
 
-import { ImagesModuleOptions } from './image.module'
+import { ImageModuleOptions } from './image.module'
 
 import { SNOWFLAKE_SERVICE } from '../common/constants'
 import { SupportedFiles, SupportedFilesType } from '../config/multer.config'
 import { SnowflakeService } from '../snowflake/snowflake.module'
 
 @Injectable()
-export class ImagesService {
+export class ImageService {
   constructor(
     @Inject(ConfigService) private readonly configService: ConfigService,
-    @Inject('IMAGES_CONFIG') private readonly options: ImagesModuleOptions,
+    @Inject('IMAGE_CONFIG') private readonly options: ImageModuleOptions,
     @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
   ) {}
 
@@ -79,8 +79,6 @@ export class ImagesService {
     const { folder, fileName } = options
 
     const filePath = this.joinFilePath(...folder, fileName) + '.webp'
-
-    console.log(filePath)
 
     try {
       await access(filePath)

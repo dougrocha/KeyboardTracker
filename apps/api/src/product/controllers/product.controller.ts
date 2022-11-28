@@ -21,7 +21,7 @@ export class ProductController {
   ) {}
 
   /**
-   * GET /products/all
+   * GET /products
    *
    * Returns all products
    *
@@ -61,14 +61,14 @@ export class ProductController {
   }
 
   /**
-   * GET /products
+   * GET /products/search/v1
    *
    * Search for products by name, description, brand, vendor, material, status, and type
    * @param search Search query
    * @param pagination Pagination params
    * @returns Products
    */
-  @Get('search')
+  @Get('search/v1')
   async search(
     @Query() search: ProductSearchQuery,
     @Query() pagination: PaginationParams,

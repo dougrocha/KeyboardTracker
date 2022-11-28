@@ -13,7 +13,7 @@ export async function GetAllProducts({
   page = 1,
 }: PaginationParams) {
   const data = await AxiosClient.get<Product[]>(
-    `/product?perPage=${perPage}&page=${page}`
+    `/product?perPage=${perPage}&page=${page}&products=true`
   )
 
   return data.data

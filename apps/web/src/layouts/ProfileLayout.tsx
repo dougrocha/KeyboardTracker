@@ -16,12 +16,15 @@ const ProfileLayout = ({
       <NextSeo {...seo} />
       <MainViewLayout
         className="flex flex-row pb-10"
-        footer={false}
-        footerContent={ProfileFooter()}
+        hideFooter
+        // footerContent={ProfileFooter()}
       >
         <ProfileSidebar />
         <section className="min-h-full w-full px-2 py-10 dark:bg-zinc-700">
           {children}
+          <footer className="mt-10">
+            <ProfileFooter />
+          </footer>
         </section>
       </MainViewLayout>
     </>
@@ -31,7 +34,7 @@ const ProfileLayout = ({
 const ProfileSidebar = () => {
   return (
     <>
-      <section className="sticky top-10 flex h-[calc(100vh_-_100px)] w-52 flex-shrink-0 flex-col justify-between px-4 transition-colors">
+      <section className="sticky top-10 flex h-[calc(100vh_-_150px)] w-52 flex-shrink-0 flex-col justify-between px-4 transition-colors">
         <ul className="flex flex-col">
           {SidebarTags.map((tag) => (
             <li
@@ -92,7 +95,7 @@ const SidebarTags = [
   {
     name: "Create Vendor",
     active: "My Products",
-    href: `${process.env.NEXT_PUBLIC_WEB_URL}/profile/vendor`,
+    href: `${process.env.NEXT_PUBLIC_WEB_URL}/profile/vendors`,
   },
   {
     name: "Favorites",

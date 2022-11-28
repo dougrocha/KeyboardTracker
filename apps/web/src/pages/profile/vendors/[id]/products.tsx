@@ -2,26 +2,19 @@ import { PaginationState } from "@tanstack/react-table"
 import React from "react"
 
 import ProductsTable from "../../../../components/ProductsTable"
-import {
-  UseGetVendorProducts,
-  UseGetVendors,
-} from "../../../../libs/api/Vendor"
+import VendorLayout from "../../../../layouts/VendorLayout"
+import { UseGetVendorProducts } from "../../../../libs/api/Vendor"
+import { Vendor } from "../../../../types/vendor"
 
-const VendorProductsPage = () => {
-  const { vendors } = UseGetVendors()
-
-  if (!vendors) return <div>Join here</div>
-
+const VendorProductsPage = ({ vendor }: { vendor: Vendor }) => {
   return (
     <>
-      <VendorTable />
+      <VendorTable id={vendor.id} />
     </>
   )
 }
 
-const VendorTable = () => {
-  const { vendors } = UseGetVendors()
-
+const VendorTable = ({ id }: { id: string }) => {
   const [{ pageIndex, pageSize }, setPagination] =
     React.useState<PaginationState>({
       pageIndex: 0,
@@ -37,7 +30,7 @@ const VendorTable = () => {
   )
 
   const { products, count, isLoading, error, refetch, isRefetching } =
-    UseGetVendorProducts(vendors?.[0].id ?? "", {
+    UseGetVendorProducts(id ?? "", {
       page: pageIndex + 1,
       perPage: pageSize,
     })
@@ -55,5 +48,9 @@ const VendorTable = () => {
     />
   )
 }
+
+VendorProductsPage.getLayout = (page: React.ReactNode) => (
+  <VendorLayout>{page}</VendorLayout>
+)
 
 export default VendorProductsPage

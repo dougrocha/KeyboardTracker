@@ -15,6 +15,9 @@ import { format } from "date-fns"
 import React from "react"
 import { BarLoader } from "react-spinners"
 
+import Form from "./Forms/Form"
+import Input from "./Forms/Input"
+import ModalDialog from "./ModalDialog"
 import ProfileSection from "./Profile/ProfileSection"
 
 import { Product } from "../types/product"
@@ -74,35 +77,41 @@ const ProductsTable = ({
       columnHelper.accessor("brand", {
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor("groupBuyStartDate", {
-        header: `Group Buy Start Date (${
-          new Date()
-            .toLocaleTimeString("en-us", {
-              timeZoneName: "short",
-            })
-            .split(" ")[2]
-        })`,
-        cell: (info) =>
-          info.getValue()
-            ? format(new Date(info.getValue() as Date), "MM/dd/yyyy HH:mm")
-            : null,
-      }),
-      columnHelper.accessor("groupBuyEndDate", {
-        // get locale time zone abbreviated from browser
-        header: `Group Buy End Date (${
-          new Date()
-            .toLocaleTimeString("en-us", {
-              timeZoneName: "short",
-            })
-            .split(" ")[2]
-        })`,
-        cell: (info) =>
-          info.getValue()
-            ? format(new Date(info.getValue() as Date), "MM/dd/yyyy HH:mm")
-            : null,
-      }),
+      columnHelper.accessor(
+        (row) =>
+          `${format(
+            new Date(row.groupBuyStartDate as Date),
+            "MM/dd/yyyy"
+          )} - ${format(new Date(row.groupBuyEndDate as Date), "MM/dd/yyyy")}`,
+        {
+          id: "groupBuyDate",
+          header: `Group Buy (${
+            new Date()
+              .toLocaleTimeString("en-us", {
+                timeZoneName: "short",
+              })
+              .split(" ")[2]
+          })`,
+        }
+      ),
       columnHelper.accessor("status", {
         cell: (info) => info.getValue(),
+      }),
+      columnHelper.display({
+        id: "actions",
+        cell: (row) => (
+          <ModalDialog
+            render={({ close, labelId }) => (
+              <EditProductView
+                close={close}
+                labelId={labelId}
+                product={row.row.original}
+              />
+            )}
+          >
+            <button>Open dialog</button>
+          </ModalDialog>
+        ),
       }),
     ],
     [columnHelper, formatCurrency, pagination]
@@ -279,6 +288,84 @@ const ProductsTable = ({
         </div>
       </div>
     </ProfileSection>
+  )
+}
+
+interface EditProductViewProps {
+  product: Product
+  close: () => void
+  labelId: string
+}
+
+const EditProductView = ({ close, labelId, product }: EditProductViewProps) => {
+  const onSubmit = async (data: Product) => {
+    console.log(data)
+  }
+
+  return (
+    <div className="flex max-h-min w-full max-w-xl flex-col gap-2 rounded bg-gray-300 p-10">
+      <div className="flex justify-between">
+        <h2 className="text-xl font-semibold">
+          Edit Product:{" "}
+          <span className="truncate font-normal">{product.name}</span>
+        </h2>
+        <button className="text-xl font-bold" onClick={close}>
+          X
+        </button>
+      </div>
+      <div className="flex flex-col gap-2">
+        <Form<Product>
+          onSubmit={onSubmit}
+          defaultValues={product}
+          className="mt-8 h-full max-w-full space-y-4"
+        >
+          <Input
+            id={labelId}
+            label="Name"
+            type="text"
+            placeholder={product.name}
+            className="rounded border"
+          />
+          <Input
+            id={labelId}
+            label="Price"
+            type="number"
+            placeholder={
+              product.price
+                ? product.price.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  })
+                : "0.00"
+            }
+            min={0}
+            step={0.01}
+            className="rounded border"
+          />
+          <Input
+            id={labelId}
+            label="Description"
+            type="text"
+            placeholder={product.description}
+            className="rounded border"
+          />
+          <div className="flex justify-end gap-2 pt-4">
+            <button
+              className="rounded border bg-gray-700 px-4 py-2 text-white transition-colors hover:bg-gray-500 hover:text-white"
+              onClick={close}
+            >
+              Cancel
+            </button>
+            <button
+              className="rounded border bg-gray-700 px-4 py-2 text-white transition-colors hover:bg-gray-500 hover:text-white"
+              type="submit"
+            >
+              Save
+            </button>
+          </div>
+        </Form>
+      </div>
+    </div>
   )
 }
 

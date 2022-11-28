@@ -16,7 +16,7 @@ const CatalogPage = ({ products }: CatalogPageProps) => {
     <MainViewLayout>
       {/* Search bar area */}
       <div className="my-10 flex w-full items-center justify-center">
-        <SearchBox className="w-full md:w-1/2" />
+        <SearchBox placeholder="Search a product..." maxWidth="lg" />
       </div>
       {/* Items area */}
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
@@ -32,6 +32,7 @@ export const getStaticProps = async (): Promise<
   GetStaticPropsResult<CatalogPageProps>
 > => {
   const products = await GetAllProducts({})
+
 
   return {
     props: { products },
