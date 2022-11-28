@@ -11,7 +11,7 @@ const Hero = () => {
         <p className="mb-5 mt-2 text-lg">
           Introducing the best way to track up and coming group buys.
         </p>
-        <SearchBox className="w-80" placeholder="Search..." />
+        <SearchBox placeholder="Search a product..." maxWidth="md" />
       </div>
 
       <div className="absolute -right-36 top-1/2 hidden h-full w-[512px] -translate-y-1/2 overflow-hidden rounded-lg md:block">

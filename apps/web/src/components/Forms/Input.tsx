@@ -27,6 +27,7 @@ const Input = ({
   validation,
   icon,
   hideLabel,
+  className,
   ...rest
 }: InputProps) => {
   const {
@@ -47,6 +48,7 @@ const Input = ({
         readOnly={readOnly}
         placeholder={placeholder}
         className={classNames(
+          className,
           "block w-full rounded border-none font-medium shadow-sm",
           readOnly &&
             "cursor-not-allowed border-gray-300 bg-gray-100 focus:border-gray-300 focus:ring-0",
@@ -58,6 +60,7 @@ const Input = ({
             "focus:ring-primary-500 focus:border-primary-500 border-gray-300"
         )}
         aria-describedby={rest.name ?? id}
+        aria-invalid={errors.name ? "true" : "false"}
         {...register?.(id, {
           required: rest.required,
           ...validation,

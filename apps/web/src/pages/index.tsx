@@ -26,7 +26,7 @@ const HomePage = ({
     <>
       <Hero />
 
-      <div className="mt-20 mb-10 flex flex-col space-y-10 overflow-x-scroll">
+      <div className="mt-20 mb-10 flex flex-col space-y-10">
         <Carousel title="Interest Checks">
           {interestChecks?.map((p) => (
             <Card key={p.id} product={p} className="w-80 rounded" />
@@ -49,7 +49,8 @@ const HomePage = ({
               />
             ))}
           </div>
-          <Link href={"/products"} legacyBehavior>
+
+          <Link href={"/products"}>
             <button className="mt-10 rounded-md bg-gray-200 py-2 px-4 font-medium text-black">
               Find More
             </button>
@@ -61,7 +62,7 @@ const HomePage = ({
 }
 
 HomePage.getLayout = (page: ReactElement) => (
-  <MainViewLayout footer>{page}</MainViewLayout>
+  <MainViewLayout>{page}</MainViewLayout>
 )
 
 export default HomePage

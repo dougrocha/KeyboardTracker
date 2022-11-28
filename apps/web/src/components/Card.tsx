@@ -53,9 +53,9 @@ const Card = ({ product, className }: CardProps) => {
 
   return (
     <li
-      className={`relative mb-4 box-border inline-flex h-72 shrink-0 flex-col items-center justify-between overflow-hidden ${className}`}
+      className={`relative mb-4 box-border inline-flex h-72 shrink-0 select-text flex-col items-center justify-between overflow-hidden ${className}`}
     >
-      <div className="relative h-full w-full">
+      <div className="relative h-full w-full select-none">
         <Image
           src={coverImage ?? "/hero.jpg"}
           alt={`card image for ${name}`}

@@ -1,6 +1,6 @@
 import { Designer } from "./designer"
 import { GroupBuyStatus } from "./groupBuyStatus"
-import { Vendor } from "./image"
+import { Vendor } from "./vendor"
 import { Keyboard } from "./keyboard"
 import { KeycapSet } from "./keycapSet"
 import { ProductType } from "./productType"

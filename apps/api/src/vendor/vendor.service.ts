@@ -66,8 +66,15 @@ export class VendorService {
         where: {
           userId,
         },
-        include: {
-          vendor: true,
+        select: {
+          vendor: {
+            select: {
+              id: true,
+              name: true,
+              country: true,
+              verified: true,
+            },
+          },
         },
       })
       .then((userVendors) => userVendors.map(({ vendor }) => vendor))
