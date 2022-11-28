@@ -127,6 +127,9 @@ const ImageField = ({
     },
   })
 
+  console.log("src", src)
+  console.log("prev", previewImage)
+
   const onSubmit = (data: { avatar: FileList | null }) => {
     const file = data.avatar?.[0]
     if (file) {
@@ -146,8 +149,13 @@ const ImageField = ({
                 src={previewImage}
                 alt={alt ?? "Profile Picture"}
                 fill
-                sizes="128px"
+                quality={50}
                 className="rounded-full object-cover object-center"
+                sizes="
+                  (max-width: 640px) 64px,
+                  (max-width: 768px) 64px,
+                  (max-width: 1024px) 128px
+                  "
               />
             ) : (
               <div className="h-32 w-32 rounded-full bg-gray-400" />

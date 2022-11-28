@@ -2,8 +2,8 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 
 import { PaginationParams } from "./types"
 
-import { Vendor } from "../../types/vendor"
 import { Product } from "../../types/product"
+import { Vendor } from "../../types/vendor"
 import AxiosClient from "../AxiosClient"
 
 interface VendorProducts {

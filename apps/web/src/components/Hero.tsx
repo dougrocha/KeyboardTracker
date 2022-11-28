@@ -18,7 +18,9 @@ const Hero = () => {
         <Image
           src={"/hero.jpg"}
           alt={"Keyboard Picture"}
-          sizes="512px"
+          sizes="(max-width: 640px) 64px,
+          (max-width: 768px) 64px,
+          (max-width: 1024px) 128px"
           fill
           priority
           className="h-full object-cover object-center"

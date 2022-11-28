@@ -1,9 +1,9 @@
 import { Designer } from "./designer"
 import { GroupBuyStatus } from "./groupBuyStatus"
-import { Vendor } from "./vendor"
 import { Keyboard } from "./keyboard"
 import { KeycapSet } from "./keycapSet"
 import { ProductType } from "./productType"
+import { Vendor } from "./vendor"
 import { YearQuarter } from "./yearQuarter"
 
 export interface Product {

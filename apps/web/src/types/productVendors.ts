@@ -1,5 +1,5 @@
-import { Vendor } from "./vendor"
 import { Product } from "./product"
+import { Vendor } from "./vendor"
 
 export interface ProductVendors {
   id: string
