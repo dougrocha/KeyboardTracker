@@ -1,13 +1,8 @@
 import { Product, Vendor } from "@meka/database"
-import { PaginationParams } from "@meka/types"
+import { PaginatedResults, PaginationParams } from "@meka/types"
 import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 
 import AxiosClient from "../AxiosClient"
-
-interface VendorProducts {
-  products: Product[]
-  count: number
-}
 
 const GetMyVendorUrl = async () => {
   const data = await AxiosClient.get<Vendor[]>(`user/me/vendors`)
@@ -17,7 +12,7 @@ const GetMyVendorUrl = async () => {
 const GetVendorProducts = async (
   id: string,
   pagination: PaginationParams = { page: 1, perPage: 10 }
-): Promise<VendorProducts> => {
+): Promise<PaginatedResults<Product>> => {
   const { data } = await AxiosClient.get(
     `/vendor/${id}/products?page=${pagination.page}&perPage=${pagination.perPage}`
   )
@@ -54,7 +49,7 @@ export const UseGetVendorProducts = (
   )
 
   return {
-    products: data?.products,
+    products: data?.data,
     count: data?.count,
     ...rest,
   }

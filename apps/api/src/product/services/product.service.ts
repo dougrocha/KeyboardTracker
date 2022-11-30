@@ -152,16 +152,28 @@ export class ProductService implements BaseService<Product> {
     })
   }
 
-  async findManyWithStatus(status: GroupBuyStatus, params?: PaginationParams) {
-    console.log('status', status)
-
+  async findManyWithStatus(
+    status: GroupBuyStatus,
+    params?: PaginationParams,
+  ): Promise<MaybePaginated<Product>> {
     if (params) {
       const { perPage, page = 1 } = params
-      return this.prisma.product.findMany({
-        where: { status },
-        take: perPage,
-        skip: (page - 1) * perPage,
-      })
+
+      return this.prisma
+        .$transaction([
+          this.prisma.product.findMany({
+            where: { status },
+            take: perPage,
+            skip: (page - 1) * perPage,
+          }),
+          this.prisma.product.count({
+            where: { status },
+          }),
+        ])
+        .then(([products, count]) => ({
+          data: products,
+          count,
+        }))
     }
 
     return this.prisma.product.findMany({ where: { status } })

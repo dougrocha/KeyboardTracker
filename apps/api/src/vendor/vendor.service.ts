@@ -119,21 +119,23 @@ export class VendorService implements BaseService<Vendor> {
   }
 
   async findUserVendors(userId: string) {
-    return this.prisma.userVendor.findMany({
-      where: {
-        userId,
-      },
-      select: {
-        vendor: {
-          select: {
-            id: true,
-            name: true,
-            country: true,
-            verified: true,
+    return this.prisma.userVendor
+      .findMany({
+        where: {
+          userId,
+        },
+        select: {
+          vendor: {
+            select: {
+              id: true,
+              name: true,
+              country: true,
+              verified: true,
+            },
           },
         },
-      },
-    })
+      })
+      .then((vendors) => vendors.map((vendor) => vendor.vendor))
   }
 
   async findVendorsByCountry(country: string) {
