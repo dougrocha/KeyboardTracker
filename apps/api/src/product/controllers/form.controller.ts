@@ -1,6 +1,6 @@
+import { User } from '@meka/database'
 import { Controller } from '@nestjs/common'
 import { Body, Get, Inject, Param, Post } from '@nestjs/common/decorators'
-import { User } from '@meka/database'
 
 import { FORM_SERVICE } from '../../common/constants'
 import { GetCurrentUser } from '../../common/decorators/current-user.decorator'
