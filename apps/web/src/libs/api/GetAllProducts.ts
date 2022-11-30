@@ -18,7 +18,7 @@ export async function GetAllProductIds({
   perPage = 100,
   page = 1,
 }: PaginationParams) {
-  const { data } = await AxiosClient.get<PaginatedResults<Pick<Product, "id">>>(
+  const { data } = await AxiosClient.get<Pick<Product, "id">[]>(
     `/product?perPage=${perPage}&page=${page}`
   )
   return data

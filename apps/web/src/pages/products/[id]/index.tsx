@@ -234,7 +234,7 @@ export const getStaticProps = async ({
 export const getStaticPaths = async () => {
   const data = await GetAllProductIds({})
 
-  const paths = data.data.map(({ id }) => ({
+  const paths = data.map(({ id }) => ({
     params: { id },
   }))
 

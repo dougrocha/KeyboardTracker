@@ -49,15 +49,7 @@ export class ProductController {
     @Query() { perPage = 10, page = 1 }: PaginationParams,
     @Query('product', ParseBoolPipe) product: boolean,
   ) {
-    console.log({ perPage, page, product })
-
     if (product) {
-      console.log(
-        await this.productService.findMany({
-          perPage,
-          page,
-        }),
-      )
       return await this.productService.findMany({ perPage, page })
     }
 

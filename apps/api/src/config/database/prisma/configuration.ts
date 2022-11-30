@@ -12,6 +12,7 @@ export class PrismaConfigService implements PrismaOptionsFactory {
     return {
       prismaOptions: {
         log: ['query', 'info', 'warn'],
+        errorFormat: 'pretty',
       },
       explicitConnect: true,
       middlewares: [

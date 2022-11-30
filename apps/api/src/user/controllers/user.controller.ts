@@ -18,12 +18,11 @@ import {
   UploadedFile,
   StreamableFile,
   UseGuards,
-  Req,
   UseInterceptors,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { Queue } from 'bull'
-import { Request, Response } from 'express'
+import { Response } from 'express'
 
 import {
   DESIGNER_SERVICE,
