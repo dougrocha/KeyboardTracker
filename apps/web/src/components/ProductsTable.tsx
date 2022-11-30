@@ -71,8 +71,7 @@ const ProductsTable = ({
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("price", {
-        cell: (info) =>
-          formatCurrency.format(info.getValue()?.toNumber() ?? 0 / 100),
+        cell: (info) => formatCurrency.format(Number(info.getValue())),
       }),
       columnHelper.accessor("brand", {
         cell: (info) => info.getValue(),
