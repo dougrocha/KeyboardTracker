@@ -1,14 +1,11 @@
 import { HeartIcon } from "@heroicons/react/24/outline"
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
 import { Product } from "@meka/database"
-import { useQuery } from "@tanstack/react-query"
 import Image from "next/image"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 
 import { UseFavorites } from "../libs/api/Favorites"
-import { GetProfileInformation } from "../libs/api/GetMe"
-import { GetUserFavorites } from "../libs/api/GetUserFavorites"
 
 interface CardProps {
   product: Product
@@ -16,13 +13,11 @@ interface CardProps {
 }
 
 const Card = ({ product, className }: CardProps) => {
-  const { data: user } = useQuery(["user"], GetProfileInformation)
+  const {
+    favorites: { data: favorites },
+  } = UseFavorites()
 
-  const { data } = useQuery(["favorites"], GetUserFavorites, {
-    enabled: !!user?.id,
-  })
-
-  const favoriteProduct = data?.favorites?.find(
+  const favoriteProduct = favorites?.find(
     (fav) => fav.product.id === product.id
   )
 

@@ -1,3 +1,4 @@
+import { Product } from "@meka/database"
 import { GetStaticPropsResult } from "next"
 import React from "react"
 
@@ -5,10 +6,10 @@ import Card from "../../components/Card"
 import SearchBox from "../../components/SearchBox"
 import MainViewLayout from "../../layouts/MainViewLayout"
 import { GetAllProducts } from "../../libs/api/GetAllProducts"
-import { Product } from "../../types/product"
 
 interface CatalogPageProps {
   products: Product[]
+  count: number
 }
 
 const CatalogPage = ({ products }: CatalogPageProps) => {
@@ -34,7 +35,7 @@ export const getStaticProps = async (): Promise<
   const products = await GetAllProducts({})
 
   return {
-    props: { products },
+    props: { products: products.data, count: products.count },
     revalidate: 60,
   }
 }

@@ -5,6 +5,7 @@ import {
   MinusCircleIcon,
 } from "@heroicons/react/20/solid"
 import { yupResolver } from "@hookform/resolvers/yup"
+import { RegisterFormData } from "@meka/database"
 import classNames from "classnames"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -14,7 +15,6 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import useAuth from "../hooks/useAuth"
 import MainViewLayout from "../layouts/MainViewLayout"
 import { UseLocalRegister } from "../libs/api/Auth"
-import { RegisterFormData } from "../types/protected-auth"
 import schema from "../utils/schemas/registerForm"
 
 const RegisterPage = () => {

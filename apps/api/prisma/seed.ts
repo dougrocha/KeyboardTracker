@@ -310,6 +310,23 @@ async function main() {
     },
   })
 
+  const product12 = await prisma.product.create({
+    data: {
+      id: nextId(),
+      name: 'Product 11',
+      description: 'Product 11 description',
+      price: 1100,
+      estimatedDeliveryQuarter: 'Q3',
+      estimatedDeliveryYear: '2032',
+      groupBuyStartDate: new Date('2021-11-01'),
+      groupBuyEndDate: new Date('2021-12-02'),
+      layout: 'ANSI',
+      status: 'GROUP_BUY',
+      type: 'KEYBOARD',
+      brand: 'JTK',
+    },
+  })
+
   const keycap1 = await prisma.keycapSet.create({
     data: {
       material: 'ABS',
@@ -612,6 +629,21 @@ async function main() {
       product: {
         connect: {
           id: product7.id,
+        },
+      },
+      vendor: {
+        connect: {
+          id: vendor1.id,
+        },
+      },
+    },
+  })
+
+  const productVendor8 = await prisma.productVendor.create({
+    data: {
+      product: {
+        connect: {
+          id: product8.id,
         },
       },
       vendor: {

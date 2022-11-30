@@ -13,7 +13,7 @@ export class FormController {
 
   @Get(':id/form')
   async getForm(@Param('id') id: string) {
-    return await this.form.findProductForm(id)
+    return await this.form.findProductFormWithFieldsAndValues(id)
   }
 
   @Post(':id/form')

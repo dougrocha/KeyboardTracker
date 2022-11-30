@@ -1,4 +1,4 @@
-import { GroupBuyStatus } from "../types/groupBuyStatus"
+import { GroupBuyStatus } from "@meka/database"
 
 export const StatusString = (status: GroupBuyStatus) => {
   switch (status) {

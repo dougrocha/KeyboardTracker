@@ -1,10 +1,10 @@
+import { Vendor } from "@meka/database"
 import React, { useEffect, useState } from "react"
 import { useForm, FormProvider } from "react-hook-form"
 
 import Input from "../../../../components/Forms/Input"
 import ProfileSection from "../../../../components/Profile/ProfileSection"
 import VendorLayout from "../../../../layouts/VendorLayout"
-import { Vendor } from "../../../../types/vendor"
 
 const VendorSettingsPage = ({ vendor }: { vendor: Vendor }) => {
   return (

@@ -1,10 +1,10 @@
+import { Vendor } from "@meka/database"
 import { PaginationState } from "@tanstack/react-table"
 import React from "react"
 
 import ProductsTable from "../../../../components/ProductsTable"
 import VendorLayout from "../../../../layouts/VendorLayout"
 import { UseGetVendorProducts } from "../../../../libs/api/Vendor"
-import { Vendor } from "../../../../types/vendor"
 
 const VendorProductsPage = ({ vendor }: { vendor: Vendor }) => {
   return (

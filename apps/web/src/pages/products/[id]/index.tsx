@@ -1,4 +1,9 @@
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
+import {
+  Vendor,
+  ProductIncludeAll,
+  Image as ProductImage,
+} from "@meka/database"
 import classNames from "classnames"
 import { GetStaticPropsContext, GetStaticPropsResult } from "next"
 import Image from "next/image"
@@ -11,12 +16,10 @@ import {
   FindProductVendors,
 } from "../../../libs/api/FindOneProduct"
 import { GetAllProductIds } from "../../../libs/api/GetAllProducts"
-import { Image as ProductImage, Product } from "../../../types/product"
-import { Vendor } from "../../../types/vendor"
 import { StatusString } from "../../../utils/statusStrings"
 
 interface ProductPageProps {
-  product: Product
+  product: ProductIncludeAll
   vendors: Vendor[]
 }
 
@@ -197,7 +200,13 @@ const InfoColumn = ({
   )
 }
 
-const InfoTag = ({ title, value }: { title: string; value?: string }) => {
+const InfoTag = ({
+  title,
+  value,
+}: {
+  title: string
+  value?: string | null
+}) => {
   return (
     <div className="flex flex-col">
       <span className="font-semibold">{title}</span>
@@ -225,7 +234,7 @@ export const getStaticProps = async ({
 export const getStaticPaths = async () => {
   const data = await GetAllProductIds({})
 
-  const paths = data.map(({ id }) => ({
+  const paths = data.data.map(({ id }) => ({
     params: { id },
   }))
 

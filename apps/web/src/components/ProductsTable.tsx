@@ -1,3 +1,4 @@
+import { Product } from "@meka/database"
 import { UseQueryResult } from "@tanstack/react-query"
 import {
   createColumnHelper,
@@ -19,8 +20,6 @@ import Form from "./Forms/Form"
 import Input from "./Forms/Input"
 import ModalDialog from "./ModalDialog"
 import ProfileSection from "./Profile/ProfileSection"
-
-import { Product } from "../types/product"
 
 interface ProductsTableProps {
   products?: Product[] | undefined
@@ -72,7 +71,8 @@ const ProductsTable = ({
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("price", {
-        cell: (info) => formatCurrency.format(info.getValue() ?? 0 / 100),
+        cell: (info) =>
+          formatCurrency.format(info.getValue()?.toNumber() ?? 0 / 100),
       }),
       columnHelper.accessor("brand", {
         cell: (info) => info.getValue(),
@@ -330,14 +330,7 @@ const EditProductView = ({ close, labelId, product }: EditProductViewProps) => {
             id={labelId}
             label="Price"
             type="number"
-            placeholder={
-              product.price
-                ? product.price.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  })
-                : "0.00"
-            }
+            placeholder={product.price?.toString()}
             min={0}
             step={0.01}
             className="rounded border"

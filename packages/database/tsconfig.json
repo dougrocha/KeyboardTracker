@@ -13,6 +13,6 @@
     "incremental": true,
     "skipLibCheck": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["dist", "build", "node_modules"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["./dist/**/*"]
 }

@@ -1,3 +1,9 @@
+import {
+  FieldType,
+  FormField,
+  FormWithFieldsAndValues,
+  FormFieldsWithValues,
+} from "@meka/database"
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import dynamic from "next/dynamic"
 import React from "react"
@@ -6,7 +12,6 @@ import create, { useStore } from "zustand"
 import { devtools } from "zustand/middleware"
 
 import { GetFormByProductId } from "../../../libs/api/GetFormByProductId"
-import { FieldType, Form as FormType, FormField } from "../../../types/form"
 
 const Boolean = dynamic(() => import("../../../components/Forms/Boolean"))
 const Input = dynamic(() => import("../../../components/Forms/Input"))
@@ -82,7 +87,7 @@ const useFormStore = create(
 )
 
 interface FormPageProps {
-  form: FormType
+  form: FormWithFieldsAndValues
 }
 
 const FormPage = ({ form }: FormPageProps) => {
@@ -155,7 +160,7 @@ const FormPage = ({ form }: FormPageProps) => {
   )
 }
 
-const FormDisplay = ({ field }: { field: FormField }) => {
+const FormDisplay = ({ field }: { field: FormFieldsWithValues }) => {
   switch (field.type) {
     case FieldType.TEXT:
       return <Input id={`fields.${field?.position}.value`} label={field.name} />

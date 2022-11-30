@@ -19,7 +19,7 @@ export const GetUserFavorites = async () => {
   return data
 }
 
-export const AddProductToFavorites = async (id: number) => {
+export const AddProductToFavorites = async (id: string) => {
   const data = await AxiosClient.post<FavoritesResponse[]>(
     `/user/me/favorites`,
     {
@@ -40,16 +40,17 @@ export const RemoveProductFromFavorites = async (id: number) => {
 }
 
 export const UseFavorites = (
-  options?: UseMutationOptions<FavoritesResponse[], unknown, number>
+  options?: UseMutationOptions<FavoritesResponse[], unknown, string | number>
 ) => {
   const queryClient = useQueryClient()
 
-  const op: UseMutationOptions<FavoritesResponse[], unknown, number> = {
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user", "favorites"] })
-    },
-    ...options,
-  }
+  const op: UseMutationOptions<FavoritesResponse[], unknown, string | number> =
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["user", "favorites"] })
+      },
+      ...options,
+    }
 
   const getFavorites = useQuery(["user", "favorites"], () => GetUserFavorites())
 

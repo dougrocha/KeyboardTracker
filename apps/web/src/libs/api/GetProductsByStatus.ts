@@ -1,7 +1,6 @@
+import { GroupBuyStatus, Product } from "@meka/database"
 import { PaginationParams } from "@meka/types"
 
-import { GroupBuyStatus } from "../../types/groupBuyStatus"
-import { Product } from "../../types/product"
 import AxiosClient from "../AxiosClient"
 
 /**

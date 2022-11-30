@@ -1,7 +1,6 @@
 import { Designer, Product } from "@meka/database"
+import { PaginationParams } from "@meka/types"
 import { useQuery, UseQueryOptions } from "@tanstack/react-query"
-
-import { PaginationParams } from "./types"
 
 import AxiosClient from "../AxiosClient"
 

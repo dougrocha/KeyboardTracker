@@ -1,9 +1,7 @@
+import { Product, Vendor } from "@meka/database"
+import { PaginationParams } from "@meka/types"
 import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 
-import { PaginationParams } from "./types"
-
-import { Product } from "../../types/product"
-import { Vendor } from "../../types/vendor"
 import AxiosClient from "../AxiosClient"
 
 interface VendorProducts {

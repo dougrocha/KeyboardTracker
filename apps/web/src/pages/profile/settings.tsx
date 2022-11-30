@@ -1,3 +1,4 @@
+import { Theme } from "@meka/database"
 import { useTheme } from "next-themes"
 import React, { MouseEvent } from "react"
 
@@ -5,7 +6,6 @@ import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileSection from "../../components/Profile/ProfileSection"
 import useAuth from "../../hooks/useAuth"
 import ProfileLayout from "../../layouts/ProfileLayout"
-import { UserTheme } from "../../types/protected-auth"
 
 const SettingsPage = () => {
   const { theme, setTheme } = useTheme()
@@ -25,7 +25,7 @@ const SettingsPage = () => {
             </p>
           </div>
           <DropdownSelect
-            options={[UserTheme.LIGHT, UserTheme.DARK, UserTheme.SYSTEM]}
+            options={[Theme.LIGHT, Theme.DARK, Theme.SYSTEM]}
             defaultValue={user?.theme ?? theme}
             onChange={(e) => {
               setTheme(e.currentTarget.value.toLowerCase())

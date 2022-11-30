@@ -1,7 +1,7 @@
+import { Vendor } from "@meka/database"
 import React from "react"
 
 import VendorLayout from "../../../../layouts/VendorLayout"
-import { Vendor } from "../../../../types/vendor"
 
 const VendorPage = ({ vendor }: { vendor: Vendor }) => {
   return (
