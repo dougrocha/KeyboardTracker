@@ -18,11 +18,12 @@ import {
   UploadedFile,
   StreamableFile,
   UseGuards,
+  Req,
   UseInterceptors,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { Queue } from 'bull'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 
 import {
   DESIGNER_SERVICE,
@@ -121,10 +122,14 @@ export class UsersController {
     const currAvatar = await this.userService.findUserAvatar(user.id)
 
     if (currAvatar) {
-      await this.imagesQueue.add(DELETE_AVATAR, {
-        folder: [user.id],
-        fileName: currAvatar.avatar,
-      })
+      await this.imagesQueue.add(
+        DELETE_AVATAR,
+        {
+          folder: [user.id],
+          fileName: currAvatar.avatar,
+        },
+        { delay: 5000 },
+      )
     }
 
     const fileName = this.snowflake.nextId()

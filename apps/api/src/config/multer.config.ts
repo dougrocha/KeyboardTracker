@@ -8,9 +8,6 @@ export const multerConfig = {
 }
 
 export const multerImageOptions: MulterModuleOptions = {
-  limits: {
-    fileSize: multerConfig.fileSize,
-  },
   fileFilter: (req, file, cb) => {
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif|webp)$/)) {
       return cb(
@@ -21,9 +18,19 @@ export const multerImageOptions: MulterModuleOptions = {
         false,
       )
     }
+
+    if (file.size > multerConfig.fileSize) {
+      return cb(
+        new HttpException(
+          `File size must be less than ${multerConfig.fileSize} bytes`,
+          HttpStatus.BAD_REQUEST,
+        ),
+        false,
+      )
+    }
+
     cb(null, true)
   },
-  // TODO: Change so image is saved into storage first. Then optimized and replaced with new image.
   storage: memoryStorage(),
 }
 
