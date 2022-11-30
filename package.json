@@ -12,7 +12,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "db:seed": "yarn workspace @meka/database prisma db push --accept-data-loss --force-reset && yarn workspace @meka/database prisma db seed"
   },
   "devDependencies": {
     "prettier": "^2.8.0",
