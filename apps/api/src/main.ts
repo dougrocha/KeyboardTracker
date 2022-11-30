@@ -19,7 +19,9 @@ async function bootstrap() {
     credentials: true,
   })
 
-  app.use(compression())
+  // Some request wont decompress automatically on client
+  // Specifically with form get request
+  // app.use(compression())
 
   const httpAdapter = app.getHttpAdapter()
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter))

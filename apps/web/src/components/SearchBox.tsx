@@ -1,4 +1,5 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
+import { Product } from "@meka/database"
 import classNames from "classnames"
 import { useRouter } from "next/router"
 import React, { useEffect, useState, useTransition } from "react"
@@ -8,7 +9,6 @@ import Input from "./Forms/Input"
 
 import useDebounce from "../hooks/useDebounce"
 import { SearchProducts } from "../libs/api/SearchProducts"
-import { Product } from "../types/product"
 
 interface SearchBoxProps {
   placeholder?: string

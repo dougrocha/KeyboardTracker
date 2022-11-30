@@ -4,6 +4,7 @@ import {
   GlobeAltIcon,
   ListBulletIcon,
 } from "@heroicons/react/24/outline"
+import { Vendor } from "@meka/database"
 import Link from "next/link"
 import React from "react"
 
@@ -11,7 +12,6 @@ import ProfileHeader from "../../../components/Profile/ProfileHeader"
 import ProfileSection from "../../../components/Profile/ProfileSection"
 import ProfileLayout from "../../../layouts/ProfileLayout"
 import { UseGetVendors } from "../../../libs/api/Vendor"
-import { Vendor } from "../../../types/vendor"
 
 const VendorPage = () => {
   const { vendors } = UseGetVendors()

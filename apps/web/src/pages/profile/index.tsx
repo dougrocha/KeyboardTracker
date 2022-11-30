@@ -1,3 +1,4 @@
+import { User } from "@meka/database"
 import { useQueryClient } from "@tanstack/react-query"
 import Image from "next/image"
 import React, { ChangeEvent, useState } from "react"
@@ -12,7 +13,6 @@ import useAuth from "../../hooks/useAuth"
 import ProfileLayout from "../../layouts/ProfileLayout"
 import { UseUpdateUser, UseUpdateUserAvatar } from "../../libs/api/GetMe"
 import { GetUserAvatar } from "../../libs/api/Images"
-import { User } from "../../types/protected-auth"
 
 const ProfilePage = () => {
   const { user, isLoading } = useAuth()

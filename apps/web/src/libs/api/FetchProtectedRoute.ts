@@ -1,4 +1,5 @@
-import { ProtectedAuth } from "../../types/user"
+import { ProtectedAuth } from "@meka/database"
+
 import AxiosClient from "../AxiosClient"
 
 const CheckProtectedRoute = async (): Promise<ProtectedAuth> => {

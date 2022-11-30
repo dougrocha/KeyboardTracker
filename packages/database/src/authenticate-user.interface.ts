@@ -1,4 +1,4 @@
-import { User } from "@meka/database"
+import { User } from "@prisma/client"
 
 export type LoginFormData = Required<Pick<User, "email" | "password">>
 

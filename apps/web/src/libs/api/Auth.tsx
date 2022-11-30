@@ -1,6 +1,6 @@
+import { LoginFormData, RegisterFormData } from "@meka/database"
 import { useMutation } from "@tanstack/react-query"
 
-import { LoginFormData, RegisterFormData } from "../../types/user"
 import AxiosClient from "../AxiosClient"
 
 export const localLoginUrl = async ({ email, password }: LoginFormData) => {

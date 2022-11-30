@@ -1,4 +1,5 @@
-import { DiscordIdentity } from "../../types/protected-auth"
+import { DiscordIdentity } from "@meka/database"
+
 import AxiosClient from "../AxiosClient"
 
 interface UserConnections {

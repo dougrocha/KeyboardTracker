@@ -1,6 +1,6 @@
-import { PaginationParams } from "./types"
+import { Product } from "@meka/database"
+import { PaginationParams } from "@meka/types"
 
-import { Product } from "../../types/product"
 import AxiosClient from "../AxiosClient"
 
 /**

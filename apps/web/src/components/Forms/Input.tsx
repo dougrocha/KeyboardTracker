@@ -6,10 +6,11 @@ import { RegisterOptions, useFormContext } from "react-hook-form"
 import BaseInput from "./BaseInput"
 import InputErrorIcon from "./InputErrorIcon"
 
-interface InputProps extends ComponentPropsWithoutRef<"input"> {
+interface InputProps
+  extends Omit<ComponentPropsWithoutRef<"input">, "placeholder"> {
   label?: string
   id: string
-  placeholder?: string
+  placeholder?: string | null
   helperText?: string
   readOnly?: boolean
   hideLabel?: boolean
@@ -46,7 +47,7 @@ const Input = ({
         type={type}
         id={id}
         readOnly={readOnly}
-        placeholder={placeholder}
+        placeholder={placeholder ?? undefined}
         className={classNames(
           className,
           "block w-full rounded border-none font-medium shadow-sm",

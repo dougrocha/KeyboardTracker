@@ -1,4 +1,4 @@
-import { Form } from '@meka/database'
+import { Form, Prisma } from '@meka/database'
 import { PaginationParams, PaginatedResults, MaybePaginated } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
@@ -106,9 +106,20 @@ export class FormService implements BaseService<Form> {
     })
   }
 
-  async findProductForm(productId: string) {
-    return this.prisma.form.findFirst({
+  async findProductForm(productId: string, includeFields?: Prisma.FormInclude) {
+    return this.prisma.form.findUnique({
       where: { productId },
+      include: includeFields,
+    })
+  }
+
+  async findProductFormWithFields(productId: string) {
+    return this.findProductForm(productId, { fields: true })
+  }
+
+  async findProductFormWithFieldsAndValues(productId: string) {
+    return this.findProductForm(productId, {
+      fields: { include: { values: true } },
     })
   }
 

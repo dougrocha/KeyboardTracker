@@ -1,4 +1,5 @@
-import { User } from "../../types/protected-auth"
+import { User } from "@meka/database"
+
 import AxiosClient from "../AxiosClient"
 
 export async function GetUserFavorites(): Promise<User> {
