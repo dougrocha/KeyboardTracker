@@ -1,3 +1,4 @@
+import { GroupBuyStatus } from '@meka/database'
 import {
   Controller,
   Get,
@@ -7,12 +8,27 @@ import {
   Param,
   ParseEnumPipe,
 } from '@nestjs/common'
-import { GroupBuyStatus } from '@prisma/client'
+import { Transform } from 'class-transformer'
+import { IsNumber, IsOptional, Min } from 'class-validator'
 
 import { PRODUCT_SERVICE } from '../../common/constants'
-import { PaginationParams } from '../dtos/queries/pagination-params.dto'
+import { PaginationParams } from '../../common/dto/pagination-params.dto'
 import { ProductSearchQuery } from '../dtos/queries/product-search-query.dto'
 import { ProductService } from '../services/product.service'
+
+export class Test {
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => (value ? parseInt(value) : 10))
+  @Min(1)
+  perPage?: number
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => (value ? parseInt(value) : 1))
+  @Min(1)
+  page?: number
+}
 
 @Controller()
 export class ProductController {
@@ -21,7 +37,7 @@ export class ProductController {
   ) {}
 
   /**
-   * GET /products
+   * GET /product
    *
    * Returns all products
    *
@@ -30,13 +46,24 @@ export class ProductController {
    */
   @Get()
   async findMany(
-    @Query() { perPage, page }: PaginationParams,
-    @Query('products', ParseBoolPipe) products: boolean,
+    @Query() { perPage = 10, page = 1 }: PaginationParams,
+    @Query('product', ParseBoolPipe) product: boolean,
   ) {
-    return await this.productService.findMany({
-      select: products ? undefined : { id: true },
-      skip: page ? (page - 1) * perPage : undefined,
-      take: perPage,
+    console.log({ perPage, page, product })
+
+    if (product) {
+      console.log(
+        await this.productService.findMany({
+          perPage,
+          page,
+        }),
+      )
+      return await this.productService.findMany({ perPage, page })
+    }
+
+    return await this.productService.findAllIds({
+      perPage,
+      page,
     })
   }
 
@@ -57,7 +84,7 @@ export class ProductController {
    */
   @Get(':id/vendors')
   async findAllVendors(@Param('id') id: string) {
-    return await this.productService.findProductVendors(id)
+    return await this.productService.findProductVendorsByProductId(id)
   }
 
   /**
@@ -93,6 +120,6 @@ export class ProductController {
     @Param('status', new ParseEnumPipe(GroupBuyStatus)) status: GroupBuyStatus,
     @Query() pagination: PaginationParams,
   ) {
-    return await this.productService.findByStatus(status, pagination)
+    return await this.productService.findManyWithStatus(status, pagination)
   }
 }

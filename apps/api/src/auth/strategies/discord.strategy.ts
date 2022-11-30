@@ -12,7 +12,7 @@ const DISCORD_SCOPES = ['email', 'identify']
 export class DiscordStrategy extends PassportStrategy(Strategy) {
   constructor(
     @Inject(DISCORD_AUTH_SERVICE)
-    private readonly authService: DiscordAuthService,
+    private readonly discordAuthService: DiscordAuthService,
     configService: ConfigService,
   ) {
     super({
@@ -26,7 +26,7 @@ export class DiscordStrategy extends PassportStrategy(Strategy) {
   async validate(accessToken: string, refreshToken: string, profile: Profile) {
     const { discriminator, username, email, mfa_enabled } = profile
 
-    return this.authService.validateUser({
+    return this.discordAuthService.validate({
       discordId: profile.id,
       username,
       discriminator,

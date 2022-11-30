@@ -11,7 +11,7 @@ import HiddenInput from "../components/Forms/PasswordInput"
 import useAuth from "../hooks/useAuth"
 import MainViewLayout from "../layouts/MainViewLayout"
 import { UseLocalLogin } from "../libs/api/Auth"
-import { LoginFormData, User } from "../types/user"
+import { LoginFormData, User } from "../types/protected-auth"
 import schema from "../utils/schemas/loginForm"
 
 const LoginSources = [

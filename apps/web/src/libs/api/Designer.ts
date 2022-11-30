@@ -1,9 +1,8 @@
+import { Designer, Product } from "@meka/database"
 import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 
 import { PaginationParams } from "./types"
 
-import { Designer } from "../../types/designer"
-import { Product } from "../../types/product"
 import AxiosClient from "../AxiosClient"
 
 interface DesignerProducts {

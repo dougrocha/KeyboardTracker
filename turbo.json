@@ -2,19 +2,30 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^db:generate", "^build"],
       "outputs": ["dist/**", ".next/**"]
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:push": {
+      "cache": false
     },
     "lint": {
       "outputs": []
     },
     "dev": {
+      "dependsOn": ["^db:generate"],
       "cache": false
     },
     "web#build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**"],
       "env": ["NEXT_PUBLIC_API_URL", "NEXT_PUBLIC_WEB_URL"]
+    },
+    "api#dev": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
     },
     "api#build": {
       "dependsOn": ["^build"],
@@ -38,6 +49,10 @@
         "UPLOADS_PATH",
         "MAX_FILE_UPLOAD_SIZE"
       ]
+    },
+    "database#generate": {
+      "cache": false,
+      "env": ["POSTGRES_PASSWORD", "POSTGRES_USER", "POSTGRES_DB"]
     }
   },
   "globalDependencies": [],

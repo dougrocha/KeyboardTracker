@@ -1,4 +1,4 @@
-import { PaginationParams } from "./types"
+import { PaginationParams } from "@meka/types"
 
 import { GroupBuyStatus } from "../../types/groupBuyStatus"
 import { Product } from "../../types/product"

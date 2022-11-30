@@ -1,14 +1,14 @@
 import { HeartIcon } from "@heroicons/react/24/outline"
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
+import { Product } from "@meka/database"
 import { useQuery } from "@tanstack/react-query"
 import Image from "next/image"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 
-import { UseFavorites } from "../libs/api/AddProductToFavorites"
+import { UseFavorites } from "../libs/api/Favorites"
 import { GetProfileInformation } from "../libs/api/GetMe"
 import { GetUserFavorites } from "../libs/api/GetUserFavorites"
-import { Product } from "../types/product"
 
 interface CardProps {
   product: Product

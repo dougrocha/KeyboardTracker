@@ -33,7 +33,6 @@ export const getStaticProps = async (): Promise<
 > => {
   const products = await GetAllProducts({})
 
-
   return {
     props: { products },
     revalidate: 60,

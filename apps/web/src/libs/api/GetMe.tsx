@@ -1,10 +1,10 @@
+import { User } from "@meka/database"
 import {
   useMutation,
   UseMutationOptions,
   useQueryClient,
 } from "@tanstack/react-query"
 
-import { User } from "../../types/user"
 import AxiosClient from "../AxiosClient"
 
 interface AvatarReturn {

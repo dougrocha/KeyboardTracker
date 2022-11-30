@@ -12,16 +12,7 @@ interface FlakeOptions {
   worker?: number
 }
 
-export interface SnowflakeService {
-  next(): string
-  nextId(): string
-  readonly id: string
-  readonly datacenter: number
-  readonly worker: number
-  nano(size?: number): string
-}
-
-export interface SnowflakeModuleOptions {
+interface SnowflakeModuleOptions {
   global?: boolean
   options?: FlakeOptions
 }
@@ -58,4 +49,13 @@ export class SnowflakeModule {
       global: options?.global,
     }
   }
+}
+
+export interface SnowflakeService {
+  next(): string
+  nextId(): string
+  readonly id: string
+  readonly datacenter: number
+  readonly worker: number
+  nano(size?: number): string
 }

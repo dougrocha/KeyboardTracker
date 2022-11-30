@@ -5,7 +5,7 @@ import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileSection from "../../components/Profile/ProfileSection"
 import useAuth from "../../hooks/useAuth"
 import ProfileLayout from "../../layouts/ProfileLayout"
-import { UserTheme } from "../../types/user"
+import { UserTheme } from "../../types/protected-auth"
 
 const SettingsPage = () => {
   const { theme, setTheme } = useTheme()

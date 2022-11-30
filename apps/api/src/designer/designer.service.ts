@@ -1,51 +1,59 @@
+import { Designer, PrismaClient } from '@meka/database'
+import { PaginationParams, PaginatedResults, MaybePaginated } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
-import { PrismaClient } from '@prisma/client'
 
 import { CreateDesignerDto } from './dtos/create-designer'
 import { UpdateDesignerDto } from './dtos/update-designer.dto'
 
 import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../common/constants'
-import { PaginationParams } from '../product/dtos/queries/pagination-params.dto'
+import BaseService from '../common/interfaces/base-service.interface'
 import { SnowflakeService } from '../snowflake/snowflake.module'
 
 @Injectable()
-export class DesignerService {
+export class DesignerService implements BaseService<Designer> {
   constructor(
     @Inject(PRISMA_SERVICE) private readonly prisma: PrismaClient,
     @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
   ) {}
 
-  async create(userId: string, createDesignerDto: CreateDesignerDto) {
+  create(data: CreateDesignerDto) {
     return this.prisma.designer.create({
       data: {
         id: this.snowflake.nextId(),
-        username: createDesignerDto.username,
-        name: createDesignerDto.name,
+        username: data.username,
+        name: data.name,
         user: {
           connect: {
-            id: userId,
+            id: data.userId,
           },
         },
       },
     })
   }
 
-  async findMany({ page, perPage }: PaginationParams) {
-    return this.prisma.designer.findMany({
-      skip: (page || 1 - 1) * (perPage || 10),
-      take: perPage || 10,
-    })
+  findMany(): Promise<Designer[]>
+  findMany(params?: PaginationParams): Promise<PaginatedResults<Designer>>
+  findMany(params?: unknown): Promise<MaybePaginated<Designer>> {
+    if (params) {
+      const { page = 1, perPage = 10 } = params as PaginationParams
+      return this.prisma.designer.findMany({
+        skip: (page - 1) * perPage,
+        take: perPage,
+      })
+    }
+
+    return this.prisma.designer.findMany()
   }
 
-  async findById(designerId: string) {
+  findOne(id: string): Promise<Designer> {
     return this.prisma.designer.findUnique({
       where: {
-        id: designerId,
+        id,
       },
     })
   }
 
-  async findByUserId(userId: string) {
+  async findUserDesigner(userId: string) {
     return this.prisma.designer.findUnique({
       where: {
         userId,
@@ -53,35 +61,16 @@ export class DesignerService {
     })
   }
 
-  async update(
-    id: string,
-    {
-      name,
-      discordServerUrl,
-      redditUsername,
-      twitterHandle,
-      username,
-      avatarUrl,
-      bannerUrl,
-    }: UpdateDesignerDto,
-  ) {
+  update(id: string, data: UpdateDesignerDto) {
     return this.prisma.designer.update({
       where: {
         id: id,
       },
-      data: {
-        username,
-        name,
-        discordServerUrl,
-        redditUsername,
-        twitterHandle,
-        avatarUrl,
-        bannerUrl,
-      },
+      data,
     })
   }
 
-  async delete(id: string) {
+  delete(id: string) {
     return this.prisma.designer.delete({
       where: {
         id: id,
@@ -117,5 +106,14 @@ export class DesignerService {
           count,
         }
       })
+  }
+
+  async validateUserDesigner(userId: string, designerId: string) {
+    return this.prisma.designer.findFirst({
+      where: {
+        id: designerId,
+        userId,
+      },
+    })
   }
 }

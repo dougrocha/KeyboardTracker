@@ -1,3 +1,4 @@
+import { User } from '@meka/database'
 import {
   Body,
   Controller,
@@ -11,7 +12,6 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { User } from '@prisma/client'
 import { Request, Response } from 'express'
 
 import { LOCAL_AUTH_SERVICE } from '../../common/constants'

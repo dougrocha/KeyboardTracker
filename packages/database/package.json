@@ -1,0 +1,25 @@
+{
+  "name": "@meka/database",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate"
+  },
+  "prisma": {
+    "seed": "ts-node src/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.7.0",
+    "biguint-format": "^1.0.2",
+    "flake-idgen": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/flake-idgen": "^0.1.31",
+    "prisma": "^4.7.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
+  }
+}

@@ -6,13 +6,13 @@ import {
   useDismiss,
   useListNavigation,
 } from "@floating-ui/react-dom-interactions"
+import { User } from "@meka/database"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { useRef, useState } from "react"
 
 import { GetUserAvatar } from "../../libs/api/Images"
-import { User } from "../../types/user"
 import { capitalizeFirstLetter } from "../../utils/string"
 
 const MenuList = [

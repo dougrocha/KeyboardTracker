@@ -1,16 +1,17 @@
+import { GroupBuyStatus, Prisma, Product } from '@meka/database'
+import { PaginationParams, PaginatedResults, MaybePaginated } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
-import { GroupBuyStatus, Prisma } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
 
 import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants'
+import BaseService from '../../common/interfaces/base-service.interface'
 import { SnowflakeService } from '../../snowflake/snowflake.module'
 import { CreateProductDto } from '../dtos/create-product.dto'
-import { PaginationParams } from '../dtos/queries/pagination-params.dto'
 import { ProductSearchQuery } from '../dtos/queries/product-search-query.dto'
 import { UpdateProductDto } from '../dtos/update-product.dto'
 
 @Injectable()
-export class ProductService {
+export class ProductService implements BaseService<Product> {
   constructor(
     @Inject(PRISMA_SERVICE) private readonly prisma: PrismaService,
     @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
@@ -47,16 +48,41 @@ export class ProductService {
     })
   }
 
-  async findMany({
-    select,
-    take,
-    skip,
-  }: {
-    select?: Prisma.ProductSelect
-    take?: number
-    skip?: number
-  }) {
-    return await this.prisma.product.findMany({ select, take, skip })
+  /**
+   * Returns products
+   *
+   * @returns Product[]
+   */
+  findMany(): Promise<Product[]>
+  findMany(params?: PaginationParams): Promise<PaginatedResults<Product>>
+  async findMany(params?: unknown): Promise<MaybePaginated<Product>> {
+    if (!params) {
+      return this.prisma.product.findMany()
+    }
+
+    const { perPage, page = 1 } = params as PaginationParams
+
+    return this.prisma
+      .$transaction([
+        this.prisma.product.findMany({
+          skip: (page - 1) * perPage,
+          take: perPage,
+        }),
+        this.prisma.product.count(),
+      ])
+      .then(([products, count]) => ({
+        data: products,
+        count,
+      }))
+  }
+
+  // Find all products ids with pagination
+  async findAllIds(params?: PaginationParams): Promise<Pick<Product, 'id'>[]> {
+    return await this.prisma.product.findMany({
+      select: { id: true },
+      take: params?.perPage,
+      skip: params?.page ? (params.page - 1) * params.perPage : undefined,
+    })
   }
 
   /**
@@ -126,39 +152,32 @@ export class ProductService {
     })
   }
 
-  /**
-   * Returns products with a specific status
-   * @param status Prisma.GroupBuyStatus
-   */
-  async findByStatus(
-    status: GroupBuyStatus,
-    { perPage, page = 1 }: PaginationParams,
-    orderBy?: Prisma.ProductOrderByWithRelationAndSearchRelevanceInput,
-  ) {
-    return await this.prisma.product.findMany({
-      where: { status },
-      take: perPage,
-      skip: (page - 1) * perPage,
-      orderBy,
-    })
+  async findManyWithStatus(status: GroupBuyStatus, params?: PaginationParams) {
+    console.log('status', status)
+
+    if (params) {
+      const { perPage, page = 1 } = params
+      return this.prisma.product.findMany({
+        where: { status },
+        take: perPage,
+        skip: (page - 1) * perPage,
+      })
+    }
+
+    return this.prisma.product.findMany({ where: { status } })
   }
 
-  /**
-   * Returns products with a specific type
-   * @param id Product id
-   * @returns Product
-   */
-  async findProductVendors(productId: string) {
+  async findProductVendorsByProductId(productId: string) {
     return await this.prisma.productVendor.findMany({
       where: { productId },
       include: { vendor: true },
     })
   }
 
-  async findDesignerProducts(designerId: string) {
-    return await this.prisma.productDesigner.findMany({
-      where: { designerId },
-      include: { product: true },
+  async findDesignerByProductId(productId: string) {
+    return await this.prisma.product.findUnique({
+      where: { id: productId },
+      include: { designers: true },
     })
   }
 
