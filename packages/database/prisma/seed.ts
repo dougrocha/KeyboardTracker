@@ -622,6 +622,21 @@ async function main() {
     },
   })
 
+  const productVendor8 = await prisma.productVendor.create({
+    data: {
+      product: {
+        connect: {
+          id: product1.id,
+        },
+      },
+      vendor: {
+        connect: {
+          id: vendor2.id,
+        },
+      },
+    },
+  })
+
   const userVendor1 = await prisma.userVendor.create({
     data: {
       role: "MODERATOR",
@@ -899,6 +914,8 @@ async function main() {
     ],
   })
 }
+
+console.time("seed")
 
 main()
   .then(async () => {
