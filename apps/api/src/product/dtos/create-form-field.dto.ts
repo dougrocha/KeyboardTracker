@@ -1,4 +1,4 @@
-import { FieldType } from '@prisma/client'
+import { FieldType } from '@meka/database'
 import {
   IsEnum,
   IsInt,

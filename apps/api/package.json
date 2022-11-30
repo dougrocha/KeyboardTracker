@@ -34,7 +34,7 @@
     "@nestjs/platform-express": "^9.1.1",
     "@nestjs/schedule": "^2.1.0",
     "@nestjs/throttler": "^3.0.0",
-    "@prisma/client": "^4.6.1",
+    "@prisma/client": "^4.7.0",
     "@types/express-session": "^1.17.5",
     "bcrypt": "^5.0.1",
     "biguint-format": "^1.0.2",
@@ -59,7 +59,9 @@
   },
   "devDependencies": {
     "@meka/config": "*",
+    "@meka/database": "*",
     "@meka/tsconfig": "*",
+    "@meka/types": "*",
     "@nestjs/cli": "^9.1.5",
     "@nestjs/schematics": "^9.0.3",
     "@nestjs/testing": "^9.2.0",
@@ -85,14 +87,14 @@
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^29.0.3",
     "prettier": "^2.7.1",
-    "prisma": "^4.6.1",
+    "prisma": "^4.7.0",
     "source-map-support": "^0.5.21",
     "supertest": "^6.2.4",
     "ts-jest": "^29.0.1",
     "ts-loader": "^9.3.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
-    "typescript": "^4.8.3"
+    "typescript": "^4.9.0"
   },
   "jest": {
     "moduleFileExtensions": [

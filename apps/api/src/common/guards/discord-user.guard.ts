@@ -14,7 +14,7 @@ export class FillDiscordUser implements CanActivate {
     const request = context.switchToHttp().getRequest()
     const user = request.user
 
-    const discordUser = await this.discordUserService.findUser(user.id)
+    const discordUser = await this.discordUserService.findOne(user.id)
 
     if (user) {
       request.user = {

@@ -1,4 +1,4 @@
-import { GroupBuyStatus, ProductType } from '@prisma/client'
+import { GroupBuyStatus, ProductType } from '@meka/database'
 import { IsEnum, IsOptional, IsString } from 'class-validator'
 
 import { SearchQuery } from '../../../common/dto/search-query.dto'

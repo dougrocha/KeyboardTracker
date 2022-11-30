@@ -1,13 +1,11 @@
 import { XMarkIcon } from "@heroicons/react/20/solid"
-import { useQuery } from "@tanstack/react-query"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
 
 import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileLayout from "../../layouts/ProfileLayout"
-import { UseFavorites } from "../../libs/api/AddProductToFavorites"
-import { GetUserFavorites } from "../../libs/api/GetUserFavorites"
+import { UseFavorites } from "../../libs/api/Favorites"
 
 const FavoritesPage = () => {
   return (
@@ -20,15 +18,15 @@ const FavoritesPage = () => {
 }
 
 const FavoritesContainer = () => {
-  const { data, isLoading } = useQuery(["user", "favorites"], GetUserFavorites)
+  const { favorites, removeFavorite } = UseFavorites()
 
-  const { removeFavorite } = UseFavorites()
-
-  if (isLoading) {
+  if (favorites.isLoading) {
     return <div>Loading...</div>
   }
 
-  if (!data?.favorites?.length) {
+  const favoritesData = favorites.data
+
+  if (!favoritesData?.length) {
     return (
       <div className="flex h-full flex-col items-center justify-center">
         <h1 className="text-2xl font-bold">No Favorites</h1>
@@ -39,10 +37,10 @@ const FavoritesContainer = () => {
 
   return (
     <>
-      {data?.favorites.length > 0 && (
+      {favoritesData.length > 0 && (
         <>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {data.favorites.map((favorite) => (
+            {favoritesData.map((favorite) => (
               <Link key={favorite.id} href={`/products/${favorite.product.id}`}>
                 <div className="relative flex flex-col overflow-hidden rounded-md bg-white shadow">
                   <XMarkIcon

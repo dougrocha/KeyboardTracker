@@ -2,9 +2,10 @@ import { BullModule } from '@nestjs/bull'
 import { Module } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
 
+import { UserFavoritesController } from './controllers/user-favorites.controller'
+import { UsersController } from './controllers/user.controller'
 import { DiscordUserService } from './services/discord.service'
 import { UserService } from './services/user.service'
-import { UsersController } from './user.controller'
 import { UsersImagesProcessor } from './userImage.processor'
 
 import {
@@ -49,6 +50,6 @@ import { VendorService } from '../vendor/vendor.service'
     UsersImagesProcessor,
   ],
   exports: [{ provide: USER_SERVICE, useClass: UserService }],
-  controllers: [UsersController],
+  controllers: [UsersController, UserFavoritesController],
 })
 export class UserModule {}

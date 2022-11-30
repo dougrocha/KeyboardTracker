@@ -1,33 +1,36 @@
+import { PrismaClient, DiscordIdentity } from '@meka/database'
+import { MaybePaginated, PaginatedResults, PaginationParams } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
-import { PrismaClient } from '@prisma/client'
 
 import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants'
+import BaseService from '../../common/interfaces/base-service.interface'
 import { SnowflakeService } from '../../snowflake/snowflake.module'
 import { CreateDiscordUserDto } from '../dto/create-discord-user.dto'
 import { UpdateDiscordUserDto } from '../dto/update-discord-user.dto'
 
 @Injectable()
-export class DiscordUserService {
+export class DiscordUserService implements BaseService<DiscordIdentity> {
   constructor(
     @Inject(PRISMA_SERVICE) private readonly prisma: PrismaClient,
     @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
   ) {}
 
+  findMany(): Promise<DiscordIdentity[]>
+  findMany(
+    params?: PaginationParams,
+  ): Promise<PaginatedResults<DiscordIdentity>>
+  findMany(_params?: unknown): Promise<MaybePaginated<DiscordIdentity>> {
+    throw new Error('Method not implemented. Please use `findOne` instead.')
+  }
+
+  findOne(id: string): Promise<DiscordIdentity> {
+    return this.prisma.discordIdentity.findUnique({ where: { id } })
+  }
+
   async findUserByDiscordId(discordId: string) {
     return await this.prisma.discordIdentity.findUnique({
       where: { discordId },
       include: { user: true },
-    })
-  }
-
-  /**
-   * Find a user by their user id
-   * @param id User ID
-   * @returns User's Discord Identity without token fields or id
-   */
-  async findUser(id: string) {
-    return await this.prisma.discordIdentity.findUnique({
-      where: { id },
     })
   }
 

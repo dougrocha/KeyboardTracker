@@ -1,5 +1,7 @@
 import { SetMetadata } from '@nestjs/common'
+import { VendorRole } from '@meka/database'
 
-import { RoleType } from '../enums/roles.enum'
+export const Roles = <T extends string>(...roles: T[]) =>
+  SetMetadata('roles', roles)
 
-export const Roles = (...roles: RoleType[]) => SetMetadata('roles', roles)
+export const VendorRoles = Roles<VendorRole>

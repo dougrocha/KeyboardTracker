@@ -1,6 +1,7 @@
 import { createReadStream } from 'fs'
 import { access, constants } from 'fs/promises'
 
+import { User } from '@meka/database'
 import { InjectQueue } from '@nestjs/bull'
 import {
   Body,
@@ -13,26 +14,15 @@ import {
   Inject,
   Param,
   Patch,
-  Post,
   Res,
   UploadedFile,
   StreamableFile,
   UseGuards,
   UseInterceptors,
-  ParseIntPipe,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { User } from '@prisma/client'
 import { Queue } from 'bull'
 import { Response } from 'express'
-
-import { UpdateUserDto } from './dto/update-user.dto'
-import { UserService } from './services/user.service'
-import {
-  DELETE_AVATAR,
-  JobImageType,
-  OPTIMIZE_AVATAR,
-} from './userImage.processor'
 
 import {
   DESIGNER_SERVICE,
@@ -40,15 +30,22 @@ import {
   SNOWFLAKE_SERVICE,
   USER_SERVICE,
   VENDOR_SERVICE,
-} from '../common/constants'
-import { GetCurrentUser } from '../common/decorators/current-user.decorator'
-import { ImageNotFoundException } from '../common/exceptions/imageNotFound.exception'
-import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
-import { multerImageOptions } from '../config/multer.config'
-import { DesignerService } from '../designer/designer.service'
-import { ImageService } from '../image/image.service'
-import { SnowflakeService } from '../snowflake/snowflake.module'
-import { VendorService } from '../vendor/vendor.service'
+} from '../../common/constants'
+import { GetCurrentUser } from '../../common/decorators/current-user.decorator'
+import { ImageNotFoundException } from '../../common/exceptions/imageNotFound.exception'
+import { AuthenticatedGuard } from '../../common/guards/authenticated.guard'
+import { multerImageOptions } from '../../config/multer.config'
+import { DesignerService } from '../../designer/designer.service'
+import { ImageService } from '../../image/image.service'
+import { SnowflakeService } from '../../snowflake/snowflake.module'
+import { VendorService } from '../../vendor/vendor.service'
+import { UpdateUserDto } from '../dto/update-user.dto'
+import { UserService } from '../services/user.service'
+import {
+  DELETE_AVATAR,
+  JobImageType,
+  OPTIMIZE_AVATAR,
+} from '../userImage.processor'
 
 @Controller()
 export class UsersController {
@@ -71,19 +68,19 @@ export class UsersController {
   @Get('me/designer')
   @UseGuards(AuthenticatedGuard)
   async getDesignerInfo(@GetCurrentUser() user: User) {
-    return await this.designerService.findByUserId(user.id)
+    return await this.designerService.findUserDesigner(user.id)
   }
 
   @Get('me/vendors')
   @UseGuards(AuthenticatedGuard)
   async getVendors(@GetCurrentUser() user: User) {
-    return await this.vendorService.findByUserId(user.id)
+    return await this.vendorService.findUserVendors(user.id)
   }
 
   @Get('me/connections')
   @UseGuards(AuthenticatedGuard)
   async findAllConnections(@GetCurrentUser() user: User) {
-    return this.userService.findAllConnections(user.id)
+    return this.userService.findUserConnections(user.id)
   }
 
   @Patch('me')
@@ -121,7 +118,7 @@ export class UsersController {
     if (!file)
       throw new HttpException('No file uploaded', HttpStatus.BAD_REQUEST)
 
-    const currAvatar = await this.userService.findById(user.id)
+    const currAvatar = await this.userService.findUserAvatar(user.id)
 
     if (currAvatar) {
       await this.imagesQueue.add(DELETE_AVATAR, {
@@ -161,6 +158,7 @@ export class UsersController {
       )
 
     const path = this.imagesService.joinFilePath(id, avatar) + '.webp'
+
     return await access(path, constants.F_OK | constants.R_OK)
       .then(() => {
         res.set('Content-Type', 'image/webp')
@@ -170,30 +168,5 @@ export class UsersController {
       .catch(() => {
         throw new ImageNotFoundException()
       })
-  }
-
-  @Get('me/favorites')
-  @UseGuards(AuthenticatedGuard)
-  async findFavorites(@GetCurrentUser() user: User) {
-    return await this.userService.findFavorites(user.id)
-  }
-
-  @Post('me/favorites')
-  @UseGuards(AuthenticatedGuard)
-  async addFavorite(@GetCurrentUser() user: User, @Body('id') id: string) {
-    return await this.userService.addFavorite(user.id, id)
-  }
-
-  @Delete('me/favorites')
-  async removeFavorite(
-    @GetCurrentUser() user: User,
-    @Body('id', ParseIntPipe) id: number,
-  ) {
-    return await this.userService.removeFavorite(user.id, id)
-  }
-
-  @Get(':id/favorites')
-  async findFavoritesById(@Param('id') id: string) {
-    return await this.userService.findFavorites(id)
   }
 }

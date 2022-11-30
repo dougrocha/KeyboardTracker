@@ -1,6 +1,6 @@
+import { User } from '@meka/database'
 import { Controller, Get, Res, UseGuards } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { User } from '@prisma/client'
 import { Response } from 'express'
 
 import { GetCurrentUser } from '../../common/decorators/current-user.decorator'

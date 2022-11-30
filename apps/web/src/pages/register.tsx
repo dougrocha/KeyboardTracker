@@ -14,7 +14,7 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import useAuth from "../hooks/useAuth"
 import MainViewLayout from "../layouts/MainViewLayout"
 import { UseLocalRegister } from "../libs/api/Auth"
-import { RegisterFormData } from "../types/user"
+import { RegisterFormData } from "../types/protected-auth"
 import schema from "../utils/schemas/registerForm"
 
 const RegisterPage = () => {

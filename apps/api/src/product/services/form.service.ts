@@ -1,7 +1,10 @@
+import { Form } from '@meka/database'
+import { PaginationParams, PaginatedResults, MaybePaginated } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
 
 import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants'
+import BaseService from '../../common/interfaces/base-service.interface'
 import { SnowflakeService } from '../../snowflake/snowflake.module'
 import { CreateFormFieldValueDto } from '../dtos/create-form-field-values.dto'
 import { CreateFormFieldDto } from '../dtos/create-form-field.dto'
@@ -10,7 +13,7 @@ import { UpdateFormFieldDto } from '../dtos/update-form-field.dto'
 import { UpdateFormDto } from '../dtos/update-form.dto'
 
 @Injectable()
-export class FormService {
+export class FormService implements BaseService<Form> {
   constructor(
     @Inject(PRISMA_SERVICE) private readonly prisma: PrismaService,
     @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
@@ -25,6 +28,14 @@ export class FormService {
         ...data,
       },
     })
+  }
+
+  findMany(): Promise<Form[]>
+  findMany(params?: PaginationParams): Promise<PaginatedResults<Form>>
+  findMany(_params?: unknown): Promise<MaybePaginated<Form>> {
+    throw new Error(
+      'Forms are unique to products. Please use `findOne` instead',
+    )
   }
 
   async createField(
@@ -48,49 +59,56 @@ export class FormService {
     parentFieldId: string,
     values: CreateFormFieldValueDto[],
   ) {
-    await this.prisma.fieldValue.create({
-      data: { position: 0, value: 'test', parentFieldId },
-    })
     return await this.prisma.fieldValue.createMany({
       data: values.map((value) => ({
         id: this.snowflake.nextId(),
-        productId,
+        product: { connect: { id: productId } },
+        formId,
         parentFieldId,
         ...value,
       })),
     })
   }
 
-  async findAll() {
-    return await this.prisma.form.findMany()
-  }
-
   async findOne(id: string) {
-    return await this.prisma.form.findUnique({
+    return this.prisma.form.findUnique({
       where: { id },
     })
   }
 
-  async findOneByProductId(id: string) {
-    return await this.prisma.form.findUnique({
-      where: { productId: id },
+  async delete(id: string): Promise<Form> {
+    return this.prisma.form.delete({
+      where: { id },
+    })
+  }
+
+  async deleteField(id: string) {
+    return this.prisma.formField.delete({
+      where: { id },
+    })
+  }
+
+  async deleteFieldValue(id: string) {
+    return this.prisma.fieldValue.delete({
+      where: { id },
+    })
+  }
+
+  async findFormAnswers(formId: string) {
+    return this.prisma.form.findUnique({
+      where: { id: formId },
       include: {
-        fields: {
-          select: {
-            id: true,
-            description: true,
-            name: true,
-            type: true,
-            required: true,
-            position: true,
-            values: true,
-            _count: true,
-          },
-          orderBy: {
-            position: 'asc',
-          },
+        responses: {
+          orderBy: { answeredAt: 'desc' },
+          include: { field: true, fieldValueResponses: true },
         },
       },
+    })
+  }
+
+  async findProductForm(productId: string) {
+    return this.prisma.form.findFirst({
+      where: { productId },
     })
   }
 
@@ -120,18 +138,6 @@ export class FormService {
   async remove(id: string) {
     return await this.prisma.form.delete({
       where: { id },
-    })
-  }
-
-  async findAllAnswersByFormId(id: string) {
-    return await this.prisma.form.findUnique({
-      where: { id },
-      include: {
-        responses: {
-          orderBy: { answeredAt: 'desc' },
-          include: { field: true, fieldValueResponses: true },
-        },
-      },
     })
   }
 }

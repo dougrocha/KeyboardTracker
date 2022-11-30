@@ -1,3 +1,4 @@
+import { GroupBuyStatus, Product } from "@meka/database"
 import { GetStaticPropsResult } from "next"
 import Link from "next/link"
 import { ReactElement } from "react"
@@ -8,8 +9,6 @@ import Hero from "../components/Hero"
 import MainViewLayout from "../layouts/MainViewLayout"
 import { GetAllProducts } from "../libs/api/GetAllProducts"
 import GetProductsByStatus from "../libs/api/GetProductsByStatus"
-import { GroupBuyStatus } from "../types/groupBuyStatus"
-import { Product } from "../types/product"
 
 interface HomePageProps {
   interestChecks?: Product[]
@@ -80,7 +79,7 @@ export async function getStaticProps(): Promise<
     props: {
       interestChecks,
       groupBuys,
-      mostRecentProducts,
+      mostRecentProducts: mostRecentProducts.data,
     },
   }
 }

@@ -624,6 +624,7 @@ async function main() {
 
   const userVendor1 = await prisma.userVendor.create({
     data: {
+      role: 'MODERATOR',
       user: {
         connect: {
           id: user1.id,
@@ -639,6 +640,7 @@ async function main() {
 
   const userVendor2 = await prisma.userVendor.create({
     data: {
+      role: 'USER',
       user: {
         connect: {
           id: user1.id,
@@ -647,6 +649,22 @@ async function main() {
       vendor: {
         connect: {
           id: vendor2.id,
+        },
+      },
+    },
+  })
+
+  const userVendor3 = await prisma.userVendor.create({
+    data: {
+      role: 'ADMIN',
+      user: {
+        connect: {
+          id: user2.id,
+        },
+      },
+      vendor: {
+        connect: {
+          id: vendor1.id,
         },
       },
     },

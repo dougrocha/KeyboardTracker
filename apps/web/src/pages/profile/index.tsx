@@ -12,7 +12,7 @@ import useAuth from "../../hooks/useAuth"
 import ProfileLayout from "../../layouts/ProfileLayout"
 import { UseUpdateUser, UseUpdateUserAvatar } from "../../libs/api/GetMe"
 import { GetUserAvatar } from "../../libs/api/Images"
-import { User } from "../../types/user"
+import { User } from "../../types/protected-auth"
 
 const ProfilePage = () => {
   const { user, isLoading } = useAuth()

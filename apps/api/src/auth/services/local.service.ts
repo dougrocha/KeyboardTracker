@@ -2,14 +2,23 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { compare, hash } from 'bcrypt'
 
 import { USER_SERVICE } from '../../common/constants'
+import BaseAuthService from '../../common/interfaces/base-auth-service.interface'
 import { CreateUserDto } from '../../user/dto/create-user.dto'
 import { UserService } from '../../user/services/user.service'
 
 @Injectable()
-export class LocalAuthService {
+export class LocalAuthService implements BaseAuthService<CreateUserDto> {
   constructor(
-    @Inject(USER_SERVICE) private readonly UserService: UserService,
+    @Inject(USER_SERVICE) private readonly userService: UserService,
   ) {}
+
+  async validate(details: Required<Pick<CreateUserDto, 'email' | 'password'>>) {
+    const user = await this.userService.findUserByEmail(details.email)
+    if (!user) throw new UnauthorizedException('Incorrect email or password')
+    await this.comparePasswords(user.password, details.password)
+    user.password = undefined
+    return user
+  }
 
   private async hashData(data: string) {
     return await hash(data, 10)
@@ -23,19 +32,10 @@ export class LocalAuthService {
 
   async register(user: CreateUserDto, password: string) {
     const hashedPassword = await this.hashData(password)
-    return await this.UserService.create({ ...user, password: hashedPassword })
-  }
-
-  async validate(email: string, password: string) {
-    const user = await this.UserService.findByEmail(email)
-    if (!user) throw new UnauthorizedException('Incorrect email or password')
-    await this.comparePasswords(user.password, password)
-    user.password = undefined
-    return user
+    return await this.userService.create({ ...user, password: hashedPassword })
   }
 
   async login(email: string, password: string) {
-    const user = await this.validate(email, password)
-    return user
+    return await this.validate({ email, password })
   }
 }

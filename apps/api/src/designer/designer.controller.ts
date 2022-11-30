@@ -1,3 +1,4 @@
+import { User } from '@meka/database'
 import {
   Body,
   Controller,
@@ -10,7 +11,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common'
-import { User } from '@prisma/client'
 
 import { DesignerService } from './designer.service'
 import { CreateDesignerDto } from './dtos/create-designer'
@@ -18,8 +18,9 @@ import { UpdateDesignerDto } from './dtos/update-designer.dto'
 
 import { DESIGNER_SERVICE } from '../common/constants'
 import { GetCurrentUser } from '../common/decorators/current-user.decorator'
+import { PaginationParams } from '../common/dto/pagination-params.dto'
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
-import { PaginationParams } from '../product/dtos/queries/pagination-params.dto'
+import { DesignerOwner } from '../common/guards/designer-owner.guard'
 
 @Controller('designer')
 export class DesignersController {
@@ -34,16 +35,19 @@ export class DesignersController {
     @GetCurrentUser() user: User,
     @Body() createDesignerBody: CreateDesignerDto,
   ) {
-    return await this.designerService.create(user.id, createDesignerBody)
+    return await this.designerService.create({
+      userId: user.id,
+      ...createDesignerBody,
+    })
   }
 
   @Get(':id')
   async getAccount(@Param('id') id: string) {
-    return await this.designerService.findById(id)
+    return await this.designerService.findOne(id)
   }
 
   @Patch(':id')
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthenticatedGuard, DesignerOwner)
   async updateAccount(
     @Param('id') id: string,
     @Body() updateDesignerBody: UpdateDesignerDto,
@@ -52,6 +56,7 @@ export class DesignersController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthenticatedGuard, DesignerOwner)
   async deleteAccount(@Param('id') id: string) {
     return await this.designerService.delete(id)
   }

@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common'
 import { Body, Get, Inject, Param, Post } from '@nestjs/common/decorators'
-import { User } from '@prisma/client'
+import { User } from '@meka/database'
 
 import { FORM_SERVICE } from '../../common/constants'
 import { GetCurrentUser } from '../../common/decorators/current-user.decorator'
@@ -13,7 +13,7 @@ export class FormController {
 
   @Get(':id/form')
   async getForm(@Param('id') id: string) {
-    return await this.form.findOneByProductId(id)
+    return await this.form.findProductForm(id)
   }
 
   @Post(':id/form')

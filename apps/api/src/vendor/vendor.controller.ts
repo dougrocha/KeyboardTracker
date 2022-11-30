@@ -15,7 +15,7 @@ import { UpdateVendorDto } from './dto/update-vendor.dto'
 import { VendorService } from './vendor.service'
 
 import { VENDOR_SERVICE } from '../common/constants'
-import { PaginationParams } from '../product/dtos/queries/pagination-params.dto'
+import { PaginationParams } from '../common/dto/pagination-params.dto'
 
 @Controller('vendor')
 export class VendorController {
@@ -48,12 +48,12 @@ export class VendorController {
 
   @Get()
   async findMany() {
-    return await this.vendorService.findAllProducts()
+    return await this.vendorService.findMany()
   }
 
   @Get('country/:country')
   async findAllByCountry(@Param('country') country: string) {
-    return await this.vendorService.findAllByCountry(country)
+    return await this.vendorService.findVendorsByCountry(country)
   }
 
   @Get(':id/products')
@@ -61,6 +61,6 @@ export class VendorController {
     @Param('id') id: string,
     @Query() pagination: PaginationParams,
   ) {
-    return await this.vendorService.findMany(id, pagination)
+    return await this.vendorService.findVendorProducts(id, pagination)
   }
 }

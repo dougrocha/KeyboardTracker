@@ -1,12 +1,12 @@
 import classNames from "classnames"
 import dynamic from "next/dynamic"
+import { PropsWithChildren } from "react"
 
 import Navbar from "../components/Navbar/Navbar"
-import { LayoutProps } from "../types/layoutProps"
 
 const Footer = dynamic(() => import("../components/Footer"))
 
-interface MainViewLayoutProps extends LayoutProps {
+interface MainViewLayoutProps extends PropsWithChildren {
   hideFooter?: boolean
   className?: string
   footerContent?: React.ReactNode

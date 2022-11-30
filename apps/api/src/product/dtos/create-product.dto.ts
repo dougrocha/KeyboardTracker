@@ -3,7 +3,7 @@ import {
   Prisma,
   ProductType,
   YearQuarter,
-} from '@prisma/client'
+} from '@meka/database'
 import { DecimalJsLike } from '@prisma/client/runtime'
 import { Transform } from 'class-transformer'
 import {

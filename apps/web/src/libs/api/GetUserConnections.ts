@@ -1,4 +1,4 @@
-import { DiscordIdentity } from "../../types/user"
+import { DiscordIdentity } from "../../types/protected-auth"
 import AxiosClient from "../AxiosClient"
 
 interface UserConnections {
