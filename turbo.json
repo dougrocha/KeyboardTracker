@@ -28,7 +28,8 @@
     },
     "api#dev": {
       "dependsOn": ["^database#build", "^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**"],
+      "cache": false
     },
     "api#build": {
       "dependsOn": ["^database#build", "^build"],

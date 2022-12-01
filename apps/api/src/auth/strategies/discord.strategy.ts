@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { Profile, Strategy } from 'passport-discord'
 
-import { DISCORD_AUTH_SERVICE } from '../../common/constants'
-import { DiscordAuthService } from '../services/discord.service'
+import { DISCORD_AUTH_SERVICE } from '../../common/constants.js'
+import { DiscordAuthService } from '../services/discord.service.js'
 
 const DISCORD_SCOPES = ['email', 'identify']
 

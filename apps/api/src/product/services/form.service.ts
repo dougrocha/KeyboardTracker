@@ -3,14 +3,14 @@ import { PaginationParams, PaginatedResults, MaybePaginated } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
 
-import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants'
-import BaseService from '../../common/interfaces/base-service.interface'
-import { SnowflakeService } from '../../snowflake/snowflake.module'
-import { CreateFormFieldValueDto } from '../dtos/create-form-field-values.dto'
-import { CreateFormFieldDto } from '../dtos/create-form-field.dto'
-import { CreateFormDto } from '../dtos/create-form.dto'
-import { UpdateFormFieldDto } from '../dtos/update-form-field.dto'
-import { UpdateFormDto } from '../dtos/update-form.dto'
+import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants.js'
+import BaseService from '../../common/interfaces/base-service.interface.js'
+import { SnowflakeService } from '../../snowflake/snowflake.module.js'
+import { CreateFormFieldValueDto } from '../dtos/create-form-field-values.dto.js'
+import { CreateFormFieldDto } from '../dtos/create-form-field.dto.js'
+import { CreateFormDto } from '../dtos/create-form.dto.js'
+import { UpdateFormFieldDto } from '../dtos/update-form-field.dto.js'
+import { UpdateFormDto } from '../dtos/update-form.dto.js'
 
 @Injectable()
 export class FormService implements BaseService<Form> {

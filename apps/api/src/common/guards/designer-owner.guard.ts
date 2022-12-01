@@ -5,8 +5,8 @@ import {
   Injectable,
 } from '@nestjs/common'
 
-import { DesignerService } from '../../designer/designer.service'
-import { DESIGNER_SERVICE } from '../constants'
+import { DesignerService } from '../../designer/designer.service.js'
+import { DESIGNER_SERVICE } from '../constants.js'
 
 @Injectable()
 export class DesignerOwner implements CanActivate {

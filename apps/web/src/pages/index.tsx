@@ -1,4 +1,5 @@
 import { GroupBuyStatus, Product } from "@meka/database"
+import { PaginatedResults } from "@meka/types"
 import { GetStaticPropsResult } from "next"
 import Link from "next/link"
 import { ReactElement } from "react"
@@ -11,9 +12,9 @@ import { GetAllProducts } from "../libs/api/GetAllProducts"
 import GetProductsByStatus from "../libs/api/GetProductsByStatus"
 
 interface HomePageProps {
-  interestChecks?: Product[]
-  groupBuys?: Product[]
-  mostRecentProducts?: Product[]
+  interestChecks?: PaginatedResults<Product>
+  groupBuys?: PaginatedResults<Product>
+  mostRecentProducts?: PaginatedResults<Product>
 }
 
 const HomePage = ({
@@ -27,12 +28,12 @@ const HomePage = ({
 
       <div className="mt-20 mb-10 flex flex-col space-y-10">
         <Carousel title="Interest Checks">
-          {interestChecks?.map((p) => (
+          {interestChecks?.data?.map((p) => (
             <Card key={p.id} product={p} className="w-80 rounded" />
           ))}
         </Carousel>
         <Carousel title="Group Buys">
-          {groupBuys?.map((p) => (
+          {groupBuys?.data?.map((p) => (
             <Card key={p.id} product={p} className="w-80 rounded" />
           ))}
         </Carousel>
@@ -40,7 +41,7 @@ const HomePage = ({
         <div className="flex flex-col items-center">
           <p className="mb-8 mt-10 text-2xl font-semibold">Live Group Buys</p>
           <div className="grid w-full grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3">
-            {mostRecentProducts?.map((p) => (
+            {mostRecentProducts?.data?.map((p) => (
               <Card
                 key={p.id}
                 product={p}
@@ -73,13 +74,13 @@ export async function getStaticProps(): Promise<
     GroupBuyStatus.INTEREST_CHECK
   )
   const groupBuys = await GetProductsByStatus(GroupBuyStatus.GROUP_BUY)
-  const mostRecentProducts = await GetAllProducts({ perPage: 10 })
+  const mostRecentProducts = await GetAllProducts({ perPage: 9 })
 
   return {
     props: {
       interestChecks,
       groupBuys,
-      mostRecentProducts: mostRecentProducts.data,
+      mostRecentProducts,
     },
   }
 }

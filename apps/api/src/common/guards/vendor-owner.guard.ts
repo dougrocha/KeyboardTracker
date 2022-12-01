@@ -2,8 +2,8 @@ import { VendorRole } from '@meka/database'
 import { CanActivate, ExecutionContext, Inject } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 
-import { VendorService } from '../../vendor/vendor.service'
-import { VENDOR_SERVICE } from '../constants'
+import { VendorService } from '../../vendor/vendor.service.js'
+import { VENDOR_SERVICE } from '../constants.js'
 
 export class VendorOwner implements CanActivate {
   constructor(

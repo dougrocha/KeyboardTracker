@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
 
-import { FormController } from './controllers/form.controller'
-import { ProductController } from './controllers/product.controller'
-import { FormService } from './services/form.service'
-import { ProductService } from './services/product.service'
+import { FormController } from './controllers/form.controller.js'
+import { ProductController } from './controllers/product.controller.js'
+import { FormService } from './services/form.service.js'
+import { ProductService } from './services/product.service.js'
 
 import {
   PRODUCT_SERVICE,
@@ -12,9 +12,9 @@ import {
   FORM_SERVICE,
   DESIGNER_SERVICE,
   VENDOR_SERVICE,
-} from '../common/constants'
-import { DesignerService } from '../designer/designer.service'
-import { VendorService } from '../vendor/vendor.service'
+} from '../common/constants.js'
+import { DesignerService } from '../designer/designer.service.js'
+import { VendorService } from '../vendor/vendor.service.js'
 
 @Module({
   providers: [

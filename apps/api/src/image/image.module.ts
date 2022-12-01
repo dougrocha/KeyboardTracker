@@ -1,8 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common'
 
-import { ImageService } from './image.service'
+import { ImageService } from './image.service.js'
 
-import { IMAGE_SERVICE } from '../common/constants'
+import { IMAGE_SERVICE } from '../common/constants.js'
 
 export interface ImageModuleOptions {
   path: string[]

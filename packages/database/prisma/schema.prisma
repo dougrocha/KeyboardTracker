@@ -84,7 +84,7 @@ model KeycapSet {
   material String?
 
   images  Image[]
-  product Product @relation(fields: [id], references: [id])
+  product Product @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
@@ -128,7 +128,7 @@ model Image {
 
   imgUrl String @unique
 
-  product     Product?   @relation(fields: [productId], references: [id])
+  product     Product?   @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   productId   String?
   KeycapSet   KeycapSet? @relation(fields: [keycapSetId], references: [id])
   keycapSetId String?
@@ -179,7 +179,7 @@ model Keyboard {
 
   updatedAt DateTime @updatedAt()
 
-  product Product @relation(fields: [id], references: [id])
+  product Product @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 enum VendorRole {
@@ -191,10 +191,10 @@ enum VendorRole {
 model ProductVendor {
   id Int @id @default(autoincrement())
 
-  vendor   Vendor @relation(fields: [vendorId], references: [id])
+  vendor   Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   vendorId String
 
-  product   Product? @relation(fields: [productId], references: [id])
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   productId String?
 
   @@unique([vendorId, productId])
@@ -205,10 +205,10 @@ model UserVendor {
 
   role VendorRole @default(USER)
 
-  vendor   Vendor @relation(fields: [vendorId], references: [id])
+  vendor   Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   vendorId String
 
-  user   User?   @relation(fields: [userId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String?
 
   @@unique([vendorId, userId])
@@ -217,10 +217,10 @@ model UserVendor {
 model ProductDesigner {
   id Int @id @default(autoincrement())
 
-  designer   Designer? @relation(fields: [designerId], references: [id])
+  designer   Designer? @relation(fields: [designerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   designerId String?
 
-  product   Product? @relation(fields: [productId], references: [id])
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   productId String?
 
   @@unique([productId, designerId])

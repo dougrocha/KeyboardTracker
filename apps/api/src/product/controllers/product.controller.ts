@@ -7,28 +7,13 @@ import {
   ParseBoolPipe,
   Param,
   ParseEnumPipe,
+  Body,
 } from '@nestjs/common'
-import { Transform } from 'class-transformer'
-import { IsNumber, IsOptional, Min } from 'class-validator'
 
-import { PRODUCT_SERVICE } from '../../common/constants'
-import { PaginationParams } from '../../common/dto/pagination-params.dto'
-import { ProductSearchQuery } from '../dtos/queries/product-search-query.dto'
-import { ProductService } from '../services/product.service'
-
-export class Test {
-  @IsOptional()
-  @IsNumber()
-  @Transform(({ value }) => (value ? parseInt(value) : 10))
-  @Min(1)
-  perPage?: number
-
-  @IsOptional()
-  @IsNumber()
-  @Transform(({ value }) => (value ? parseInt(value) : 1))
-  @Min(1)
-  page?: number
-}
+import { PRODUCT_SERVICE } from '../../common/constants.js'
+import { PaginationParams } from '../../common/dto/pagination-params.dto.js'
+import { ProductSearchQuery } from '../dtos/queries/product-search-query.dto.js'
+import { ProductService } from '../services/product.service.js'
 
 @Controller()
 export class ProductController {
@@ -46,17 +31,14 @@ export class ProductController {
    */
   @Get()
   async findMany(
-    @Query() { perPage = 10, page = 1 }: PaginationParams,
-    @Query('product', ParseBoolPipe) product: boolean,
+    @Query() pagination: PaginationParams,
+    @Body('product', ParseBoolPipe) product: boolean,
   ) {
     if (product) {
-      return await this.productService.findMany({ perPage, page })
+      return await this.productService.findMany(pagination)
     }
 
-    return await this.productService.findAllIds({
-      perPage,
-      page,
-    })
+    return await this.productService.findAllIds(pagination)
   }
 
   /**

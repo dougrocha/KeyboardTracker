@@ -1,8 +1,8 @@
 import { Routes } from '@nestjs/core'
 
-import { AuthModule } from '../auth/auth.module'
-import { ProductModule } from '../product/product.module'
-import { UserModule } from '../user/user.module'
+import { AuthModule } from '../auth/auth.module.js'
+import { ProductModule } from '../product/product.module.js'
+import { UserModule } from '../user/user.module.js'
 
 export const routes: Routes = [
   {

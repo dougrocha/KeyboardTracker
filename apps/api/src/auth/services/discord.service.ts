@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common'
 
-import { DISCORD_USER_SERVICE } from '../../common/constants'
-import BaseAuthService from '../../common/interfaces/base-auth-service.interface'
-import { CreateDiscordUserDto } from '../../user/dto/create-discord-user.dto'
-import { DiscordUserService } from '../../user/services/discord.service'
+import { DISCORD_USER_SERVICE } from '../../common/constants.js'
+import BaseAuthService from '../../common/interfaces/base-auth-service.interface.js'
+import { CreateDiscordUserDto } from '../../user/dto/create-discord-user.dto.js'
+import { DiscordUserService } from '../../user/services/discord.service.js'
 
 @Injectable()
 export class DiscordAuthService

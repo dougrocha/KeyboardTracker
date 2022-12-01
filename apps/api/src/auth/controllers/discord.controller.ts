@@ -3,10 +3,10 @@ import { Controller, Get, Res, UseGuards } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Response } from 'express'
 
-import { GetCurrentUser } from '../../common/decorators/current-user.decorator'
-import { DiscordAuthGuard } from '../../common/guards/auth.guard'
-import { AuthenticatedGuard } from '../../common/guards/authenticated.guard'
-import { FillDiscordUser } from '../../common/guards/discord-user.guard'
+import { GetCurrentUser } from '../../common/decorators/current-user.decorator.js'
+import { DiscordAuthGuard } from '../../common/guards/auth.guard.js'
+import { AuthenticatedGuard } from '../../common/guards/authenticated.guard.js'
+import { FillDiscordUser } from '../../common/guards/discord-user.guard.js'
 
 @Controller('discord')
 export class DiscordAuthController {

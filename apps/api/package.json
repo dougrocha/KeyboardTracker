@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Meck API for keyboard tracker",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",

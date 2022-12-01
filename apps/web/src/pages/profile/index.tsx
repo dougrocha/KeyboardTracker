@@ -127,9 +127,6 @@ const ImageField = ({
     },
   })
 
-  console.log("src", src)
-  console.log("prev", previewImage)
-
   const onSubmit = (data: { avatar: FileList | null }) => {
     const file = data.avatar?.[0]
     if (file) {

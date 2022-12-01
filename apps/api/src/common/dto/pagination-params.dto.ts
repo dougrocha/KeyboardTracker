@@ -4,14 +4,14 @@ import { IsOptional, IsNumber, Min } from 'class-validator'
 
 export class PaginationParams implements PaginationParamInterface {
   @IsOptional()
+  @Transform(({ value }) => (value ? parseInt(value) : undefined))
   @IsNumber()
-  @Transform(({ value }) => (value ? parseInt(value) : 10))
   @Min(1)
   perPage?: number
 
   @IsOptional()
+  @Transform(({ value }) => (value ? parseInt(value) : undefined))
   @IsNumber()
-  @Transform(({ value }) => (value ? parseInt(value) : 1))
   @Min(1)
   page?: number
 }

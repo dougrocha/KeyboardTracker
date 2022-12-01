@@ -1,15 +1,24 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "Node",
     "sourceMap": true,
+
+    "target": "ESNext",
+
     "outDir": "./dist",
     "baseUrl": "./",
+
+    "declaration": false,
+    "removeComments": true,
+
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
+    "esModuleInterop": true,
+
+    "allowSyntheticDefaultImports": true,
+, 
     "incremental": true,
     "skipLibCheck": true
   },

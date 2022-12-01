@@ -1,3 +1,4 @@
+import { PaginationParams } from '@meka/types'
 import {
   Body,
   Controller,
@@ -8,14 +9,15 @@ import {
   Patch,
   Query,
   Post,
+  NotFoundException,
 } from '@nestjs/common'
 
-import { CreateVendorDto } from './dto/create-vendor.dto'
-import { UpdateVendorDto } from './dto/update-vendor.dto'
-import { VendorService } from './vendor.service'
+import { CreateVendorDto } from './dto/create-vendor.dto.js'
+import { UpdateVendorDto } from './dto/update-vendor.dto.js'
+import { VendorService } from './vendor.service.js'
 
-import { VENDOR_SERVICE } from '../common/constants'
-import { PaginationParams } from '../common/dto/pagination-params.dto'
+import { VENDOR_SERVICE } from '../common/constants.js'
+import { VendorRoles } from '../common/decorators/roles.decorator.js'
 
 @Controller('vendor')
 export class VendorController {
@@ -25,15 +27,20 @@ export class VendorController {
 
   @Get(':id')
   async findById(@Param('id') id: string) {
-    return await this.vendorService.findById(id)
+    const vendor = await this.vendorService.findById(id)
+    if (!vendor) {
+      throw new NotFoundException('User not found')
+    }
+    return vendor
   }
 
-  @Post(':id')
+  @Post()
   async create(@Body() createVendorBody: CreateVendorDto) {
     return await this.vendorService.create(createVendorBody)
   }
 
   @Patch(':id')
+  @VendorRoles('MODERATOR', 'ADMIN')
   async update(
     @Param('id') id: string,
     @Body() updateVendorBody: UpdateVendorDto,
@@ -42,13 +49,14 @@ export class VendorController {
   }
 
   @Delete(':id')
+  @VendorRoles('ADMIN')
   async delete(@Param('id') id: string) {
     return await this.vendorService.delete(id)
   }
 
   @Get()
-  async findMany() {
-    return await this.vendorService.findMany()
+  async findMany(@Query() pagination: PaginationParams) {
+    return await this.vendorService.findMany(pagination)
   }
 
   @Get('country/:country')

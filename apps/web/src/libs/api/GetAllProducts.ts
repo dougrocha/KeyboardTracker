@@ -3,23 +3,29 @@ import { PaginatedResults, PaginationParams } from "@meka/types"
 
 import AxiosClient from "../AxiosClient"
 
-export async function GetAllProducts({
-  perPage = 100,
-  page = 1,
-}: PaginationParams) {
+export async function GetAllProducts({ perPage, page }: PaginationParams) {
   const { data } = await AxiosClient.get<PaginatedResults<Product>>(
-    `/product?perPage=${perPage}&page=${page}&product=true`
+    `/product`,
+    {
+      params: {
+        perPage,
+        page,
+      },
+      data: {
+        product: true,
+      },
+    }
   )
 
   return data
 }
 
-export async function GetAllProductIds({
-  perPage = 100,
-  page = 1,
-}: PaginationParams) {
-  const { data } = await AxiosClient.get<Pick<Product, "id">[]>(
-    `/product?perPage=${perPage}&page=${page}`
-  )
+export async function GetAllProductIds({ page, perPage }: PaginationParams) {
+  const { data } = await AxiosClient.get<Pick<Product, "id">[]>(`/product`, {
+    params: {
+      perPage,
+      page,
+    },
+  })
   return data
 }

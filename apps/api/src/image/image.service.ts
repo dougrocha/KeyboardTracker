@@ -3,13 +3,13 @@ import { join } from 'path'
 
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import * as sharp from 'sharp'
+import sharp from 'sharp'
 
-import { ImageModuleOptions } from './image.module'
+import { ImageModuleOptions } from './image.module.js'
 
-import { SNOWFLAKE_SERVICE } from '../common/constants'
-import { SupportedFiles, SupportedFilesType } from '../config/multer.config'
-import { SnowflakeService } from '../snowflake/snowflake.module'
+import { SNOWFLAKE_SERVICE } from '../common/constants.js'
+import { SupportedFilesType, SupportedFiles } from '../config/multer.config.js'
+import { SnowflakeService } from '../snowflake/snowflake.module.js'
 
 @Injectable()
 export class ImageService {
