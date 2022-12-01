@@ -9,7 +9,7 @@ export default function Document() {
           rel="stylesheet"
         />
       </Head>
-      <body className="bg-[#f7f7f7] antialiased transition-colors dark:bg-[#212529]">
+      <body className="bg-primary-light text-black antialiased transition-colors dark:bg-primary-dark dark:text-white">
         <Main />
         <NextScript />
       </body>

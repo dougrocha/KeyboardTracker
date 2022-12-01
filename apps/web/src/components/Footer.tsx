@@ -40,24 +40,7 @@ const Column2 = [
 
 const Footer = () => {
   return (
-    // <footer className="flex h-16 items-center justify-between text-sm md:sticky">
-    //   <p className="">© THOCC</p>
-    //   <div className="group flex items-center space-x-5">
-    //     {FooterLinks.map((link) => (
-    //       <Link key={link.name} href={link.href}>
-    //         <a className="text-black transition-colors hover:!text-blue-400 group-hover:text-gray-500 dark:text-gray-300">
-    //           {link.name}
-    //         </a>
-    //       </Link>
-    //     ))}
-    //     <Link href={"https://github.com/dougrocha/keyboardtracker"}>
-    //       <a>
-    //         <FaGithub className="h-6 w-6 transition-colors hover:fill-blue-500" />
-    //       </a>
-    //     </Link>
-    //   </div>
-    // </footer>
-    <footer className="mt-auto bg-[#0F172A] md:h-60">
+    <footer className="mt-10 bg-[#0F172A] md:h-60">
       <div className="container mx-auto flex flex-col justify-between px-2 pt-10 pb-4 sm:px-6 md:flex-row-reverse md:py-10">
         <div className="flex flex-col gap-y-6 text-sm font-semibold  md:flex-row md:gap-y-0 md:gap-x-10">
           {[Column1, Column2].map((column, i) => (

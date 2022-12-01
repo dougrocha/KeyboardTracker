@@ -69,7 +69,7 @@ export class VendorService implements BaseService<Vendor> {
       })
     }
 
-    const { page, perPage } = params
+    const { page = 1, perPage = 10 } = params
 
     return this.prisma
       .$transaction([

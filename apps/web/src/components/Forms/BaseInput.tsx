@@ -18,7 +18,7 @@ const BaseInput = ({
 }: BaseInputProps) => (
   <div className="relative">
     {hideLabel ? null : (
-      <label htmlFor={id} className="block text-sm">
+      <label htmlFor={id} className="block text-sm text-black dark:text-white">
         {label}
       </label>
     )}

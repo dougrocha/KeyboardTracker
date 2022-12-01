@@ -8,6 +8,12 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
+      colors: {
+        primary: {
+          dark: "#1a202c",
+          light: "#f7fafc",
+        },
+      },
       fontFamily: {
         montserrat: ["Montserrat", "sans-serif"],
       },
