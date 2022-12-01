@@ -19,7 +19,7 @@ const MainViewLayout = ({
   className,
 }: MainViewLayoutProps) => {
   return (
-    <div className="mx-auto flex min-h-screen flex-col">
+    <div className="mx-auto flex min-h-screen flex-col ">
       <Navbar />
       <main
         className={classNames(

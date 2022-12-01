@@ -1,4 +1,4 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
 import { Product } from "@meka/database"
 import classNames from "classnames"
 import { useRouter } from "next/router"
@@ -63,16 +63,17 @@ const SearchBox = ({ placeholder, maxWidth }: SearchBoxProps) => {
     <Form
       onSubmit={onSubmit}
       className={classNames(
-        `relative bg-gray-500/30 px-2.5 py-2 pl-10 transition-transform`,
+        `relative w-full max-w-sm shadow-sm`,
         searchResults.length ? "rounded-t-md" : "rounded-md",
-        maxWidth ? `max-w-${maxWidth}` : "max-w-sm"
+        maxWidth ? `sm:max-w-${maxWidth}` : "sm:max-w-md"
       )}
     >
-      <MagnifyingGlassIcon className="absolute top-1/2 left-2.5 h-5 w-5 -translate-y-1/2" />
+      <MagnifyingGlassIcon className="absolute top-1/2 left-3 z-10 h-5 w-5 -translate-y-1/2 text-black dark:text-white" />
       <Input
         id="search"
         type="text"
         hideLabel
+        className="h-14 pl-9"
         placeholder={isPending ? "Loading..." : placeholder ?? "Search..."}
         readOnly={isPending}
         disabled={isPending}
@@ -83,7 +84,7 @@ const SearchBox = ({ placeholder, maxWidth }: SearchBoxProps) => {
         }}
       />
       {searchResults.length > 0 && (
-        <div className="absolute top-full left-0 w-full rounded-b-md bg-white text-black shadow-md dark:bg-gray-700 dark:text-white">
+        <div className="absolute top-full left-0 z-10 w-full rounded-b-md bg-primary-light text-black shadow-md dark:bg-primary-dark dark:text-white">
           <>
             {searchResults
               .filter((val) => {

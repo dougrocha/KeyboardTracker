@@ -26,7 +26,7 @@ const Navbar = () => {
   const { user, isLoading } = useAuth()
 
   return (
-    <nav className="container mx-auto mb-5 flex h-20 w-full items-center justify-between px-2 py-8 sm:px-6">
+    <nav className="container mx-auto mb-5 flex h-20 w-full items-center justify-between py-8 px-4 sm:px-6 lg:px-8">
       <Link href="/" className="text-3xl font-bold text-black dark:text-white">
         MEKA
       </Link>

@@ -9,6 +9,8 @@
     "outDir": "./dist",
     "baseUrl": "./",
 
+    "lib": ["ESNext", "ESNext.AsyncIterable"],
+
     "declaration": false,
     "removeComments": true,
 
@@ -16,9 +18,12 @@
     "experimentalDecorators": true,
 
     "esModuleInterop": true,
-
     "allowSyntheticDefaultImports": true,
-, 
+
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
     "incremental": true,
     "skipLibCheck": true
   },
