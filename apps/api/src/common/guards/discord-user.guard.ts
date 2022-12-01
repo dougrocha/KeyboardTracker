@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common'
-import { Inject } from '@nestjs/common/decorators/core/inject.decorator'
+import { Inject } from '@nestjs/common/decorators/core/inject.decorator.js'
 
-import { DiscordUserService } from '../../user/services/discord.service'
-import { DISCORD_USER_SERVICE } from '../constants'
+import { DiscordUserService } from '../../user/services/discord.service.js'
+import { DISCORD_USER_SERVICE } from '../constants.js'
 
 export class FillDiscordUser implements CanActivate {
   constructor(

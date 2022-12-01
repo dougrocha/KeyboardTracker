@@ -11,8 +11,8 @@ export class PrismaConfigService implements PrismaOptionsFactory {
   createPrismaOptions(): PrismaServiceOptions | Promise<PrismaServiceOptions> {
     return {
       prismaOptions: {
-        log: ['query', 'info', 'warn'],
-        errorFormat: 'pretty',
+        log: ['info', 'warn'],
+        errorFormat: 'minimal',
       },
       explicitConnect: true,
       middlewares: [

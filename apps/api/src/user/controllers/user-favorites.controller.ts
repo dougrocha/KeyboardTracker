@@ -11,10 +11,10 @@ import {
   Controller,
 } from '@nestjs/common'
 
-import { USER_SERVICE } from '../../common/constants'
-import { GetCurrentUser } from '../../common/decorators/current-user.decorator'
-import { AuthenticatedGuard } from '../../common/guards/authenticated.guard'
-import { UserService } from '../services/user.service'
+import { USER_SERVICE } from '../../common/constants.js'
+import { GetCurrentUser } from '../../common/decorators/current-user.decorator.js'
+import { AuthenticatedGuard } from '../../common/guards/authenticated.guard.js'
+import { UserService } from '../services/user.service.js'
 
 @Controller()
 export class UserFavoritesController {

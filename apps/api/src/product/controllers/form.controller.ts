@@ -2,10 +2,10 @@ import { User } from '@meka/database'
 import { Controller } from '@nestjs/common'
 import { Body, Get, Inject, Param, Post } from '@nestjs/common/decorators'
 
-import { FORM_SERVICE } from '../../common/constants'
-import { GetCurrentUser } from '../../common/decorators/current-user.decorator'
-import { CreateFormDto } from '../dtos/create-form.dto'
-import { FormService } from '../services/form.service'
+import { FORM_SERVICE } from '../../common/constants.js'
+import { GetCurrentUser } from '../../common/decorators/current-user.decorator.js'
+import { CreateFormDto } from '../dtos/create-form.dto.js'
+import { FormService } from '../services/form.service.js'
 
 @Controller()
 export class FormController {

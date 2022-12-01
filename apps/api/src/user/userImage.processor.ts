@@ -2,8 +2,8 @@ import { Process, Processor } from '@nestjs/bull'
 import { Inject } from '@nestjs/common'
 import { Job } from 'bull'
 
-import { IMAGE_SERVICE } from '../common/constants'
-import { ImageService } from '../image/image.service'
+import { IMAGE_SERVICE } from '../common/constants.js'
+import { ImageService } from '../image/image.service.js'
 
 export interface JobImageType {
   file?: Express.Multer.File

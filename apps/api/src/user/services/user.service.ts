@@ -2,11 +2,11 @@ import { PrismaClient, User } from '@meka/database'
 import { MaybePaginated, PaginatedResults, PaginationParams } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
 
-import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants'
-import BaseService from '../../common/interfaces/base-service.interface'
-import { SnowflakeService } from '../../snowflake/snowflake.module'
-import { CreateUserDto } from '../dto/create-user.dto'
-import { UpdateUserDto } from '../dto/update-user.dto'
+import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants.js'
+import BaseService from '../../common/interfaces/base-service.interface.js'
+import { SnowflakeService } from '../../snowflake/snowflake.module.js'
+import { CreateUserDto } from '../dto/create-user.dto.js'
+import { UpdateUserDto } from '../dto/update-user.dto.js'
 
 @Injectable()
 export class UserService implements BaseService<User> {

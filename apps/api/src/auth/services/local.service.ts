@@ -1,10 +1,10 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { compare, hash } from 'bcrypt'
 
-import { USER_SERVICE } from '../../common/constants'
-import BaseAuthService from '../../common/interfaces/base-auth-service.interface'
-import { CreateUserDto } from '../../user/dto/create-user.dto'
-import { UserService } from '../../user/services/user.service'
+import { USER_SERVICE } from '../../common/constants.js'
+import BaseAuthService from '../../common/interfaces/base-auth-service.interface.js'
+import { CreateUserDto } from '../../user/dto/create-user.dto.js'
+import { UserService } from '../../user/services/user.service.js'
 
 @Injectable()
 export class LocalAuthService implements BaseAuthService<CreateUserDto> {

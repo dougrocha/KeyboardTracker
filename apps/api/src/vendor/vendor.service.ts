@@ -3,12 +3,12 @@ import { MaybePaginated, PaginatedResults, PaginationParams } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
 
-import { CreateVendorDto } from './dto/create-vendor.dto'
-import { UpdateVendorDto } from './dto/update-vendor.dto'
+import { CreateVendorDto } from './dto/create-vendor.dto.js'
+import { UpdateVendorDto } from './dto/update-vendor.dto.js'
 
-import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../common/constants'
-import BaseService from '../common/interfaces/base-service.interface'
-import { SnowflakeService } from '../snowflake/snowflake.module'
+import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../common/constants.js'
+import BaseService from '../common/interfaces/base-service.interface.js'
+import { SnowflakeService } from '../snowflake/snowflake.module.js'
 
 @Injectable()
 export class VendorService implements BaseService<Vendor> {
@@ -37,9 +37,11 @@ export class VendorService implements BaseService<Vendor> {
   async findMany(): Promise<Vendor[]>
   async findMany(params?: PaginationParams): Promise<PaginatedResults<Vendor>>
   async findMany(params?: unknown): Promise<MaybePaginated<Vendor>> {
-    if (!params) return this.prisma.vendor.findMany()
+    if (Object.keys(params ?? {}).length === 0) {
+      return this.prisma.vendor.findMany()
+    }
 
-    const { page = 1, perPage = 10 } = params as PaginationParams
+    const { page, perPage } = params as PaginationParams
 
     return await this.prisma
       .$transaction([
@@ -59,7 +61,7 @@ export class VendorService implements BaseService<Vendor> {
     vendorId: string,
     params?: PaginationParams,
   ): Promise<MaybePaginated<Product>> {
-    if (!params) {
+    if (Object.keys(params ?? {}).length === 0) {
       return this.prisma.product.findMany({
         where: {
           id: vendorId,
@@ -67,7 +69,7 @@ export class VendorService implements BaseService<Vendor> {
       })
     }
 
-    const { page = 1, perPage = 10 } = params
+    const { page, perPage } = params
 
     return this.prisma
       .$transaction([

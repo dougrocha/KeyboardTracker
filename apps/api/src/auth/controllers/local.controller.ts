@@ -14,12 +14,12 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { Request, Response } from 'express'
 
-import { LOCAL_AUTH_SERVICE } from '../../common/constants'
-import { GetCurrentUser } from '../../common/decorators/current-user.decorator'
-import { LocalAuthGuard } from '../../common/guards/auth.guard'
-import { AuthenticatedGuard } from '../../common/guards/authenticated.guard'
-import { CreateUserDto } from '../../user/dto/create-user.dto'
-import { LocalAuthService } from '../services/local.service'
+import { LOCAL_AUTH_SERVICE } from '../../common/constants.js'
+import { GetCurrentUser } from '../../common/decorators/current-user.decorator.js'
+import { LocalAuthGuard } from '../../common/guards/auth.guard.js'
+import { AuthenticatedGuard } from '../../common/guards/authenticated.guard.js'
+import { CreateUserDto } from '../../user/dto/create-user.dto.js'
+import { LocalAuthService } from '../services/local.service.js'
 
 @Controller()
 export class LocalAuthController {

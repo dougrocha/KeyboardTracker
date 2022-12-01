@@ -2,11 +2,11 @@ import { PrismaClient, DiscordIdentity } from '@meka/database'
 import { MaybePaginated, PaginatedResults, PaginationParams } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
 
-import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants'
-import BaseService from '../../common/interfaces/base-service.interface'
-import { SnowflakeService } from '../../snowflake/snowflake.module'
-import { CreateDiscordUserDto } from '../dto/create-discord-user.dto'
-import { UpdateDiscordUserDto } from '../dto/update-discord-user.dto'
+import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants.js'
+import BaseService from '../../common/interfaces/base-service.interface.js'
+import { SnowflakeService } from '../../snowflake/snowflake.module.js'
+import { CreateDiscordUserDto } from '../dto/create-discord-user.dto.js'
+import { UpdateDiscordUserDto } from '../dto/update-discord-user.dto.js'
 
 @Injectable()
 export class DiscordUserService implements BaseService<DiscordIdentity> {

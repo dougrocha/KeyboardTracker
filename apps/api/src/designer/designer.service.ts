@@ -2,12 +2,12 @@ import { Designer, PrismaClient } from '@meka/database'
 import { PaginationParams, PaginatedResults, MaybePaginated } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
 
-import { CreateDesignerDto } from './dtos/create-designer'
-import { UpdateDesignerDto } from './dtos/update-designer.dto'
+import { CreateDesignerDto } from './dtos/create-designer.js'
+import { UpdateDesignerDto } from './dtos/update-designer.dto.js'
 
-import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../common/constants'
-import BaseService from '../common/interfaces/base-service.interface'
-import { SnowflakeService } from '../snowflake/snowflake.module'
+import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../common/constants.js'
+import BaseService from '../common/interfaces/base-service.interface.js'
+import { SnowflakeService } from '../snowflake/snowflake.module.js'
 
 @Injectable()
 export class DesignerService implements BaseService<Designer> {

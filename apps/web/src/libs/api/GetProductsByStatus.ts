@@ -1,5 +1,5 @@
 import { GroupBuyStatus, Product } from "@meka/database"
-import { PaginationParams } from "@meka/types"
+import { PaginatedResults, PaginationParams } from "@meka/types"
 
 import AxiosClient from "../AxiosClient"
 
@@ -7,16 +7,18 @@ import AxiosClient from "../AxiosClient"
  *
  * @param status Group buy status
  * @param pagination Pagination params
- * @default { take: 100, skip: 0 }
  * @returns Products
  *
  */
 export default async function GetProductsByStatus(
   status: GroupBuyStatus,
-  { perPage, page }: PaginationParams = { perPage: 100, page: 1 }
-): Promise<Product[]> {
-  const res = await AxiosClient.get<Product[]>(
-    `/product/status/${status}?perPage=${perPage}&page=${page}`
+  pagination: PaginationParams = { page: 1, perPage: 10 }
+): Promise<PaginatedResults<Product>> {
+  const res = await AxiosClient.get<PaginatedResults<Product>>(
+    `/product/status/${status}`,
+    {
+      params: pagination,
+    }
   )
   return res.data
 }

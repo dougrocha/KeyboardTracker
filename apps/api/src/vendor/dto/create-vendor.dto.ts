@@ -1,11 +1,4 @@
-import { Transform } from 'class-transformer'
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  MinLength,
-} from 'class-validator'
+import { IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator'
 
 export class CreateVendorDto {
   @IsNotEmpty()
@@ -24,8 +17,4 @@ export class CreateVendorDto {
   @IsString()
   @IsOptional()
   country?: string
-
-  @IsBoolean()
-  @Transform(({ value }) => (value === 'true' ? true : false))
-  verified: boolean
 }

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
 
-import { VendorController } from './vendor.controller'
-import { VendorService } from './vendor.service'
+import { VendorController } from './vendor.controller.js'
+import { VendorService } from './vendor.service.js'
 
-import { PRISMA_SERVICE, VENDOR_SERVICE } from '../common/constants'
+import { VENDOR_SERVICE, PRISMA_SERVICE } from '../common/constants.js'
 
 @Module({
   controllers: [VendorController],

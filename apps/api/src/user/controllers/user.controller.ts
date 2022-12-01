@@ -30,22 +30,22 @@ import {
   SNOWFLAKE_SERVICE,
   USER_SERVICE,
   VENDOR_SERVICE,
-} from '../../common/constants'
-import { GetCurrentUser } from '../../common/decorators/current-user.decorator'
-import { ImageNotFoundException } from '../../common/exceptions/imageNotFound.exception'
-import { AuthenticatedGuard } from '../../common/guards/authenticated.guard'
-import { multerImageOptions } from '../../config/multer.config'
-import { DesignerService } from '../../designer/designer.service'
-import { ImageService } from '../../image/image.service'
-import { SnowflakeService } from '../../snowflake/snowflake.module'
-import { VendorService } from '../../vendor/vendor.service'
-import { UpdateUserDto } from '../dto/update-user.dto'
-import { UserService } from '../services/user.service'
+} from '../../common/constants.js'
+import { GetCurrentUser } from '../../common/decorators/current-user.decorator.js'
+import { ImageNotFoundException } from '../../common/exceptions/imageNotFound.exception.js'
+import { AuthenticatedGuard } from '../../common/guards/authenticated.guard.js'
+import { multerImageOptions } from '../../config/multer.config.js'
+import { DesignerService } from '../../designer/designer.service.js'
+import { ImageService } from '../../image/image.service.js'
+import { SnowflakeService } from '../../snowflake/snowflake.module.js'
+import { VendorService } from '../../vendor/vendor.service.js'
+import { UpdateUserDto } from '../dto/update-user.dto.js'
+import { UserService } from '../services/user.service.js'
 import {
   DELETE_AVATAR,
   JobImageType,
   OPTIMIZE_AVATAR,
-} from '../userImage.processor'
+} from '../userImage.processor.js'
 
 @Controller()
 export class UsersController {

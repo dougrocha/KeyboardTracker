@@ -12,15 +12,15 @@ import {
   UseGuards,
 } from '@nestjs/common'
 
-import { DesignerService } from './designer.service'
-import { CreateDesignerDto } from './dtos/create-designer'
-import { UpdateDesignerDto } from './dtos/update-designer.dto'
+import { DesignerService } from './designer.service.js'
+import { CreateDesignerDto } from './dtos/create-designer.js'
+import { UpdateDesignerDto } from './dtos/update-designer.dto.js'
 
-import { DESIGNER_SERVICE } from '../common/constants'
-import { GetCurrentUser } from '../common/decorators/current-user.decorator'
-import { PaginationParams } from '../common/dto/pagination-params.dto'
-import { AuthenticatedGuard } from '../common/guards/authenticated.guard'
-import { DesignerOwner } from '../common/guards/designer-owner.guard'
+import { DESIGNER_SERVICE } from '../common/constants.js'
+import { GetCurrentUser } from '../common/decorators/current-user.decorator.js'
+import { PaginationParams } from '../common/dto/pagination-params.dto.js'
+import { AuthenticatedGuard } from '../common/guards/authenticated.guard.js'
+import { DesignerOwner } from '../common/guards/designer-owner.guard.js'
 
 @Controller('designer')
 export class DesignersController {

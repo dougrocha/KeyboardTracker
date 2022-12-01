@@ -3,12 +3,12 @@ import { PaginationParams, PaginatedResults, MaybePaginated } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
 
-import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants'
-import BaseService from '../../common/interfaces/base-service.interface'
-import { SnowflakeService } from '../../snowflake/snowflake.module'
-import { CreateProductDto } from '../dtos/create-product.dto'
-import { ProductSearchQuery } from '../dtos/queries/product-search-query.dto'
-import { UpdateProductDto } from '../dtos/update-product.dto'
+import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants.js'
+import BaseService from '../../common/interfaces/base-service.interface.js'
+import { SnowflakeService } from '../../snowflake/snowflake.module.js'
+import { CreateProductDto } from '../dtos/create-product.dto.js'
+import { ProductSearchQuery } from '../dtos/queries/product-search-query.dto.js'
+import { UpdateProductDto } from '../dtos/update-product.dto.js'
 
 @Injectable()
 export class ProductService implements BaseService<Product> {
@@ -53,14 +53,18 @@ export class ProductService implements BaseService<Product> {
    *
    * @returns Product[]
    */
-  findMany(): Promise<Product[]>
-  findMany(params?: PaginationParams): Promise<PaginatedResults<Product>>
-  async findMany(params?: unknown): Promise<MaybePaginated<Product>> {
-    if (!params) {
-      return this.prisma.product.findMany()
+  async findMany(
+    pagination?: PaginationParams,
+  ): Promise<PaginatedResults<Product>> {
+    if (!Object.values(pagination).length) {
+      const products = await this.prisma.product.findMany()
+      return {
+        data: products,
+        count: products.length,
+      }
     }
 
-    const { perPage, page = 1 } = params as PaginationParams
+    const { perPage, page = 1 } = pagination
 
     return this.prisma
       .$transaction([
