@@ -53,10 +53,11 @@ export class ProductService implements BaseService<Product> {
    *
    * @returns Product[]
    */
-  async findMany(
-    pagination?: PaginationParams,
-  ): Promise<PaginatedResults<Product>> {
-    if (!Object.values(pagination).length) {
+  async findMany({
+    page,
+    perPage,
+  }: PaginationParams): Promise<PaginatedResults<Product>> {
+    if (!page || !perPage) {
       const products = await this.prisma.product.findMany()
       return {
         data: products,
@@ -64,13 +65,11 @@ export class ProductService implements BaseService<Product> {
       }
     }
 
-    const { perPage, page = 1 } = pagination
-
     return this.prisma
       .$transaction([
         this.prisma.product.findMany({
-          skip: (page - 1) * perPage,
           take: perPage,
+          skip: (page - 1) * perPage,
         }),
         this.prisma.product.count(),
       ])
@@ -158,11 +157,9 @@ export class ProductService implements BaseService<Product> {
 
   async findManyWithStatus(
     status: GroupBuyStatus,
-    params?: PaginationParams,
+    { page, perPage }: PaginationParams,
   ): Promise<MaybePaginated<Product>> {
-    if (params) {
-      const { perPage, page = 1 } = params
-
+    if (page && perPage) {
       return this.prisma
         .$transaction([
           this.prisma.product.findMany({

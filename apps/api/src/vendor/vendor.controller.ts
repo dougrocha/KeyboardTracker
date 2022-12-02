@@ -1,4 +1,3 @@
-import { PaginationParams } from '@meka/types'
 import {
   Body,
   Controller,
@@ -18,6 +17,7 @@ import { VendorService } from './vendor.service.js'
 
 import { VENDOR_SERVICE } from '../common/constants.js'
 import { VendorRoles } from '../common/decorators/roles.decorator.js'
+import { PaginationParams } from '../common/dto/pagination-params.dto.js'
 
 @Controller('vendor')
 export class VendorController {
@@ -56,6 +56,7 @@ export class VendorController {
 
   @Get()
   async findMany(@Query() pagination: PaginationParams) {
+    console.log(pagination)
     return await this.vendorService.findMany(pagination)
   }
 

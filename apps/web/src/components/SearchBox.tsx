@@ -1,14 +1,13 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
-import { Product } from "@meka/database"
 import classNames from "classnames"
-import { useRouter } from "next/router"
-import React, { useEffect, useState, useTransition } from "react"
+import Link from "next/link"
+import React, { Suspense, useState } from "react"
 
 import Form from "./Forms/Form"
 import Input from "./Forms/Input"
 
 import useDebounce from "../hooks/useDebounce"
-import { SearchProducts } from "../libs/api/SearchProducts"
+import { useProductSearch } from "../libs/api/SearchProducts"
 
 interface SearchBoxProps {
   placeholder?: string
@@ -16,55 +15,20 @@ interface SearchBoxProps {
 }
 
 const SearchBox = ({ placeholder, maxWidth }: SearchBoxProps) => {
-  const [isPending, startTransition] = useTransition()
   const [query, setQuery] = useState("")
 
-  const debouncedSearch = useDebounce(query, 500)
-
-  const [searchResults, setSearchResults] = useState<
-    Pick<Product, "id" | "name">[]
-  >([])
-
-  const { push } = useRouter()
-
-  useEffect(() => {
-    if (debouncedSearch.length < 0) {
-      setSearchResults([])
-      return
-    }
-
-    const getResults = async () => {
-      const res = await SearchProducts(debouncedSearch, {
-        perPage: 5,
-      })
-      startTransition(() => {
-        setSearchResults(res)
-      })
-    }
-
-    getResults()
-
-    return () => {
-      setSearchResults([])
-    }
-  }, [debouncedSearch])
+  const deferredQuery = useDebounce(query, 250)
+  const isStale = query !== deferredQuery
 
   const onSubmit = () => {
-    if (!query) {
-      push("/products")
-      return
-    }
-
-    push(`/products?search=${query}`)
-    setSearchResults([])
+    return
   }
 
   return (
     <Form
       onSubmit={onSubmit}
       className={classNames(
-        `relative w-full max-w-sm shadow-sm`,
-        searchResults.length ? "rounded-t-md" : "rounded-md",
+        `relative h-full w-full max-w-sm shadow-sm`,
         maxWidth ? `sm:max-w-${maxWidth}` : "sm:max-w-md"
       )}
     >
@@ -73,46 +37,104 @@ const SearchBox = ({ placeholder, maxWidth }: SearchBoxProps) => {
         id="search"
         type="text"
         hideLabel
-        className="h-14 pl-9"
-        placeholder={isPending ? "Loading..." : placeholder ?? "Search..."}
-        readOnly={isPending}
-        disabled={isPending}
+        className={classNames(
+          "h-14 pl-9",
+          isStale ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-900"
+        )}
+        rounded={{
+          position: query ? "t" : undefined,
+        }}
+        autoComplete="off"
+        value={query}
+        placeholder={placeholder ?? "Search..."}
         validation={{
-          onChange: (e) => {
-            setQuery(e.target.value)
-          },
+          onChange: (e) => setQuery(e.target.value),
         }}
       />
-      {searchResults.length > 0 && (
-        <div className="absolute top-full left-0 z-10 w-full rounded-b-md bg-primary-light text-black shadow-md dark:bg-primary-dark dark:text-white">
-          <>
-            {searchResults
-              .filter((val) => {
-                if (!query) return null
-                return val.name.toLowerCase().includes(query.toLowerCase())
-              })
-              .map((p, i) => {
-                i === 0 ? (
-                  <div key={p.id} className="p-2">
-                    {p.name}
-                  </div>
-                ) : null
-              })}
-            {searchResults
-              .filter((val) => {
-                if (!query) return val
-                return val.name.toLowerCase().includes(query.toLowerCase())
-              })
-              .map((p) => (
-                <div key={p.id} className="p-2">
-                  {p.name}
-                </div>
-              ))}
-          </>
-        </div>
-      )}
+      <Suspense
+        fallback={
+          <div
+            className={classNames(
+              "absolute inset-x-0 top-auto z-10 w-full rounded-b-md border border-t-0 border-indigo-500 bg-indigo-50 p-4 text-black shadow-md duration-500 dark:bg-gray-800 dark:text-white",
+              isStale ? "animate-pulse" : ""
+            )}
+          >
+            Loading...
+          </div>
+        }
+      >
+        <SearchResults query={deferredQuery} isStale={isStale} />
+      </Suspense>
     </Form>
   )
 }
+
+const SearchResults = React.memo(function ({
+  query,
+  isStale,
+}: {
+  query?: string
+  isStale?: boolean
+}) {
+  const { data } = useProductSearch(query?.trim(), {}, { enabled: isStale })
+
+  const filteredData = React.useCallback(() => {
+    return (
+      data?.filter((product) => {
+        return product.name.toLowerCase().includes(query?.toLowerCase() ?? "")
+      }) ?? []
+    )
+  }, [data, query])
+
+  if (!query) {
+    return null
+  }
+
+  return (
+    <ul
+      className={classNames(
+        "absolute inset-x-0 top-auto z-10 max-h-min min-h-full w-full max-w-full rounded-b-md border border-t-0 border-indigo-500 bg-indigo-50 text-black shadow-md duration-500 dark:bg-gray-800 dark:text-white",
+        isStale ? "animate-pulse" : ""
+      )}
+    >
+      <>
+        {filteredData().map((p) => {
+          return (
+            <li key={p.id}>
+              <Link
+                href={`/products/${p.id}`}
+                className="flex justify-between p-2"
+              >
+                <p>{p.name}</p>
+                <span className="w-1/2 truncate text-gray-500 dark:text-gray-400">
+                  {p.description}
+                </span>
+              </Link>
+            </li>
+          )
+        })}
+
+        {filteredData().length === 0 && (
+          <li className="flex whitespace-nowrap p-4">
+            No matches for &quot;<i className="min-w-0 truncate">{query}</i>
+            &quot;
+          </li>
+        )}
+
+        <li>
+          <Link href={`/products`}>
+            <p className="h-full w-full border-t border-indigo-300 p-2 text-center text-indigo-600 transition-colors hover:bg-indigo-600 hover:text-white dark:text-white dark:hover:bg-gray-700">
+              Check out more products...
+            </p>
+          </Link>
+        </li>
+      </>
+    </ul>
+  )
+})
+
+// h-full w-full border-t border-indigo-300 p-2 text-center text-indigo-600 transition-colors hover:bg-indigo-600 dark:text-white dark:hover:bg-gray-700
+
+SearchResults.displayName = "SearchResults"
 
 export default SearchBox

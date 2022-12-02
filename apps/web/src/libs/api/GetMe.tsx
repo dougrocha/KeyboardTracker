@@ -1,9 +1,5 @@
 import { User } from "@meka/database"
-import {
-  useMutation,
-  UseMutationOptions,
-  useQueryClient,
-} from "@tanstack/react-query"
+import { useMutation, UseMutationOptions } from "@tanstack/react-query"
 
 import AxiosClient from "../AxiosClient"
 
@@ -44,15 +40,7 @@ export function UseUpdateUser(options?: UseMutationOptions<User, Error, User>) {
 export function UseUpdateUserAvatar(
   options?: UseMutationOptions<AvatarReturn, Error, File>
 ) {
-  const queryClient = useQueryClient()
   return useMutation(["user", "avatar"], UpdateMeAvatar, {
-    onSuccess: (data) => {
-      // update user cache with new avatar id
-      queryClient.setQueryData<Pick<User, "avatar">>(["user"], (old) => ({
-        ...old,
-        avatar: data.fileId,
-      }))
-    },
     ...options,
   })
 }
