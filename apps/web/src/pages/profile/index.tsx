@@ -99,31 +99,30 @@ const UserSection = ({ user }: { user: User }) => {
           </div>
         </form>
 
-        <ImageField
-          userId={user.id}
-          src={GetUserAvatar(user.id, user.avatar)}
-        />
+        <ImageField userId={user.id} avatar={user.avatar ?? ""} />
       </FormProvider>
     </ProfileSection>
   )
 }
 
 const ImageField = ({
-  src,
+  avatar,
   alt,
   size = "lg",
   userId,
 }: {
   userId: string
-  src?: string
+  avatar?: string
   alt?: string
   size?: "sm" | "lg"
 }) => {
+  const src = GetUserAvatar(userId, avatar)
   const [previewImage, setPreviewImage] = useState<string | undefined>(src)
+  const [isDifferent, setIsDifferent] = useState(previewImage !== previewImage)
 
   const { mutate: updateAvatar } = UseUpdateUserAvatar({
-    onSuccess: (data) => {
-      setPreviewImage(GetUserAvatar(userId, data.fileId))
+    onSettled: () => {
+      setIsDifferent(false)
     },
   })
 
@@ -146,13 +145,16 @@ const ImageField = ({
                 src={previewImage}
                 alt={alt ?? "Profile Picture"}
                 fill
-                quality={50}
                 className="rounded-full object-cover object-center"
                 sizes="
                   (max-width: 640px) 64px,
-                  (max-width: 768px) 64px,
-                  (max-width: 1024px) 128px
-                  "
+                  (max-width: 768px) 96px,
+                  (max-width: 1024px) 128px,
+                  128px
+                "
+                blurDataURL="/images/keyboard_cable.jpg"
+                placeholder="blur"
+                loading="lazy"
               />
             ) : (
               <div className="h-32 w-32 rounded-full bg-gray-400" />
@@ -190,14 +192,15 @@ const ImageField = ({
                     const reader = new FileReader()
                     reader.onloadend = () => {
                       setPreviewImage(reader.result as string)
+                      setIsDifferent(true)
                     }
                     reader.readAsDataURL(file)
                   }
                 },
-                required: false,
+                required: true,
               }}
             />
-            {src != previewImage ? (
+            {isDifferent ? (
               <div className="mt-2 flex w-full space-x-4">
                 <button
                   className="w-32 cursor-pointer rounded bg-gray-600 px-4 py-2 text-white"

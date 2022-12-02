@@ -50,7 +50,7 @@ const ProductPage = ({ product, vendors }: ProductPageProps) => {
         <ProductImage
           size="lg"
           image={{
-            imgUrl: "/hero.jpg",
+            imgUrl: "/images/hero.jpg",
             title: name,
             description: product.description,
           }}
@@ -161,7 +161,7 @@ const ProductImage = ({
       )}
     >
       <Image
-        src={"/hero.jpg"}
+        src={"/images/hero.jpg"}
         alt={`${image?.title}`}
         fill
         sizes="(max-width: 768px) 100vw,

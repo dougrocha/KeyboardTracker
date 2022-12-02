@@ -16,6 +16,10 @@ interface InputProps
   hideLabel?: boolean
   icon?: JSX.Element
   validation?: RegisterOptions
+  rounded?: {
+    size?: "sm" | "md" | "lg"
+    position?: "t" | "b" | "l" | "r" | "tl" | "tr" | "bl" | "br" | "none"
+  }
 }
 
 const Input = ({
@@ -29,6 +33,7 @@ const Input = ({
   icon,
   hideLabel,
   className,
+  rounded,
   ...rest
 }: InputProps) => {
   const {
@@ -50,7 +55,10 @@ const Input = ({
         placeholder={placeholder ?? undefined}
         className={classNames(
           className,
-          "block w-full rounded border-2 font-medium shadow-sm dark:border-gray-700 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:border sm:text-base sm:leading-5",
+          `rounded${rounded?.position ? `-${rounded.position}` : ""}-${
+            rounded?.size ?? "md"
+          }`,
+          "block w-full border-2 font-medium shadow-sm dark:border-gray-700 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:border sm:text-base sm:leading-5",
           readOnly &&
             "cursor-not-allowed border-gray-300 bg-gray-100 focus:border-gray-300 focus:ring-0",
           !readOnly &&

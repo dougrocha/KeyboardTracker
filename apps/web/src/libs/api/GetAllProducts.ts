@@ -10,8 +10,6 @@ export async function GetAllProducts({ perPage, page }: PaginationParams) {
       params: {
         perPage,
         page,
-      },
-      data: {
         product: true,
       },
     }

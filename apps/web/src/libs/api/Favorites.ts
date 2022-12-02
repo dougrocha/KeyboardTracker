@@ -4,6 +4,7 @@ import {
   UseMutationOptions,
   useQuery,
   useQueryClient,
+  UseQueryOptions,
 } from "@tanstack/react-query"
 
 import AxiosClient from "../AxiosClient"
@@ -40,7 +41,17 @@ export const RemoveProductFromFavorites = async (id: number) => {
 }
 
 export const UseFavorites = (
-  options?: UseMutationOptions<FavoritesResponse[], unknown, string | number>
+  options?: UseQueryOptions<
+    FavoritesResponse[],
+    unknown,
+    FavoritesResponse[],
+    string[]
+  >,
+  mutationOptions?: UseMutationOptions<
+    FavoritesResponse[],
+    unknown,
+    string | number
+  >
 ) => {
   const queryClient = useQueryClient()
 
@@ -49,10 +60,14 @@ export const UseFavorites = (
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user", "favorites"] })
       },
-      ...options,
+      ...mutationOptions,
     }
 
-  const getFavorites = useQuery(["user", "favorites"], () => GetUserFavorites())
+  const getFavorites = useQuery(
+    ["user", "favorites"],
+    () => GetUserFavorites(),
+    options
+  )
 
   const addFavorite = useMutation(
     ["user", "favorites"],

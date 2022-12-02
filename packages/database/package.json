@@ -1,8 +1,8 @@
 {
   "name": "@meka/database",
   "version": "0.0.1",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc",

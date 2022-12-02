@@ -44,21 +44,21 @@ const Navbar = () => {
             </li>
           ))}
         </ol>
-        {user && (
+        {user ? (
           <div className="flex w-full items-center gap-3">
             <Avatar user={user} />
             <MagnifyingGlassIcon className="icon cursor-pointer text-gray-800 hover:text-gray-500 dark:text-white dark:hover:text-gray-400" />
             <HeartIcon className="icon cursor-pointer text-gray-800 hover:text-gray-500 dark:text-white dark:hover:text-gray-400" />
           </div>
-        )}
-        {!user && !isLoading && (
+        ) : null}
+        {!user && !isLoading ? (
           <Link
             href={"/login"}
             className="flex h-12 items-center justify-center rounded-lg bg-blue-600 px-4 font-medium text-gray-200 transition-colors hover:bg-blue-900 hover:text-black dark:text-white"
           >
             Login
           </Link>
-        )}
+        ) : null}
       </div>
     </nav>
   )

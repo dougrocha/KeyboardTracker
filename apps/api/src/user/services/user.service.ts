@@ -1,5 +1,9 @@
 import { PrismaClient, User } from '@meka/database'
-import { MaybePaginated, PaginatedResults, PaginationParams } from '@meka/types'
+import type {
+  MaybePaginated,
+  PaginatedResults,
+  PaginationParams,
+} from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
 
 import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../../common/constants.js'
@@ -21,7 +25,7 @@ export class UserService implements BaseService<User> {
     throw new Error('Method not implemented.')
   }
 
-  findOne(id: string): Promise<User> {
+  async findOne(id: string): Promise<User> {
     return this.prisma.user.findUnique({ where: { id } })
   }
 

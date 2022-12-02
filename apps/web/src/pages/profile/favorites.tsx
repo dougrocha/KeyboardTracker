@@ -55,7 +55,9 @@ const FavoritesContainer = () => {
                     <div className="relative h-24 w-full">
                       {!favorite.product.coverImage ? (
                         <Image
-                          src={favorite.product.coverImage ?? "/hero.jpg"}
+                          src={
+                            favorite.product.coverImage ?? "/images/hero.jpg"
+                          }
                           className="object-cover"
                           alt={favorite.product.name + " cover image"}
                           fill

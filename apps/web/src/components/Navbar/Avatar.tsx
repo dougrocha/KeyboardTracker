@@ -76,10 +76,13 @@ const Avatar = ({ user }: AvatarProps) => {
         <Image
           src={GetUserAvatar(user.id, user.avatar)}
           alt={`${user.username} profile image`}
-          fill
-          quality={80}
           className="rounded-full object-cover object-center"
-          sizes="128px"
+          sizes="40px"
+          width={40}
+          height={40}
+          loading="eager"
+          blurDataURL="/images/keyboard_cable.jpg"
+          placeholder="blur"
         />
       ) : (
         <span className="text-lg font-medium text-gray-200">

@@ -4,14 +4,13 @@ import {
   Get,
   Inject,
   Query,
-  ParseBoolPipe,
   Param,
   ParseEnumPipe,
-  Body,
 } from '@nestjs/common'
 
 import { PRODUCT_SERVICE } from '../../common/constants.js'
 import { PaginationParams } from '../../common/dto/pagination-params.dto.js'
+import { FindManyProductsDto } from '../dtos/find-many-products.dto.js'
 import { ProductSearchQuery } from '../dtos/queries/product-search-query.dto.js'
 import { ProductService } from '../services/product.service.js'
 
@@ -30,14 +29,8 @@ export class ProductController {
    * @returns
    */
   @Get()
-  async findMany(
-    @Query() pagination: PaginationParams,
-    @Body('product', ParseBoolPipe) product: boolean,
-  ) {
-    if (product) {
-      return await this.productService.findMany(pagination)
-    }
-
+  async findMany(@Query() { product, ...pagination }: FindManyProductsDto) {
+    if (product) return await this.productService.findMany(pagination)
     return await this.productService.findAllIds(pagination)
   }
 

@@ -52,7 +52,7 @@ const Card = ({ product, className }: CardProps) => {
     >
       <div className="relative h-full w-full select-none">
         <Image
-          src={coverImage ?? "/hero.jpg"}
+          src={coverImage ?? "/images/hero.jpg"}
           alt={`card image for ${name}`}
           fill
           sizes="(max-width: 640px) 320px"
