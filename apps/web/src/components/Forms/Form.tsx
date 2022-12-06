@@ -6,12 +6,17 @@ import {
   DeepPartial,
   Resolver,
   SubmitHandler,
+  SubmitErrorHandler,
 } from "react-hook-form"
 
 interface FormProps<T extends FieldValues>
-  extends Omit<React.HTMLAttributes<HTMLFormElement>, "onSubmit"> {
+  extends Omit<
+    React.HTMLAttributes<HTMLFormElement>,
+    "onSubmit" | "onInvalid" | "onReset"
+  > {
   defaultValues?: DeepPartial<T>
   onSubmit: SubmitHandler<T>
+  onInvalid?: SubmitErrorHandler<T> | undefined
   resolver?: Resolver<T>
 }
 
@@ -21,13 +26,17 @@ function Form<T extends FieldValues>({
   children,
   className,
   resolver,
+  onInvalid,
   ...rest
 }: React.PropsWithChildren<FormProps<T>>) {
   const methods = useForm<T>({ defaultValues, resolver })
 
   return (
     <FormProvider {...methods} {...rest}>
-      <form onSubmit={methods.handleSubmit(onSubmit)} className={className}>
+      <form
+        onSubmit={methods.handleSubmit(onSubmit, onInvalid)}
+        className={className}
+      >
         {React.Children.map(children, (child) => {
           if (React.isValidElement(child)) {
             React.cloneElement(child, {

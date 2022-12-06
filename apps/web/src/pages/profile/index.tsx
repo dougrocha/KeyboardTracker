@@ -2,7 +2,7 @@ import { User } from "@meka/database"
 import { useQueryClient } from "@tanstack/react-query"
 import Image from "next/image"
 import React, { ChangeEvent, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FieldValues, useFormContext } from "react-hook-form"
 
 import Form from "../../components/Forms/Form"
 import Input from "../../components/Forms/Input"
@@ -35,73 +35,86 @@ const ProfilePage = () => {
           </>
         }
       />
+
       <UserSection user={user} />
-      <ConnectionsSection />
+
+      <ImageField userId={user.id} avatar={user.avatar ?? ""} />
+
+      <ProfileSection flex="row" className="mx-auto mt-10 2xl:w-10/12">
+        <ConnectionsSection />
+      </ProfileSection>
     </>
   )
 }
 
 const UserSection = ({ user }: { user: User }) => {
-  const methods = useForm({
-    defaultValues: user,
-  })
-
-  const { handleSubmit, reset } = methods
-
   const [readOnly, setReadOnly] = useState(true)
 
   const { mutate: updateUser } = UseUpdateUser()
 
   const queryClient = useQueryClient()
 
-  const onSubmit = handleSubmit(
-    (data) => {
-      updateUser(data, {
-        onSuccess: () => {
-          queryClient.invalidateQueries(["user"])
-          setReadOnly(true)
-        },
-      })
-    },
-    (errors, e) => {
-      console.log(errors, e)
-    }
-  )
+  const onSubmit = (data: User) => {
+    updateUser(data, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["user"])
+        setReadOnly(true)
+      },
+    })
+  }
 
   return (
-    <ProfileSection>
-      <FormProvider {...methods}>
-        <form onSubmit={onSubmit} className="mt-8 max-w-sm space-y-4">
-          <Input id="username" label="Display Name" readOnly={readOnly} />
-          <Input id="name" label="Name" readOnly={readOnly} />
-          <Input id="email" label="Email" readOnly={readOnly} />
+    <Form
+      defaultValues={user}
+      onSubmit={onSubmit}
+      className="mt-8 flex max-w-sm flex-col gap-y-6"
+    >
+      <Input id="username" label="Display Name" readOnly={readOnly} />
+      <Input id="name" label="Name" readOnly={readOnly} />
+      <Input id="email" label="Email" readOnly={readOnly} />
 
-          <div className="flex flex-col space-y-2 text-white sm:flex-row sm:justify-between sm:space-y-0">
-            <button
-              className="w-32 rounded bg-gray-600 px-4 py-2 text-center text-white"
-              onClick={() => {
-                setReadOnly(!readOnly)
-                if (!readOnly) reset(user)
-              }}
-              type="button"
-            >
-              {readOnly ? "Edit" : "Cancel"}
-            </button>
-            {!readOnly && (
-              <button
-                className="w-32 cursor-pointer rounded bg-gray-600 px-4 py-2 text-white"
-                value="Save"
-                type="submit"
-              >
-                Save
-              </button>
-            )}
-          </div>
-        </form>
+      <SaveButtonGroup
+        readOnly={readOnly}
+        setReadOnly={setReadOnly}
+        defaultValues={user}
+      />
+    </Form>
+  )
+}
 
-        <ImageField userId={user.id} avatar={user.avatar ?? ""} />
-      </FormProvider>
-    </ProfileSection>
+const SaveButtonGroup = <T extends FieldValues>({
+  setReadOnly,
+  readOnly,
+  defaultValues,
+}: {
+  readOnly: boolean
+  setReadOnly: (value: boolean) => void
+  defaultValues?: T
+}) => {
+  const methods = useFormContext<T>()
+
+  return (
+    <div className="flex flex-col space-y-2 text-white sm:flex-row sm:justify-between sm:space-y-0">
+      <button
+        className="w-32 rounded bg-gray-600 px-4 py-2 text-center text-white"
+        onClick={() => {
+          setReadOnly(!readOnly)
+          if (!readOnly) methods.reset(defaultValues)
+        }}
+        type="button"
+      >
+        {readOnly ? "Edit" : "Cancel"}
+      </button>
+      {!readOnly && (
+        <button
+          className="w-32 cursor-pointer rounded bg-gray-600 px-4 py-2 text-white"
+          value="Save"
+          type="submit"
+        >
+          Save
+        </button>
+      )}
+    </div>
   )
 }
 

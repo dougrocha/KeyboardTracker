@@ -1,8 +1,17 @@
+import { Bars3BottomLeftIcon } from "@heroicons/react/24/outline"
+import { atom, useAtom, useSetAtom } from "jotai"
 import { NextSeo } from "next-seo"
 import type { NextSeoProps } from "next-seo"
 import Link from "next/link"
+import React, { useEffect } from "react"
+import { useMedia } from "react-use"
 
 import MainViewLayout from "./MainViewLayout"
+
+import { useGetMyDesigner } from "../libs/api/Designer"
+import { useGetVendors } from "../libs/api/Vendor"
+
+export const profileMenuAtom = atom(false)
 
 const ProfileLayout = ({
   children,
@@ -11,76 +20,130 @@ const ProfileLayout = ({
   children: React.ReactNode
   seo?: NextSeoProps
 }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useAtom(profileMenuAtom)
+
+  const isDesktop = useMedia("(min-width: 1024px)", true)
+
+  useEffect(() => {
+    // Close profile menu on desktop
+    if (isDesktop) {
+      setIsSidebarOpen(false)
+    }
+  }, [isDesktop, setIsSidebarOpen])
+
   return (
     <>
       <NextSeo {...seo} />
       <MainViewLayout
-        className="flex flex-row pb-10"
+        className="relative flex flex-col pb-10 lg:flex-row"
         hideFooter
-        // footerContent={ProfileFooter()}
       >
-        <ProfileSidebar />
-        <section className="min-h-full w-full px-2 py-10 dark:bg-zinc-700">
+        {/* Sidebar Button */}
+        <button
+          className="fixed top-16 left-0 z-20 flex h-16 w-16 items-center justify-center rounded-r-full bg-white text-gray-600 shadow-lg lg:hidden"
+          onClick={() => setIsSidebarOpen((prev) => !prev)}
+        >
+          <Bars3BottomLeftIcon className="h-6 w-6" />
+        </button>
+
+        {/* Sidebar */}
+        <div
+          className={`${
+            isSidebarOpen
+              ? "fixed left-10 z-10 block w-min rounded-md bg-primary-light shadow-lg shadow-indigo-400"
+              : "hidden"
+          } lg:static lg:mr-8 lg:block lg:w-60 lg:shadow-none`}
+        >
+          <ProfileSidebar />
+        </div>
+
+        {/* Main content */}
+        <div className="min-h-full min-w-full px-4 py-10 dark:bg-zinc-700 md:w-3/4">
           {children}
           <footer className="mt-10">
             <ProfileFooter />
           </footer>
-        </section>
+        </div>
       </MainViewLayout>
     </>
   )
 }
 
 const ProfileSidebar = () => {
+  const vendors = useGetVendors()
+  const designer = useGetMyDesigner()
+
+  const setSidebarMenu = useSetAtom(profileMenuAtom)
+
   return (
-    <>
-      <section className="sticky top-10 flex h-[calc(100vh_-_150px)] w-52 flex-shrink-0 flex-col justify-between px-4 transition-colors">
-        <ul className="flex flex-col">
-          {SidebarTags.map((tag) => (
-            <li
-              key={tag.name}
-              className="relative flex h-12 w-full flex-row items-center justify-start rounded px-4 text-sm font-medium text-gray-500 hover:bg-gray-200 hover:text-gray-900"
-            >
-              <Link
-                href={tag.href}
-                className="after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0"
-              >
-                {tag.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <ul className="flex flex-col">
-          {SidebarFooterTags.map((tag) => (
-            <li
-              key={tag.name}
-              className="relative flex h-12 w-full flex-row items-center justify-start rounded px-4 text-sm font-medium text-gray-500 hover:bg-gray-200 hover:text-gray-900"
-            >
-              <Link
-                href={tag.href}
-                className="after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0"
-              >
-                {tag.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </>
+    <section className="top-10 flex h-full w-52 flex-shrink-0 flex-col justify-between gap-y-2 p-4 transition-colors lg:h-[calc(100vh_-_150px)]">
+      <ul className="flex flex-col">
+        {SidebarTags.map((tag) => (
+          <li
+            key={tag.name}
+            className="relative flex h-12 w-full flex-row items-center justify-start rounded px-4 text-sm font-medium text-gray-800 hover:bg-indigo-200 hover:text-gray-900 lg:hover:bg-gray-200 "
+            onClick={() => setSidebarMenu((prev) => !prev)}
+          >
+            {tag.type === "vendors" &&
+              (vendors ? (
+                <SidebarRow
+                  name={vendors ? "Your Vendors" : "Create Vendor"}
+                  href={tag.href}
+                />
+              ) : null)}
+            {tag.type === "designer" &&
+              (vendors ? (
+                <SidebarRow
+                  name={designer ? "Designer" : "Join as a Designer"}
+                  href={tag.href}
+                />
+              ) : null)}
+            {!tag.type ? <SidebarRow name={tag.name} href={tag.href} /> : null}
+          </li>
+        ))}
+      </ul>
+      <ul className="flex flex-col">
+        {SidebarFooterTags.map((tag) => (
+          <li
+            key={tag.name}
+            className="relative flex h-12 w-full flex-row items-center justify-start rounded px-4 text-sm font-medium text-gray-800 hover:bg-indigo-200 hover:text-gray-900 lg:hover:bg-gray-200 "
+          >
+            <SidebarRow name={tag.name} href={tag.href} />
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 
 const ProfileFooter = () => {
   return (
-    <div className="container mx-auto mb-2 flex justify-between px-2 text-sm text-gray-700 sm:px-6">
-      <p>
+    <div className="container mb-2 flex flex-wrap justify-center px-2 text-sm text-gray-700 sm:mx-auto sm:px-6 xl:justify-between">
+      <p className="text-center">
         &copy; {new Date().getFullYear()} Modified by Meka Group Buys. All
         rights reserved.
       </p>
-      <p>By accessing this page, you agree to our Terms.</p>
+      <p className="text-center">
+        By accessing this page, you agree to our Terms.
+      </p>
     </div>
   )
 }
+
+const SidebarRow = ({
+  name,
+  href,
+}: {
+  name: string
+  href: string
+}): JSX.Element => (
+  <Link
+    href={href}
+    className="after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0"
+  >
+    {name}
+  </Link>
+)
 
 const SidebarTags = [
   {
@@ -88,11 +151,13 @@ const SidebarTags = [
     href: `${process.env.NEXT_PUBLIC_WEB_URL}/profile`,
   },
   {
+    type: "designer",
     name: "Join Designer",
     active: "My Designs",
     href: `${process.env.NEXT_PUBLIC_WEB_URL}/profile/designer`,
   },
   {
+    type: "vendors",
     name: "Create Vendor",
     active: "My Products",
     href: `${process.env.NEXT_PUBLIC_WEB_URL}/profile/vendors`,

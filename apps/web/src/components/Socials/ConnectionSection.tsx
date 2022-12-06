@@ -4,7 +4,6 @@ import { FaDiscord } from "react-icons/fa"
 import SocialConnector from "./SocialConnector"
 
 import { GetUserConnections } from "../../libs/api/GetUserConnections"
-import ProfileSection from "../Profile/ProfileSection"
 
 const ConnectionsSection = () => {
   const { data, isLoading } = useQuery(["connections"], GetUserConnections)
@@ -14,11 +13,11 @@ const ConnectionsSection = () => {
   }
 
   return (
-    <ProfileSection flex="row" className="mt-10">
+    <>
       {/* <SocialConnector
         name="Github"
-        icon={FaGithub}
-        connected={data["github"]}
+        icon={FaTwitter}
+        connected={data?.["twitter"] ?? false}
       /> */}
       <SocialConnector
         name="Discord"
@@ -30,7 +29,7 @@ const ConnectionsSection = () => {
         icon={FaGoogle}
         connected={data["google"]}
       /> */}
-    </ProfileSection>
+    </>
   )
 }
 

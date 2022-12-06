@@ -41,14 +41,15 @@ const Radio = ({
             !get(errors, id) &&
             "focus:ring-primary-500 focus:border-primary-500 border-gray-300"
         )}
-        aria-describedby={id}
+        aria-labelledby={id}
+        role="radio"
         {...register(id, {
           required: rest.required,
           ...validation,
         })}
         {...rest}
       />
-      <label htmlFor={id} className="block text-sm">
+      <label id={id} htmlFor={id} className="block text-sm">
         {label}
       </label>
     </div>

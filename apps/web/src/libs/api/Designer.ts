@@ -29,7 +29,7 @@ const GetDesignerProductsUrl = async (
   return data.data
 }
 
-export const UseGetMyDesigner = (
+export const useGetMyDesigner = (
   options: UseQueryOptions<Designer, Error, Designer, string[]> = {}
 ) => {
   const { data, isLoading, error } = useQuery(
@@ -40,14 +40,14 @@ export const UseGetMyDesigner = (
   return { designer: data, isLoading, error }
 }
 
-export const UseGetDesigner = (id: string) => {
+export const useGetDesigner = (id: string) => {
   const { data, isLoading, error } = useQuery(["designer", id], () =>
     GetOtherDesignerUrl(id)
   )
   return { designer: data, isLoading, error }
 }
 
-export const UseGetDesignerProducts = ({
+export const useGetDesignerProducts = ({
   id,
   pagination,
 }: {
