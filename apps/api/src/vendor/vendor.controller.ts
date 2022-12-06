@@ -56,7 +56,6 @@ export class VendorController {
 
   @Get()
   async findMany(@Query() pagination: PaginationParams) {
-    console.log(pagination)
     return await this.vendorService.findMany(pagination)
   }
 
