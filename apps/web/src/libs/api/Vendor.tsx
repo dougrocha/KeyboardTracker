@@ -24,7 +24,7 @@ const GetVendorUrl = async (id: string) => {
   return data.data
 }
 
-export const UseGetVendors = (
+export const useGetVendors = (
   options: UseQueryOptions<Vendor[], Error, Vendor[], string[]> = {}
 ) => {
   const { data, ...rest } = useQuery(
@@ -36,7 +36,7 @@ export const UseGetVendors = (
   return { vendors: data, ...rest }
 }
 
-export const UseGetVendorProducts = (
+export const useGetVendorProducts = (
   id: string,
   pagination?: PaginationParams
 ) => {
@@ -55,7 +55,7 @@ export const UseGetVendorProducts = (
   }
 }
 
-export const UseGetVendor = (
+export const useGetVendor = (
   id: string,
   options: UseQueryOptions<Vendor, Error, Vendor, string[]> = {}
 ) => {

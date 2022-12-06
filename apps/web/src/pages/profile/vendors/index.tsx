@@ -11,10 +11,10 @@ import React from "react"
 import ProfileHeader from "../../../components/Profile/ProfileHeader"
 import ProfileSection from "../../../components/Profile/ProfileSection"
 import ProfileLayout from "../../../layouts/ProfileLayout"
-import { UseGetVendors } from "../../../libs/api/Vendor"
+import { useGetVendors } from "../../../libs/api/Vendor"
 
 const VendorPage = () => {
-  const { vendors } = UseGetVendors()
+  const { vendors } = useGetVendors()
 
   if (vendors?.length === 0) return <CreateVendorPage />
 
@@ -28,7 +28,7 @@ const VendorPage = () => {
         }
       />
 
-      <ProfileSection flex="row" className="gap-x-10">
+      <ProfileSection className="grid gap-10 xl:grid-cols-2">
         {vendors?.map((vendor) => (
           <VendorCard key={vendor.id} vendor={vendor} />
         ))}
@@ -40,19 +40,8 @@ const VendorPage = () => {
 const VendorCard = ({ vendor }: { vendor: Vendor }) => {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center space-y-4 rounded-lg bg-white p-4 text-center shadow-md">
-      <div className="flex items-center justify-center space-x-2">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-          <GlobeAltIcon className="h-6 w-6 text-gray-500" />
-        </div>
-        <div className="flex flex-col">
-          <span className="text-sm text-gray-500">Vendor</span>
-          <span className="text-lg font-bold text-gray-900">{vendor.name}</span>
-        </div>
-      </div>
+      <h2 className="text-xl font-bold text-gray-900">{vendor.name}</h2>
 
-      <h2 className="title-font text-lg font-medium text-gray-700">
-        {vendor.name}
-      </h2>
       <div className="mx-auto my-4 space-y-4">
         {/* Verified icon */}
         <div className="flex w-full items-center">
@@ -77,40 +66,25 @@ const VendorCard = ({ vendor }: { vendor: Vendor }) => {
         </p>
       </div>
 
-      <div className="flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-4 text-white">
-        <Link
-          href={{
-            pathname: "/profile/vendors/[id]/products",
-            query: { id: vendor.id },
-          }}
-        >
-          <button className="flex items-center justify-center rounded bg-blue-700 px-4 py-2">
-            <ListBulletIcon className="mr-2 h-6 w-6" />
-            <span>Products</span>
-          </button>
-        </Link>
-        <Link
-          href={{
-            pathname: "/profile/vendors/[id]",
-            query: { id: vendor.id },
-          }}
-        >
-          <button className="flex items-center justify-center rounded bg-blue-700 px-4 py-2">
-            <AdjustmentsVerticalIcon className="h-6 w-6" />
-            <span>Manage</span>
-          </button>
-        </Link>
-        <Link
-          href={{
-            pathname: "/profile/vendors/[id]/settings",
-            query: { id: vendor.id },
-          }}
-        >
-          <button className="flex items-center justify-center rounded bg-blue-700 px-4 py-2">
-            <AdjustmentsVerticalIcon className="mr-2 h-6 w-6" />
-            <span>Edit</span>
-          </button>
-        </Link>
+      <div className="grid w-full min-w-full items-center gap-4 text-white lg:grid-cols-3">
+        {VendorButtonsList.map((button) => (
+          <Link
+            key={button.text}
+            href={{
+              pathname: button.href,
+              query: { id: vendor.id },
+            }}
+          >
+            <button className="flex w-full items-center justify-center rounded bg-blue-700 px-4 py-2">
+              <>
+                {React.createElement(button.icon, {
+                  className: "mr-2 h-6 w-6 flex-shrink-0",
+                })}
+                <span>{button.text}</span>
+              </>
+            </button>
+          </Link>
+        ))}
       </div>
     </div>
   )
@@ -123,6 +97,24 @@ const CreateVendorPage = () => {
     </>
   )
 }
+
+const VendorButtonsList = [
+  {
+    icon: AdjustmentsVerticalIcon,
+    text: "Manage",
+    href: "/profile/vendors/[id]",
+  },
+  {
+    icon: ListBulletIcon,
+    text: "Products",
+    href: "/profile/vendors/[id]/products",
+  },
+  {
+    icon: AdjustmentsVerticalIcon,
+    text: "Edit",
+    href: "/profile/vendors/[id]/settings",
+  },
+]
 
 VendorPage.getLayout = (page: React.ReactNode) => (
   <ProfileLayout>{page}</ProfileLayout>

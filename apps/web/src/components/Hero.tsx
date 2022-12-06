@@ -33,7 +33,7 @@ const Hero = () => {
         />
 
         <div
-          className="relative my-10 h-36 w-full px-10 shadow-lg sm:my-12 sm:px-10 lg:my-0 lg:h-72"
+          className="relative my-10 h-36 w-full overflow-hidden rounded-xl px-10 shadow-xl shadow-indigo-400 dark:shadow-lg dark:shadow-indigo-900 sm:my-12 sm:px-10 lg:my-0 lg:h-72"
           aria-hidden="true"
         >
           <Image
@@ -42,7 +42,7 @@ const Hero = () => {
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 1024px"
-            className="rounded-xl object-cover lg:object-center"
+            className="object-cover lg:object-center"
             draggable={false}
           />
         </div>

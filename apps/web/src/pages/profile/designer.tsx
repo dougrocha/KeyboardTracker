@@ -8,8 +8,8 @@ import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileSection from "../../components/Profile/ProfileSection"
 import ProfileLayout from "../../layouts/ProfileLayout"
 import {
-  UseGetDesignerProducts,
-  UseGetMyDesigner,
+  useGetDesignerProducts,
+  useGetMyDesigner,
 } from "../../libs/api/Designer"
 
 const DesignerPage = () => {
@@ -18,7 +18,7 @@ const DesignerPage = () => {
 
   const [readOnly, setReadOnly] = useState(true)
 
-  const { designer } = UseGetMyDesigner({
+  const { designer } = useGetMyDesigner({
     onSuccess: (data) => {
       // On success, reset the form with the new data
       reset(data)
@@ -94,7 +94,7 @@ const DesignerCreatePage = () => {
 }
 
 const DesignerTable = () => {
-  const { designer } = UseGetMyDesigner()
+  const { designer } = useGetMyDesigner()
 
   const [{ pageIndex, pageSize }, setPagination] =
     React.useState<PaginationState>({
@@ -111,7 +111,7 @@ const DesignerTable = () => {
   )
 
   const { data, isLoading, error, refetch, isRefetching } =
-    UseGetDesignerProducts({
+    useGetDesignerProducts({
       id: designer?.id,
       pagination: {
         page: pagination.pageIndex + 1,

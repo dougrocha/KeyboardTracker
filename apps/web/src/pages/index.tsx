@@ -142,7 +142,7 @@ const ProductCard = ({
           }}
         >
           {isFavorite ? (
-            <SolidHeartIcon className="h-5 w-5 text-red-500 dark:text-white" />
+            <SolidHeartIcon className="h-5 w-5 text-red-500" />
           ) : (
             <HeartIcon className="h-5 w-5 text-black dark:text-white" />
           )}

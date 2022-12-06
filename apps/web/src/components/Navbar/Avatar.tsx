@@ -64,12 +64,12 @@ const Avatar = ({ user }: AvatarProps) => {
   return (
     <button
       className="relative flex h-10 w-10 select-none items-center justify-center rounded-full bg-blue-900"
-      onClick={user ? () => setOpen((prev) => !prev) : undefined}
       {...getReferenceProps({
         ref: reference,
-        role: "menu",
         "aria-haspopup": true,
         "aria-expanded": isOpen,
+        "aria-controls": "menu",
+        onClick: () => (user ? setOpen((prev) => !prev) : undefined),
       })}
     >
       {user.avatar ? (
@@ -91,15 +91,17 @@ const Avatar = ({ user }: AvatarProps) => {
       )}
       {isOpen ? (
         <ul
-          className="z-50 flex flex-col bg-blue-500"
+          className="z-50 flex w-52 flex-col space-y-1 rounded-md bg-white p-2 text-black shadow-md dark:bg-gray-800 dark:text-white"
           {...getFloatingProps({
             ref: floating,
             style: {
               position: strategy,
               top: y ?? 0,
               left: x ?? 0,
-              width: "max-content",
             },
+            role: "menu",
+            "aria-labelledby": "menu",
+            "aria-orientation": "vertical",
           })}
         >
           {MenuList.map((item, index) => (
@@ -123,11 +125,11 @@ const Avatar = ({ user }: AvatarProps) => {
                 "aria-label": item.name,
                 "aria-controls": item.name,
               })}
-              className="h-10 bg-gray-200 px-4 text-center text-black shadow focus-within:bg-gray-400 hover:border-none focus:border focus:border-blue-700"
+              className="box-border h-10 rounded border-2 border-transparent px-4 text-center hover:bg-indigo-100 focus:border-2 focus:border-indigo-700 dark:hover:bg-indigo-700/50"
             >
               <Link
                 href={item.href}
-                className="flex h-full items-center justify-center"
+                className="flex h-full items-center justify-start"
               >
                 {item.name}
               </Link>

@@ -2,7 +2,7 @@ import classNames from "classnames"
 import React from "react"
 
 const ProfileSection = ({
-  flex = "col",
+  flex,
   className,
   children,
 }: {
@@ -14,7 +14,7 @@ const ProfileSection = ({
     <div
       className={classNames(
         flex === "row" && "flex flex-row justify-around",
-        flex === "col" && "space-y-5",
+        flex === "col" && "flex flex-col space-y-5",
         `w-full rounded bg-gray-200 p-10`,
         className
       )}
