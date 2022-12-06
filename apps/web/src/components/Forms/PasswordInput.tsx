@@ -1,4 +1,4 @@
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid"
 import React, { ComponentPropsWithoutRef, useState } from "react"
 import { RegisterOptions } from "react-hook-form"
 
@@ -50,12 +50,12 @@ const HiddenInput = ({
           aria-pressed={showPassword}
           aria-describedby="password"
           aria-controls="password"
-          className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm leading-5 text-gray-500"
+          className="absolute inset-y-0 right-3 text-sm text-gray-500"
         >
           {showPassword ? (
-            <EyeIcon className="h-6 w-6 text-gray-500 hover:text-gray-600" />
+            <EyeIcon className="h-5 w-5 text-gray-500 hover:text-gray-600" />
           ) : (
-            <EyeSlashIcon className="h-6 w-6 text-gray-500 hover:text-gray-600" />
+            <EyeSlashIcon className="h-5 w-5 text-gray-500 hover:text-gray-600" />
           )}
         </button>
       }

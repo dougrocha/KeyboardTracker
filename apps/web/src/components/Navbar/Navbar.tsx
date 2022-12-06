@@ -3,15 +3,15 @@ import {
   HeartIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline"
-import { useAtom } from "jotai"
+import { atom, useAtom } from "jotai"
 import dynamic from "next/dynamic"
 import Link from "next/link"
-import React from "react"
+import React, { useEffect } from "react"
+import { useMedia } from "react-use"
 
 import useAuth from "../../hooks/useAuth"
-import { hamMenuAtom } from "../../layouts/MainViewLayout"
 
-const Avatar = dynamic(() => import("./Avatar"), { ssr: false })
+const Avatar = dynamic(() => import("./Avatar"))
 
 const NavLinks = [
   {
@@ -28,10 +28,22 @@ const NavLinks = [
   },
 ]
 
+// make jotai atom for storing hamburger menu state
+export const hamMenuAtom = atom(false)
+
 const Navbar = () => {
   const { user, isLoading } = useAuth()
 
   const [isHamOpen, setHamOpen] = useAtom(hamMenuAtom)
+
+  const isDesktop = useMedia("(min-width: 768px)", true)
+
+  useEffect(() => {
+    // Close hamburger menu on desktop
+    if (isDesktop) {
+      setHamOpen(false)
+    }
+  }, [isDesktop, setHamOpen])
 
   return (
     <nav className="container relative mx-auto mb-5 flex h-20 w-full items-center justify-between py-8 px-4 sm:px-6 lg:px-8">
@@ -53,14 +65,6 @@ const Navbar = () => {
           ))}
         </ol>
 
-        {user ? (
-          <div className="flex w-full items-center gap-3">
-            <Avatar user={user} />
-            <MagnifyingGlassIcon className="icon cursor-pointer text-gray-800 hover:text-gray-500 dark:text-white dark:hover:text-gray-400" />
-            <HeartIcon className="icon cursor-pointer text-gray-800 hover:text-gray-500 dark:text-white dark:hover:text-gray-400" />
-          </div>
-        ) : null}
-
         {!user && !isLoading ? (
           <Link
             href={"/login"}
@@ -70,12 +74,22 @@ const Navbar = () => {
           </Link>
         ) : null}
 
-        <button
-          className="icon cursor-pointer text-gray-800 hover:text-indigo-500 dark:text-white dark:hover:text-indigo-400 md:hidden"
-          onClick={() => setHamOpen(!isHamOpen)}
-        >
-          <Bars3BottomRightIcon className="h-6 w-6" />
-        </button>
+        <div className="flex w-full items-center gap-3">
+          {user ? (
+            <>
+              <Avatar user={user} />
+              <MagnifyingGlassIcon className="icon cursor-pointer text-gray-800 hover:text-gray-500 dark:text-white dark:hover:text-gray-400" />
+              <HeartIcon className="icon cursor-pointer text-gray-800 hover:text-gray-500 dark:text-white dark:hover:text-gray-400" />
+            </>
+          ) : null}
+
+          <button
+            className="icon cursor-pointer text-gray-800 hover:text-indigo-500 dark:text-white dark:hover:text-indigo-400 md:hidden"
+            onClick={() => setHamOpen(!isHamOpen)}
+          >
+            <Bars3BottomRightIcon className="h-6 w-6" />
+          </button>
+        </div>
       </div>
 
       {/* make hamburger menu for mobile */}

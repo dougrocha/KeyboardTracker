@@ -1,9 +1,8 @@
 import {
   AdjustmentsVerticalIcon,
-  CheckBadgeIcon,
-  GlobeAltIcon,
   ListBulletIcon,
-} from "@heroicons/react/24/outline"
+} from "@heroicons/react/20/solid"
+import { CheckBadgeIcon, GlobeAltIcon } from "@heroicons/react/24/outline"
 import { Vendor } from "@meka/database"
 import Link from "next/link"
 import React from "react"
