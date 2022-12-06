@@ -4,9 +4,10 @@ import classNames from "classnames"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { ReactElement } from "react"
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { FaDiscord, FaGoogle } from "react-icons/fa"
 
+import Form from "../components/Forms/Form"
 import Input from "../components/Forms/Input"
 import HiddenInput from "../components/Forms/PasswordInput"
 import useAuth from "../hooks/useAuth"
@@ -36,11 +37,6 @@ const LoginPage = () => {
   const { push } = useRouter()
   const { user, isLoading } = useAuth()
 
-  const methods = useForm<LoginFormData>({
-    resolver: yupResolver(schema),
-  })
-  const { handleSubmit } = methods
-
   const { mutate: login, isLoading: isLoggingIn } = useLocalLogin()
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
@@ -52,6 +48,14 @@ const LoginPage = () => {
   if (user) {
     push("/profile")
     return <div>Redirecting...</div>
+  }
+
+  const onError = (error: any) => {
+    console.log("error", error)
+  }
+
+  const onInvalid = (error: any) => {
+    console.log("invalid", error)
   }
 
   return (
@@ -85,25 +89,26 @@ const LoginPage = () => {
         </ul>
 
         <p className="text-sm">Or use your email to login:</p>
-        <FormProvider {...methods}>
-          <form
-            className="w-80 space-y-6 lg:w-96"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <Input id="email" label="Email" placeholder="jsmith3@mail.com" />
-            <HiddenInput id="password" label="Password" />
+        <Form
+          resolver={yupResolver(schema)}
+          className="w-80 space-y-6 lg:w-96"
+          onSubmit={onSubmit}
+          onError={onError}
+          onInvalid={onInvalid}
+        >
+          <Input id="email" label="Email" placeholder="jsmith3@mail.com" />
+          <HiddenInput id="password" label="Password" />
 
-            <button
-              className={classNames(
-                "h-20 w-full rounded-md bg-blue-600 px-4 text-white",
-                isLoggingIn && "cursor-not-allowed opacity-50"
-              )}
-              type="submit"
-            >
-              Login
-            </button>
-          </form>
-        </FormProvider>
+          <button
+            className={classNames(
+              "h-20 w-full rounded-md bg-blue-600 px-4 text-white",
+              isLoggingIn && "cursor-not-allowed opacity-50"
+            )}
+            type="submit"
+          >
+            Login
+          </button>
+        </Form>
       </section>
     </>
   )

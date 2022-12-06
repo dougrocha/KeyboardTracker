@@ -16,13 +16,14 @@ const BaseInput = ({
   hideLabel = false,
   children,
 }: BaseInputProps) => (
-  <div className="relative">
+  <div>
     {hideLabel ? null : (
       <label htmlFor={id} className="block text-sm text-black dark:text-white">
         {label}
       </label>
     )}
-    {children}
+
+    <span className="relative block">{children}</span>
     <FormFieldHelper id={id} text={helperText} />
   </div>
 )

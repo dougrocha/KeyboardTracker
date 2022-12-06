@@ -52,13 +52,13 @@ const ProfileLayout = ({
             isSidebarOpen
               ? "fixed left-10 z-10 block w-min rounded-md bg-primary-light shadow-lg shadow-indigo-400"
               : "hidden"
-          } lg:static lg:mr-8 lg:block lg:w-60 lg:shadow-none`}
+          } lg:static lg:block lg:w-52 lg:shadow-none`}
         >
           <ProfileSidebar />
         </div>
 
         {/* Main content */}
-        <div className="min-h-full min-w-full px-4 py-10 dark:bg-zinc-700 md:w-3/4">
+        <div className="min-h-full w-full px-4 py-10 dark:bg-zinc-700">
           {children}
           <footer className="mt-10">
             <ProfileFooter />
@@ -76,7 +76,7 @@ const ProfileSidebar = () => {
   const setSidebarMenu = useSetAtom(profileMenuAtom)
 
   return (
-    <section className="top-10 flex h-full w-52 flex-shrink-0 flex-col justify-between gap-y-2 p-4 transition-colors lg:h-[calc(100vh_-_150px)]">
+    <section className="top-10 flex h-full w-full flex-shrink-0 flex-col justify-between gap-y-2 p-4 transition-colors lg:h-[calc(100vh_-_150px)]">
       <ul className="flex flex-col">
         {SidebarTags.map((tag) => (
           <li
