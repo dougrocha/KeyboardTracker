@@ -5,7 +5,7 @@ import React, { PropsWithChildren, useEffect } from "react"
 
 import MainViewLayout from "./MainViewLayout"
 
-import { UseGetVendor } from "../libs/api/Vendor"
+import { useGetVendor } from "../libs/api/Vendor"
 
 const VendorLayout = ({ children }: PropsWithChildren) => {
   const {
@@ -21,7 +21,7 @@ const VendorLayout = ({ children }: PropsWithChildren) => {
     }
   }, [isReady, push, id])
 
-  const { vendor } = UseGetVendor(id as string)
+  const { vendor } = useGetVendor(id as string)
 
   if (!isReady || !id || !vendor) return null
 

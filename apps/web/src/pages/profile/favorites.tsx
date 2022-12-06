@@ -5,7 +5,7 @@ import React from "react"
 
 import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileLayout from "../../layouts/ProfileLayout"
-import { UseFavorites } from "../../libs/api/Favorites"
+import { useFavorites } from "../../libs/api/Favorites"
 
 const FavoritesPage = () => {
   return (
@@ -18,7 +18,7 @@ const FavoritesPage = () => {
 }
 
 const FavoritesContainer = () => {
-  const { favorites, removeFavorite } = UseFavorites()
+  const { favorites, removeFavorite } = useFavorites()
 
   if (favorites.isLoading) {
     return <div>Loading...</div>

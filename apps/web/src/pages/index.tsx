@@ -13,7 +13,7 @@ import Carousel from "../components/Carousel"
 import Hero from "../components/Hero"
 import SearchBox from "../components/SearchBox"
 import MainViewLayout from "../layouts/MainViewLayout"
-import { UseFavorites } from "../libs/api/Favorites"
+import { useFavorites } from "../libs/api/Favorites"
 import { GetAllProducts } from "../libs/api/GetAllProducts"
 import GetProductsByStatus from "../libs/api/GetProductsByStatus"
 
@@ -85,7 +85,7 @@ const ProductCard = ({
   width?: "sm" | "md" | "lg" | "full"
   favorite?: boolean
 }): ReactElement => {
-  const { favorites, addFavorite, removeFavorite } = UseFavorites({
+  const { favorites, addFavorite, removeFavorite } = useFavorites({
     onSettled: (data) => {
       setIsFavorite(
         data?.find((f) => f.productId === product.id) ? true : false

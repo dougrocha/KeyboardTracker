@@ -4,7 +4,7 @@ import React from "react"
 
 import ProductsTable from "../../../../components/ProductsTable"
 import VendorLayout from "../../../../layouts/VendorLayout"
-import { UseGetVendorProducts } from "../../../../libs/api/Vendor"
+import { useGetVendorProducts } from "../../../../libs/api/Vendor"
 
 const VendorProductsPage = ({ vendor }: { vendor: Vendor }) => {
   return (
@@ -30,7 +30,7 @@ const VendorTable = ({ id }: { id: string }) => {
   )
 
   const { products, count, isLoading, error, refetch, isRefetching } =
-    UseGetVendorProducts(id ?? "", {
+    useGetVendorProducts(id ?? "", {
       page: pageIndex + 1,
       perPage: pageSize,
     })
