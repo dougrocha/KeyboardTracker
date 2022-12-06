@@ -1,11 +1,11 @@
 import { useState } from "react"
 
-interface UseFormPageProps {
+interface useFormPageProps {
   start?: number
   formLength: number
 }
 
-export const useFormPages = ({ start = 0, formLength }: UseFormPageProps) => {
+export const useFormPages = ({ start = 0, formLength }: useFormPageProps) => {
   const [page, setPage] = useState<number>(start)
 
   const changePage = (go: "NEXT" | "PREV") => {

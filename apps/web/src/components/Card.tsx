@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 
-import { UseFavorites } from "../libs/api/Favorites"
+import { useFavorites } from "../libs/api/Favorites"
 
 interface CardProps {
   product: Product
@@ -15,7 +15,7 @@ interface CardProps {
 const Card = ({ product, className }: CardProps) => {
   const {
     favorites: { data: favorites },
-  } = UseFavorites()
+  } = useFavorites()
 
   const favoriteProduct = favorites?.find(
     (fav) => fav.product.id === product.id
@@ -29,7 +29,7 @@ const Card = ({ product, className }: CardProps) => {
 
   const { id, name, coverImage } = product
 
-  const { addFavorite, removeFavorite } = UseFavorites({
+  const { addFavorite, removeFavorite } = useFavorites({
     onError: (err) => {
       setIsFavorite(favoriteProduct ? true : false)
       console.error(err)

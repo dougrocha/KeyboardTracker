@@ -40,7 +40,7 @@ export const RemoveProductFromFavorites = async (id: number) => {
   return data.data
 }
 
-export const UseFavorites = (
+export const useFavorites = (
   options?: UseQueryOptions<
     FavoritesResponse[],
     unknown,

@@ -11,7 +11,7 @@ import Input from "../components/Forms/Input"
 import HiddenInput from "../components/Forms/PasswordInput"
 import useAuth from "../hooks/useAuth"
 import MainViewLayout from "../layouts/MainViewLayout"
-import { UseLocalLogin } from "../libs/api/Auth"
+import { useLocalLogin } from "../libs/api/Auth"
 import schema from "../utils/schemas/loginForm"
 
 const LoginSources = [
@@ -41,7 +41,7 @@ const LoginPage = () => {
   })
   const { handleSubmit } = methods
 
-  const { mutate: login, isLoading: isLoggingIn } = UseLocalLogin()
+  const { mutate: login, isLoading: isLoggingIn } = useLocalLogin()
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     login(data, { onSuccess: () => push("/") })

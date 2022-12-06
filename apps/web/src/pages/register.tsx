@@ -14,7 +14,7 @@ import { SubmitHandler, useForm } from "react-hook-form"
 
 import useAuth from "../hooks/useAuth"
 import MainViewLayout from "../layouts/MainViewLayout"
-import { UseLocalRegister } from "../libs/api/Auth"
+import { useLocalRegister } from "../libs/api/Auth"
 import schema from "../utils/schemas/registerForm"
 
 const RegisterPage = () => {
@@ -28,7 +28,7 @@ const RegisterPage = () => {
   })
   const { handleSubmit } = methods
 
-  const { mutate: login, isLoading: isLoggingIn } = UseLocalRegister()
+  const { mutate: login, isLoading: isLoggingIn } = useLocalRegister()
 
   const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
     login(data, { onSuccess: () => push("/") })

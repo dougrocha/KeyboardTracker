@@ -11,7 +11,7 @@ export const localLoginUrl = async ({ email, password }: LoginFormData) => {
   return data
 }
 
-export const UseLocalLogin = () => {
+export const useLocalLogin = () => {
   return useMutation(["user"], localLoginUrl)
 }
 
@@ -30,6 +30,6 @@ export const localRegister = async ({
   return data
 }
 
-export const UseLocalRegister = () => {
+export const useLocalRegister = () => {
   return useMutation(["user"], localRegister)
 }
