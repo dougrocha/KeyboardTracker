@@ -10,7 +10,7 @@
     "db:push": "prisma db push --skip-generate"
   },
   "prisma": {
-    "seed": "ts-node --transpile-only src/seed.ts"
+    "seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.7.1",

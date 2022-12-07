@@ -1,6 +1,10 @@
-import { Product, Vendor } from "@meka/database"
-import { PaginatedResults, PaginationParams } from "@meka/types"
-import { useQuery, UseQueryOptions } from "@tanstack/react-query"
+import { ProductWithPrice, Vendor } from "@meka/database"
+import {
+  AddVendorProduct,
+  PaginatedResults,
+  PaginationParams,
+} from "@meka/types"
+import { useMutation, useQuery, UseQueryOptions } from "@tanstack/react-query"
 
 import AxiosClient from "../AxiosClient"
 
@@ -12,7 +16,7 @@ const GetMyVendorUrl = async () => {
 const GetVendorProducts = async (
   id: string,
   pagination: PaginationParams = { page: 1, perPage: 10 }
-): Promise<PaginatedResults<Product>> => {
+): Promise<PaginatedResults<ProductWithPrice>> => {
   const { data } = await AxiosClient.get(
     `/vendor/${id}/products?page=${pagination.page}&perPage=${pagination.perPage}`
   )
@@ -22,6 +26,29 @@ const GetVendorProducts = async (
 const GetVendorUrl = async (id: string) => {
   const data = await AxiosClient.get<Vendor>(`vendor/${id}`)
   return data.data
+}
+
+const CreateVendorProductUrl = async (product: AddVendorProduct) => {
+  const { data } = await AxiosClient.post<AddVendorProduct>(
+    `/vendor/${product.vendorId}/products`,
+    product
+  )
+  return data
+}
+
+export const useCreateVendorProduct = ({
+  vendorId,
+  productId,
+}: {
+  vendorId: string
+  productId: string
+}) => {
+  const { mutate, ...rest } = useMutation(
+    ["vendor", vendorId, "products", productId],
+    CreateVendorProductUrl
+  )
+
+  return { createProduct: mutate, ...rest }
 }
 
 export const useGetVendors = (
@@ -45,6 +72,7 @@ export const useGetVendorProducts = (
     () => GetVendorProducts(id, pagination),
     {
       enabled: !!id,
+      keepPreviousData: true,
     }
   )
 

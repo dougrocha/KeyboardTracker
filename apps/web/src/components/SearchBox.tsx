@@ -1,6 +1,7 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid"
 import classNames from "classnames"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import React, { Suspense, useState } from "react"
 
 import Form from "./Forms/Form"
@@ -17,11 +18,16 @@ interface SearchBoxProps {
 const SearchBox = ({ placeholder, maxWidth }: SearchBoxProps) => {
   const [query, setQuery] = useState("")
 
-  const deferredQuery = useDebounce(query, 250)
+  const router = useRouter()
+
+  const deferredQuery = useDebounce(query, 500)
   const isStale = query !== deferredQuery
 
   const onSubmit = () => {
-    return
+    router.push({
+      pathname: "/products",
+      query: { search: query },
+    })
   }
 
   return (
@@ -63,7 +69,7 @@ const SearchBox = ({ placeholder, maxWidth }: SearchBoxProps) => {
           </div>
         }
       >
-        <SearchResults query={deferredQuery} isStale={isStale} />
+        <SearchResults query={query} isStale={isStale} />
       </Suspense>
     </Form>
   )
@@ -76,11 +82,11 @@ const SearchResults = React.memo(function ({
   query?: string
   isStale?: boolean
 }) {
-  const { data } = useProductSearch(query?.trim(), {}, { enabled: isStale })
+  const { data } = useProductSearch(query?.trim(), {}, { enabled: !isStale })
 
   const filteredData = React.useCallback(() => {
     return (
-      data?.filter((product) => {
+      data?.data?.filter((product) => {
         return product.name.toLowerCase().includes(query?.toLowerCase() ?? "")
       }) ?? []
     )

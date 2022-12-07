@@ -11,6 +11,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 
+import { AddVendorProductDto } from './dto/add-vendor-product.dto.js'
 import { CreateVendorDto } from './dto/create-vendor.dto.js'
 import { UpdateVendorDto } from './dto/update-vendor.dto.js'
 import { VendorService } from './vendor.service.js'
@@ -40,7 +41,7 @@ export class VendorController {
   }
 
   @Patch(':id')
-  @VendorRoles('MODERATOR', 'ADMIN')
+  @VendorRoles('ADMIN')
   async update(
     @Param('id') id: string,
     @Body() updateVendorBody: UpdateVendorDto,
@@ -70,5 +71,14 @@ export class VendorController {
     @Query() pagination: PaginationParams,
   ) {
     return await this.vendorService.findVendorProducts(id, pagination)
+  }
+
+  @Post(':id/products')
+  @VendorRoles('ADMIN')
+  async addProduct(
+    @Param('id') vendorId: string,
+    @Body() product: AddVendorProductDto,
+  ) {
+    return await this.vendorService.addVendorProduct(vendorId, product)
   }
 }

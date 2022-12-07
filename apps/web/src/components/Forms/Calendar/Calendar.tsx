@@ -21,7 +21,7 @@ import type { Holidays } from "date-fns-holiday-us"
 import dynamic from "next/dynamic"
 import { useCallback, useState } from "react"
 
-import ToolTip from "../../ToolTip"
+import ToolTip, { TooltipContent, TooltipTrigger } from "../../ToolTip"
 
 const CalendarSidebar = dynamic(() => import("./Sidebar"), {
   ssr: false,
@@ -37,7 +37,7 @@ export interface SelectedDates {
   endDate: Date
 }
 
-const Calender = ({
+const Calendar = ({
   startDate,
   endDate,
   sidebar = false,
@@ -127,73 +127,82 @@ const Calender = ({
 
             <div className="mt-2 grid grid-cols-7 text-sm">
               {days.map((day, index) => (
-                <div
-                  key={day.toString()}
-                  className={classNames(
-                    index > 6 && "border-t border-gray-200",
-                    index === 0 && colStart[getDay(day)],
-                    "group relative py-1.5"
-                  )}
-                  onClick={() => handleDateSelect(day)}
-                >
-                  <button
-                    type="button"
-                    className={classNames(
-                      isWithinSelectedDates(day) && "text-white",
-                      !isWithinSelectedDates(day) &&
-                        isToday(day) &&
-                        "text-red-500",
-                      !isWithinSelectedDates(day) &&
-                        !isToday(day) &&
-                        isSameMonth(day, firstDayOfMonth) &&
-                        "text-gray-900",
-                      !isWithinSelectedDates(day) &&
-                        !isToday(day) &&
-                        !isSameMonth(day, firstDayOfMonth) &&
-                        "text-gray-400",
-                      isWithinSelectedDates(day) &&
-                        isToday(day) &&
-                        "bg-red-500",
-                      isWithinSelectedDates(day) &&
-                        !isToday(day) &&
-                        "bg-gray-800",
-                      !isWithinSelectedDates(day) && "group-hover:bg-gray-200",
-                      (isWithinSelectedDates(day) || isToday(day)) &&
-                        "font-semibold",
-                      `mx-auto flex h-8 w-8 items-center justify-center rounded-full`
-                    )}
-                  >
-                    <time dateTime={format(day, "yyyy-MM-dd")}>
-                      {format(day, "d")}
-                    </time>
-                  </button>
-
-                  {holidays && isHoliday(day) ? (
-                    <div className="mx-auto mt-1 h-1 w-1 rounded-full bg-sky-500 after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0">
-                      <ToolTip>
-                        {Object.keys(getAllHolidays()).map(
-                          (holiday: string) => (
-                            <div
-                              key={getAllHolidays()[
-                                holiday as keyof Holidays
-                              ].date.toString()}
-                            >
-                              {isEqual(
-                                getAllHolidays()[holiday as keyof Holidays]
-                                  .date,
-                                day
-                              ) ? (
-                                <div className="whitespace-nowrap capitalize">
-                                  {holiday.replace(/([A-Z])/g, " $1").trim()}
-                                </div>
-                              ) : null}
-                            </div>
-                          )
+                <ToolTip key={day.toString()} placement="bottom">
+                  <TooltipTrigger asChild>
+                    <div
+                      className={classNames(
+                        index > 6 && "border-t border-gray-200",
+                        index === 0 && colStart[getDay(day)],
+                        "group group relative py-1.5"
+                      )}
+                      onClick={() => handleDateSelect(day)}
+                    >
+                      <button
+                        type="button"
+                        className={classNames(
+                          isWithinSelectedDates(day) && "text-white",
+                          !isWithinSelectedDates(day) &&
+                            isToday(day) &&
+                            "text-red-500",
+                          !isWithinSelectedDates(day) &&
+                            !isToday(day) &&
+                            isSameMonth(day, firstDayOfMonth) &&
+                            "text-gray-900",
+                          !isWithinSelectedDates(day) &&
+                            !isToday(day) &&
+                            !isSameMonth(day, firstDayOfMonth) &&
+                            "text-gray-400",
+                          isWithinSelectedDates(day) &&
+                            isToday(day) &&
+                            "bg-red-500",
+                          isWithinSelectedDates(day) &&
+                            !isToday(day) &&
+                            "bg-gray-800",
+                          !isWithinSelectedDates(day) &&
+                            "group-hover:bg-gray-200",
+                          (isWithinSelectedDates(day) || isToday(day)) &&
+                            "font-semibold",
+                          `mx-auto flex h-8 w-8 items-center justify-center rounded-full`
                         )}
-                      </ToolTip>
+                      >
+                        <time dateTime={format(day, "yyyy-MM-dd")}>
+                          {format(day, "d")}
+                        </time>
+                      </button>
+                      {holidays && isHoliday(day) ? (
+                        <>
+                          <span className="mx-auto mt-1 block h-1 w-1 rounded-full bg-indigo-500 group-hover:hidden" />
+                          <TooltipContent>
+                            {Object.keys(getAllHolidays()).map(
+                              (holiday: string) => {
+                                return (
+                                  <div
+                                    key={getAllHolidays()[
+                                      holiday as keyof Holidays
+                                    ].date.toString()}
+                                  >
+                                    {isEqual(
+                                      getAllHolidays()[
+                                        holiday as keyof Holidays
+                                      ].date,
+                                      day
+                                    ) ? (
+                                      <div className="whitespace-nowrap rounded bg-neutral-300 p-2 font-medium capitalize shadow-md">
+                                        {holiday
+                                          .replace(/([A-Z])/g, " $1")
+                                          .trim()}
+                                      </div>
+                                    ) : null}
+                                  </div>
+                                )
+                              }
+                            )}
+                          </TooltipContent>
+                        </>
+                      ) : null}
                     </div>
-                  ) : null}
-                </div>
+                  </TooltipTrigger>
+                </ToolTip>
               ))}
             </div>
           </div>
@@ -205,12 +214,22 @@ const Calender = ({
   )
 }
 
+const Weekdays: string[] = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+]
+
 const WeekNames = () => {
   return (
     <div className="mt-10 grid grid-cols-7 text-center text-sm leading-6 text-gray-500">
-      {["S", "M", "T", "W", "T", "F", "S"].map((day) => (
+      {Weekdays.map((day) => (
         <div key={day} className="uppercase">
-          {day}
+          {day.slice(0, 1)}
         </div>
       ))}
     </div>
@@ -227,4 +246,4 @@ const colStart = [
   "col-start-7",
 ]
 
-export default Calender
+export default Calendar

@@ -35,6 +35,7 @@ model User {
   forms           Form[]
   favorites       UserProductFavorite[]
   userVendor      UserVendor[]
+  productInvite   ProductInvite[]
 }
 
 enum Theme {
@@ -117,6 +118,7 @@ model Designer {
   userId String @unique
 
   productDesigner ProductDesigner[]
+  productInvite   ProductInvite[]
 }
 
 model Image {
@@ -165,6 +167,29 @@ model Vendor {
 
   productVendor ProductVendor[]
   userVendor    UserVendor[]
+  productInvite ProductInvite[]
+}
+
+model ProductInvite {
+  id Int @id @default(autoincrement())
+
+  vendor   Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vendorId String
+
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  productId String?
+
+  acceptedAt DateTime?
+
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  creatorId String
+
+  designer   Designer? @relation(fields: [designerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  designerId String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([vendorId, productId])
 }
 
 model Keyboard {
@@ -196,6 +221,9 @@ model ProductVendor {
 
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   productId String?
+
+  // This price is the price of the product from the vendor. Typically this is the regional price of the vendor.
+  price Decimal? @db.Money
 
   @@unique([vendorId, productId])
 }
@@ -246,8 +274,6 @@ model Product {
   groupBuyStartDate DateTime?
   groupBuyEndDate   DateTime?
 
-  price Decimal?
-
   coverImage String?
   images     Image[]
 
@@ -264,6 +290,7 @@ model Product {
   vendors       ProductVendor[]
   designers     ProductDesigner[]
   userFavorites UserProductFavorite[]
+  productInvite ProductInvite[]
 
   @@index([name, description, type, brand, status])
 }

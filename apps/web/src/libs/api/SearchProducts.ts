@@ -1,8 +1,16 @@
 import { Product } from "@meka/database"
-import { PaginationParams } from "@meka/types"
+import { PaginatedResults, PaginationParams } from "@meka/types"
 import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 
 import AxiosClient from "../AxiosClient"
+
+interface AllSearchQueries {
+  material?: string
+  vendor?: string
+  brand?: string
+  type?: string
+  status?: string
+}
 
 /**
  * Search products
@@ -11,16 +19,27 @@ import AxiosClient from "../AxiosClient"
  */
 export const SearchProducts = async (
   search?: string,
-  pagination?: PaginationParams
-): Promise<Product[]> => {
-  if (!search) return []
+  pagination?: PaginationParams,
+  allQueries?: AllSearchQueries
+): Promise<PaginatedResults<Product>> => {
+  if (!search) return { data: [], count: 0 }
 
-  const res = await AxiosClient.get(`/product/search/v1`, {
-    params: {
-      search,
-      ...pagination,
-    },
-  })
+  const { material, vendor, brand, type, status } = allQueries ?? {}
+
+  const res = await AxiosClient.get<PaginatedResults<Product>>(
+    `/product/search/v1`,
+    {
+      params: {
+        search,
+        ...pagination,
+        ...(material && { material }),
+        ...(vendor && { vendor }),
+        ...(brand && { brand }),
+        ...(type && { type }),
+        ...(status && { status }),
+      },
+    }
+  )
 
   return res.data
 }
@@ -29,9 +48,9 @@ export const useProductSearch = (
   search?: string,
   pagination?: PaginationParams,
   options?: UseQueryOptions<
-    Product[],
+    PaginatedResults<Product>,
     unknown,
-    Product[],
+    PaginatedResults<Product>,
     (string | undefined)[]
   >
 ) => {
