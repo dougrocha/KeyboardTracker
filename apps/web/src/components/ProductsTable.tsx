@@ -1,4 +1,4 @@
-import { Product } from "@meka/database"
+import { GroupBuyStatus, Product, ProductWithPrice } from "@meka/database"
 import { UseQueryResult } from "@tanstack/react-query"
 import {
   createColumnHelper,
@@ -13,16 +13,46 @@ import {
 } from "@tanstack/react-table"
 import classNames from "classnames"
 import { format } from "date-fns"
-import React from "react"
+import Image from "next/image"
+import React, { useEffect } from "react"
 import { BarLoader } from "react-spinners"
 
 import Form from "./Forms/Form"
 import Input from "./Forms/Input"
-import ModalDialog from "./ModalDialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeading,
+  DialogTrigger,
+} from "./ModalDialog"
 import ProfileSection from "./Profile/ProfileSection"
 
+const getStatusColor = (status: GroupBuyStatus) => {
+  switch (status) {
+    case GroupBuyStatus.GROUP_BUY:
+      return "bg-green-500"
+    case GroupBuyStatus.GROUP_BUY_ENDED:
+      return "bg-red-500"
+    case GroupBuyStatus.INTEREST_CHECK:
+      return "bg-yellow-500"
+    case GroupBuyStatus.DELIVERED:
+      return "bg-blue-500"
+    case GroupBuyStatus.DELAYED:
+      return "bg-purple-500"
+    case GroupBuyStatus.SHIPPING:
+      return "bg-indigo-500"
+
+    case GroupBuyStatus.WAITING_GROUP_BUY:
+    case GroupBuyStatus.UPCOMING:
+    case GroupBuyStatus.HIDDEN:
+    default:
+      return "bg-gray-500"
+  }
+}
+
 interface ProductsTableProps {
-  products?: Product[] | undefined
+  products?: ProductWithPrice[] | Product[]
   productCount?: number
   isLoading?: boolean
   pagination: PaginationState
@@ -44,7 +74,15 @@ const ProductsTable = ({
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const columnHelper = createColumnHelper<Product>()
+  const columnHelper = createColumnHelper<ProductWithPrice | Product>()
+
+  useEffect(() => {
+    if ((products[0] as ProductWithPrice).price === undefined) {
+      setColumnVisibility({
+        price: false,
+      })
+    }
+  }, [products])
 
   const formatCurrency = React.useMemo(
     () =>
@@ -53,7 +91,7 @@ const ProductsTable = ({
         currency: "USD",
 
         // These options are needed to round to whole numbers if that's what you want.
-        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+        minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
         //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
       }),
     []
@@ -61,14 +99,30 @@ const ProductsTable = ({
 
   const columns = React.useMemo(
     () => [
-      columnHelper.display({
-        header: "#",
-        id: "index",
-        cell: (row) =>
-          pagination.pageIndex * pagination.pageSize + row.row.index + 1,
-      }),
+      // columnHelper.display({
+      //   id: "index",
+      //   cell: (row) =>
+      //     pagination.pageIndex * pagination.pageSize + row.row.index + 1,
+      // }),
       columnHelper.accessor("name", {
-        cell: (info) => info.getValue(),
+        header: "Name",
+        cell: (info) => {
+          const imgUrl = info.row.original.coverImage
+          return (
+            <div className="flex w-max  items-center">
+              {!imgUrl ? (
+                <Image
+                  src={imgUrl ?? "/images/hero.jpg"}
+                  alt="product"
+                  width={100}
+                  height={60}
+                  className="aspect-video rounded object-cover object-center"
+                />
+              ) : null}
+              <p className="ml-4 font-semibold">{info.getValue()}</p>
+            </div>
+          )
+        },
       }),
       columnHelper.accessor("price", {
         cell: (info) => formatCurrency.format(Number(info.getValue())),
@@ -94,29 +148,39 @@ const ProductsTable = ({
         }
       ),
       columnHelper.accessor("status", {
-        cell: (info) => info.getValue(),
+        cell: (info) => (
+          <div
+            className={classNames(
+              "flex h-8 w-max select-none items-center justify-center rounded-lg px-2 text-xs font-semibold",
+              getStatusColor(info.getValue())
+            )}
+          >
+            {info.getValue().replaceAll("_", " ")}
+          </div>
+        ),
       }),
       columnHelper.display({
         id: "actions",
         cell: (row) => (
-          <ModalDialog
-            render={({ close, labelId }) => (
-              <EditProductView
-                close={close}
-                labelId={labelId}
-                product={row.row.original}
-              />
-            )}
-          >
-            <button>Open dialog</button>
-          </ModalDialog>
+          <Dialog>
+            <DialogTrigger className="rounded bg-indigo-600 px-4 py-2 text-white">
+              Edit Product
+            </DialogTrigger>
+            <DialogContent className="m-4 w-1/2 rounded bg-primary-light p-4 py-12">
+              <DialogHeading>Edit Product</DialogHeading>
+              <DialogDescription>
+                Edit the product information
+              </DialogDescription>
+              <EditProductView product={row.row.original} />
+            </DialogContent>
+          </Dialog>
         ),
       }),
     ],
-    [columnHelper, formatCurrency, pagination]
+    [columnHelper, formatCurrency]
   )
 
-  const table = useReactTable({
+  const table = useReactTable<ProductWithPrice | Product>({
     data: products ?? [],
     columns,
     pageCount: Math.ceil((productCount ?? 0) / (pagination.pageSize ?? 0)),
@@ -160,7 +224,7 @@ const ProductsTable = ({
       </div>
 
       {/* Button section */}
-      <div>
+      <div className="my-10">
         <button
           className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
           onClick={() => refetch()}
@@ -291,73 +355,46 @@ const ProductsTable = ({
 }
 
 interface EditProductViewProps {
-  product: Product
-  close: () => void
-  labelId: string
+  product: ProductWithPrice | Product
 }
 
-const EditProductView = ({ close, labelId, product }: EditProductViewProps) => {
-  const onSubmit = async (data: Product) => {
+const EditProductView = ({ product }: EditProductViewProps) => {
+  const onSubmit = async (data: ProductWithPrice | Product) => {
     console.log(data)
   }
 
   return (
-    <div className="flex max-h-min w-full max-w-xl flex-col gap-2 rounded bg-gray-300 p-10">
-      <div className="flex justify-between">
-        <h2 className="text-xl font-semibold">
-          Edit Product:{" "}
-          <span className="truncate font-normal">{product.name}</span>
-        </h2>
-        <button className="text-xl font-bold" onClick={close}>
-          X
-        </button>
-      </div>
-      <div className="flex flex-col gap-2">
-        <Form<Product>
-          onSubmit={onSubmit}
-          defaultValues={product}
-          className="mt-8 h-full max-w-full space-y-4"
-        >
-          <Input
-            id={labelId}
-            label="Name"
-            type="text"
-            placeholder={product.name}
-            className="rounded border"
-          />
-          <Input
-            id={labelId}
-            label="Price"
-            type="number"
-            placeholder={product.price?.toString()}
-            min={0}
-            step={0.01}
-            className="rounded border"
-          />
-          <Input
-            id={labelId}
-            label="Description"
-            type="text"
-            placeholder={product.description}
-            className="rounded border"
-          />
-          <div className="flex justify-end gap-2 pt-4">
-            <button
-              className="rounded border bg-gray-700 px-4 py-2 text-white transition-colors hover:bg-gray-500 hover:text-white"
-              onClick={close}
-            >
-              Cancel
-            </button>
-            <button
-              className="rounded border bg-gray-700 px-4 py-2 text-white transition-colors hover:bg-gray-500 hover:text-white"
-              type="submit"
-            >
-              Save
-            </button>
-          </div>
-        </Form>
-      </div>
-    </div>
+    <Form<ProductWithPrice | Product>
+      onSubmit={onSubmit}
+      defaultValues={product}
+      className="mt-8 flex h-full max-w-full flex-col gap-2 space-y-4"
+    >
+      <Input
+        id={`${product.id}-name`}
+        label="Name"
+        type="text"
+        placeholder={product.name}
+        className="rounded border"
+      />
+      {"price" in product ? (
+        <Input
+          id={`${product.id}-price`}
+          label="Price"
+          type="number"
+          placeholder={product.price?.toString()}
+          min={0}
+          step={0.01}
+          className="rounded border"
+        />
+      ) : null}
+      <Input
+        id={`${product.id}-description`}
+        label="Description"
+        type="text"
+        placeholder={product.description}
+        className="rounded border"
+      />
+    </Form>
   )
 }
 

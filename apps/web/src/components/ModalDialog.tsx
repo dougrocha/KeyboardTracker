@@ -1,87 +1,226 @@
 import {
   useFloating,
-  useInteractions,
   useClick,
-  useRole,
   useDismiss,
+  useRole,
+  useInteractions,
   FloatingPortal,
-  FloatingOverlay,
   FloatingFocusManager,
+  FloatingOverlay,
+  useId,
 } from "@floating-ui/react-dom-interactions"
-import React, { cloneElement, useId, useMemo, useState } from "react"
+import * as React from "react"
 import { mergeRefs } from "react-merge-refs"
 
-interface ModalDialogProps {
+interface DialogOptions {
+  initialOpen?: boolean
   open?: boolean
-  render: (props: {
-    close: () => void
-    labelId: string
-    descriptionId: string
-  }) => React.ReactNode
-  children: JSX.Element
+  onOpenChange?: (open: boolean) => void
 }
 
-const ModalDialog = ({
-  render,
-  open: passedOpen = false,
-  children,
-}: ModalDialogProps) => {
-  const [open, setOpen] = useState(passedOpen)
+export function useDialog({
+  initialOpen = false,
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
+}: DialogOptions = {}) {
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(initialOpen)
+  const [labelId, setLabelId] = React.useState<string | undefined>()
+  const [descriptionId, setDescriptionId] = React.useState<string | undefined>()
 
-  const { reference, floating, context } = useFloating({
+  const open = controlledOpen ?? uncontrolledOpen
+  const setOpen = setControlledOpen ?? setUncontrolledOpen
+
+  const data = useFloating({
     open,
     onOpenChange: setOpen,
   })
 
-  const id = useId()
-  const labelId = `${id}-label`
-  const descriptionId = `${id}-description`
+  const context = data.context
 
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    useClick(context),
-    useRole(context),
-    useDismiss(context),
-  ])
+  const click = useClick(context, {
+    enabled: controlledOpen == null,
+  })
+  const dismiss = useDismiss(context, { outsidePressEvent: "mousedown" })
+  const role = useRole(context)
 
-  // Preserve the consumer's ref
-  const ref = useMemo(
-    () => mergeRefs([reference, (children as any).ref]),
-    [reference, children]
-  )
+  const interactions = useInteractions([click, dismiss, role])
 
-  return (
-    <>
-      {cloneElement(children, getReferenceProps({ ref, ...children.props }))}
-      <FloatingPortal>
-        {open && (
-          <FloatingOverlay
-            lockScroll
-            style={{
-              display: "grid",
-              placeItems: "center",
-              background: "rgba(25, 25, 25, 0.25)",
-            }}
-          >
-            <FloatingFocusManager context={context}>
-              <div
-                ref={floating}
-                className="grid h-full w-full place-items-center"
-                aria-labelledby={labelId}
-                aria-describedby={descriptionId}
-                {...getFloatingProps()}
-              >
-                {render({
-                  close: () => setOpen(false),
-                  labelId,
-                  descriptionId,
-                })}
-              </div>
-            </FloatingFocusManager>
-          </FloatingOverlay>
-        )}
-      </FloatingPortal>
-    </>
+  return React.useMemo(
+    () => ({
+      open,
+      setOpen,
+      ...interactions,
+      ...data,
+      labelId,
+      descriptionId,
+      setLabelId,
+      setDescriptionId,
+    }),
+    [open, setOpen, interactions, data, labelId, descriptionId]
   )
 }
 
-export default ModalDialog
+type ContextType =
+  | (ReturnType<typeof useDialog> & {
+      setLabelId: React.Dispatch<React.SetStateAction<string | undefined>>
+      setDescriptionId: React.Dispatch<React.SetStateAction<string | undefined>>
+    })
+  | null
+
+const DialogContext = React.createContext<ContextType>(null)
+
+export const useDialogState = () => {
+  const context = React.useContext(DialogContext)
+
+  if (context == null) {
+    throw new Error("Dialog components must be wrapped in <Dialog />")
+  }
+
+  return context
+}
+
+export function Dialog({
+  children,
+  ...options
+}: {
+  children: React.ReactNode
+} & DialogOptions) {
+  // This can accept any props as options, e.g. `placement`,
+  // or other positioning options.
+  const dialog = useDialog(options)
+  return (
+    <DialogContext.Provider value={dialog}>{children}</DialogContext.Provider>
+  )
+}
+
+interface DialogTriggerProps {
+  children: React.ReactNode
+  asChild?: boolean
+}
+
+export const DialogTrigger = React.forwardRef<
+  HTMLElement,
+  React.HTMLProps<HTMLElement> & DialogTriggerProps
+>(function DialogTrigger({ children, asChild = false, ...props }, propRef) {
+  const state = useDialogState()
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const childrenRef = (children as any).ref
+
+  const ref = React.useMemo(
+    () => mergeRefs([state.reference, propRef, childrenRef]),
+    [state.reference, propRef, childrenRef]
+  )
+
+  // `asChild` allows the user to pass any element as the anchor
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(
+      children,
+      state.getReferenceProps({
+        ref,
+        ...props,
+        ...children.props,
+        "data-state": state.open ? "open" : "closed",
+      })
+    )
+  }
+
+  return (
+    <button
+      ref={ref}
+      // The user can style the trigger based on the state
+      data-state={state.open ? "open" : "closed"}
+      {...state.getReferenceProps(props)}
+    >
+      {children}
+    </button>
+  )
+})
+
+export const DialogContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLProps<HTMLDivElement>
+>(function DialogContent(props, propRef) {
+  const state = useDialogState()
+
+  const ref = React.useMemo(
+    () => mergeRefs([state.floating, propRef]),
+    [state.floating, propRef]
+  )
+
+  return (
+    <FloatingPortal>
+      {state.open && (
+        <FloatingOverlay
+          className="grid place-items-center bg-black/80"
+          lockScroll
+        >
+          <FloatingFocusManager context={state.context} modal={true}>
+            <div
+              ref={ref}
+              aria-labelledby={state.labelId}
+              aria-describedby={state.descriptionId}
+              {...state.getFloatingProps(props)}
+            >
+              {props.children}
+            </div>
+          </FloatingFocusManager>
+        </FloatingOverlay>
+      )}
+    </FloatingPortal>
+  )
+})
+
+export const DialogHeading = React.forwardRef<
+  HTMLHeadingElement,
+  React.HTMLProps<HTMLHeadingElement>
+>(function DialogHeading({ children, ...props }, ref) {
+  const { setLabelId } = useDialogState()
+  const id = useId()
+
+  // Only sets `aria-labelledby` on the Dialog root element
+  // if this component is mounted inside it.
+  React.useLayoutEffect(() => {
+    setLabelId(id)
+    return () => setLabelId(undefined)
+  }, [id, setLabelId])
+
+  return (
+    <h2 {...props} ref={ref} id={id}>
+      {children}
+    </h2>
+  )
+})
+
+export const DialogDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLProps<HTMLParagraphElement>
+>(function DialogDescription({ children, ...props }, ref) {
+  const { setDescriptionId } = useDialogState()
+  const id = useId()
+
+  // Only sets `aria-describedby` on the Dialog root element
+  // if this component is mounted inside it.
+  React.useLayoutEffect(() => {
+    setDescriptionId(id)
+    return () => setDescriptionId(undefined)
+  }, [id, setDescriptionId])
+
+  return (
+    <p {...props} ref={ref} id={id}>
+      {children}
+    </p>
+  )
+})
+
+export const DialogClose = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(function DialogClose({ children, ...props }, ref) {
+  const state = useDialogState()
+  return (
+    <button {...props} ref={ref} onClick={() => state.setOpen(false)}>
+      {children}
+    </button>
+  )
+})

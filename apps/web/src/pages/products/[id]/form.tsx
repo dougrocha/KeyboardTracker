@@ -113,9 +113,10 @@ const FormPage = ({ form }: FormPageProps) => {
   }
 
   const onSubmit = methods.handleSubmit((data: unknown) => {
-    form.fields.map((field) => {
-      savePage(field)
-    })
+    // form.fields.map((field) => {
+    //   savePage(field)
+    // })
+    console.log(data)
   })
 
   return (

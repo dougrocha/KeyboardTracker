@@ -1,7 +1,7 @@
 import { CalendarIcon } from "@heroicons/react/24/solid"
 import { format, isEqual } from "date-fns"
 
-import { SelectedDates } from "./Calender"
+import { SelectedDates } from "./Calendar"
 
 const CalendarSidebar = ({ dates }: { dates: SelectedDates }) => {
   return (

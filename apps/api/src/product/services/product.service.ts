@@ -120,39 +120,52 @@ export class ProductService implements BaseService<Product> {
     select?: Prisma.ProductSelect
     search?: ProductSearchQuery
     pagination?: PaginationParams
-  }) {
-    const formattedSearch = search.search.replace(/ /g, '|')
-    return await this.prisma.product.findMany({
-      select,
-      where: {
-        brand: { contains: search.brand },
-        status: search.status,
-        type: search.type,
-        keycapSet: {
-          material: search.material ? { contains: search.material } : undefined,
-        },
-        vendors: {
-          some: {
-            vendor: { name: { contains: search.vendor, mode: 'insensitive' } },
+  }): Promise<PaginatedResults<Partial<Product>>> {
+    const formattedSearch = search.search.trim().replace(/ /g, '|')
+
+    return this.prisma
+      .$transaction([
+        this.prisma.product.findMany({
+          select,
+          where: {
+            brand: search.brand ? { contains: search.brand } : undefined,
+            status: search.status ? search.status : undefined,
+            type: search.type ? search.type : undefined,
+            keycapSet: {
+              material: search.material
+                ? { contains: search.material }
+                : undefined,
+            },
+            vendors: {
+              some: {
+                vendor: {
+                  name: { contains: search.vendor, mode: 'insensitive' },
+                },
+              },
+            },
           },
-        },
-      },
-      take: perPage,
-      skip: (page - 1) * perPage,
-      orderBy: {
-        _relevance: {
-          fields: [
-            'name',
-            'description',
-            'brand',
-            'estimatedDeliveryYear',
-            'layout',
-          ],
-          search: formattedSearch,
-          sort: 'desc',
-        },
-      },
-    })
+          take: perPage,
+          skip: (page - 1) * perPage,
+          orderBy: {
+            _relevance: {
+              fields: [
+                'name',
+                'description',
+                'brand',
+                'estimatedDeliveryYear',
+                'layout',
+              ],
+              search: formattedSearch,
+              sort: 'desc',
+            },
+          },
+        }),
+        this.prisma.product.count(),
+      ])
+      .then(([products, count]) => ({
+        data: products,
+        count,
+      }))
   }
 
   async findManyWithStatus(

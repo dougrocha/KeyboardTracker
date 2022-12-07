@@ -1,8 +1,9 @@
-import { Product, Vendor } from '@meka/database'
+import { ProductWithPrice, Vendor } from '@meka/database'
 import { MaybePaginated, PaginatedResults, PaginationParams } from '@meka/types'
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
 
+import { AddVendorProductDto } from './dto/add-vendor-product.dto.js'
 import { CreateVendorDto } from './dto/create-vendor.dto.js'
 import { UpdateVendorDto } from './dto/update-vendor.dto.js'
 
@@ -60,13 +61,24 @@ export class VendorService implements BaseService<Vendor> {
   async findVendorProducts(
     vendorId: string,
     params?: PaginationParams,
-  ): Promise<MaybePaginated<Product>> {
+  ): Promise<MaybePaginated<ProductWithPrice>> {
     if (Object.keys(params ?? {}).length === 0) {
-      return this.prisma.product.findMany({
-        where: {
-          id: vendorId,
-        },
-      })
+      return this.prisma.productVendor
+        .findMany({
+          where: {
+            vendorId,
+          },
+          select: {
+            price: true,
+            product: true,
+          },
+        })
+        .then((products) =>
+          products.map((product) => ({
+            ...product.product,
+            price: product.price,
+          })),
+        )
     }
 
     const { page = 1, perPage = 10 } = params
@@ -89,8 +101,11 @@ export class VendorService implements BaseService<Vendor> {
           },
         }),
       ])
-      .then(([products, count]) => ({
-        data: products.map((product) => product.product),
+      .then(([vendorProducts, count]) => ({
+        data: vendorProducts.map((product) => ({
+          ...product.product,
+          price: product.price,
+        })),
         count,
       }))
   }
@@ -172,6 +187,31 @@ export class VendorService implements BaseService<Vendor> {
       },
       select: {
         role: true,
+      },
+    })
+  }
+
+  /**
+   * Create a new product for the vendor
+   *
+   * Creating a product will not create a new product here it will only allow the vendor to sell the product.
+   */
+  async addVendorProduct(
+    vendorId: string,
+    { vendorId: _vendorId, productId, ...data }: AddVendorProductDto,
+  ) {
+    return await this.prisma.productVendor.create({
+      data: {
+        vendor: {
+          connect: {
+            id: vendorId,
+          },
+        },
+        product: {
+          connect: {
+            id: productId,
+          },
+        },
       },
     })
   }

@@ -16,6 +16,10 @@ interface TextAreaProps extends ComponentPropsWithoutRef<"textarea"> {
   readOnly?: boolean
   hideLabel?: boolean
   validation?: RegisterOptions
+  rounded?: {
+    size?: "sm" | "md" | "lg"
+    position?: "t" | "b" | "l" | "r" | "tl" | "tr" | "bl" | "br" | "none"
+  }
 }
 
 const TextArea = (props: TextAreaProps) => {
@@ -29,6 +33,7 @@ const TextArea = (props: TextAreaProps) => {
     hideLabel = true,
     height = "h-24",
     resize,
+    rounded,
     ...rest
   } = props
 
@@ -49,7 +54,10 @@ const TextArea = (props: TextAreaProps) => {
         readOnly={readOnly}
         placeholder={placeholder}
         className={classNames(
-          "block w-full rounded border-none font-medium shadow-sm",
+          "block w-full border-2 font-medium shadow-sm dark:border-gray-700 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 sm:border sm:text-base sm:leading-5",
+          `rounded${rounded?.position ? `-${rounded.position}` : ""}-${
+            rounded?.size ?? "md"
+          }`,
           height,
           resize === "none" && "resize-none",
           resize === "both" && "resize",
@@ -59,10 +67,10 @@ const TextArea = (props: TextAreaProps) => {
             "cursor-not-allowed border-gray-300 bg-gray-100 focus:border-gray-300 focus:ring-0",
           !readOnly &&
             get(errors, id) &&
-            "border-red-300 bg-red-50 focus:border-red-300 focus:ring-0",
+            "border-red-300 bg-red-50 focus:border-red-300 focus:ring-0 dark:border-red-500 dark:bg-red-100 dark:focus:border-red-500",
           !readOnly &&
             !get(errors, id) &&
-            "focus:ring-primary-500 focus:border-primary-500 border-gray-300"
+            "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
         )}
         aria-describedby={id}
         {...register(id, {

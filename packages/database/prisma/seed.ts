@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-import intFormat from "biguint-format"
+import * as intFormat from "biguint-format"
 import * as FlakeId from "flake-idgen"
 
 const prisma = new PrismaClient()
@@ -116,7 +116,6 @@ async function main() {
       id: nextId(),
       name: "Product 1",
       description: "Product 1 description",
-      price: 100,
       estimatedDeliveryQuarter: "Q1",
       estimatedDeliveryYear: "2021",
       groupBuyStartDate: new Date("2021-01-01"),
@@ -127,7 +126,7 @@ async function main() {
       brand: "GMK",
       designers: {
         create: {
-          designerId: user2.designerAccount.id,
+          designerId: user2.designerAccount?.id,
         },
       },
     },
@@ -138,7 +137,6 @@ async function main() {
       id: nextId(),
       name: "GMK Keycap Set",
       description: "GMK Keycap Set description",
-      price: 100,
       estimatedDeliveryQuarter: "Q1",
       estimatedDeliveryYear: "2021",
       groupBuyStartDate: new Date("2021-03-01"),
@@ -150,7 +148,7 @@ async function main() {
       designers: {
         create: [
           {
-            designerId: user3.designerAccount.id,
+            designerId: user3.designerAccount?.id,
           },
         ],
       },
@@ -162,7 +160,6 @@ async function main() {
       id: nextId(),
       name: "Product 2",
       description: "Product 2 description",
-      price: 200,
       estimatedDeliveryQuarter: "Q2",
       estimatedDeliveryYear: "2023",
       groupBuyStartDate: new Date("2021-02-01"),
@@ -179,7 +176,6 @@ async function main() {
       id: nextId(),
       name: "Product 3",
       description: "Product 3 description",
-      price: 300,
       estimatedDeliveryQuarter: "Q3",
       estimatedDeliveryYear: "2024",
       groupBuyStartDate: new Date("2021-03-01"),
@@ -196,7 +192,6 @@ async function main() {
       id: nextId(),
       name: "Product 4",
       description: "Product 4 description",
-      price: 400,
       estimatedDeliveryQuarter: "Q4",
       estimatedDeliveryYear: "2025",
       groupBuyStartDate: new Date("2021-04-01"),
@@ -213,7 +208,6 @@ async function main() {
       id: nextId(),
       name: "Product 5",
       description: "Product 5 description",
-      price: 500,
       estimatedDeliveryQuarter: "Q1",
       estimatedDeliveryYear: "2026",
       groupBuyStartDate: new Date("2021-05-01"),
@@ -230,7 +224,6 @@ async function main() {
       id: nextId(),
       name: "Product 6",
       description: "Product 6 description",
-      price: 600,
       estimatedDeliveryQuarter: "Q2",
       estimatedDeliveryYear: "2027",
       groupBuyStartDate: new Date("2021-06-01"),
@@ -247,7 +240,6 @@ async function main() {
       id: nextId(),
       name: "Product 7",
       description: "Product 7 description",
-      price: 700,
       estimatedDeliveryQuarter: "Q3",
       estimatedDeliveryYear: "2028",
       groupBuyStartDate: new Date("2021-07-01"),
@@ -264,7 +256,6 @@ async function main() {
       id: nextId(),
       name: "Product 8",
       description: "Product 8 description",
-      price: 800,
       estimatedDeliveryQuarter: "Q4",
       estimatedDeliveryYear: "2029",
       groupBuyStartDate: new Date("2021-08-01"),
@@ -281,7 +272,6 @@ async function main() {
       id: nextId(),
       name: "Product 9",
       description: "Product 9 description",
-      price: 900,
       estimatedDeliveryQuarter: "Q1",
       estimatedDeliveryYear: "2030",
       groupBuyStartDate: new Date("2021-09-01"),
@@ -298,7 +288,6 @@ async function main() {
       id: nextId(),
       name: "Product 10",
       description: "Product 10 description",
-      price: 1000,
       estimatedDeliveryQuarter: "Q2",
       estimatedDeliveryYear: "2031",
       groupBuyStartDate: new Date("2021-10-01"),
@@ -376,7 +365,7 @@ async function main() {
       },
       designer: {
         connect: {
-          id: user1.designerAccount.id,
+          id: user1.designerAccount?.id,
         },
       },
     },
@@ -529,6 +518,7 @@ async function main() {
           id: vendor1.id,
         },
       },
+      price: 100,
     },
   })
 
@@ -544,6 +534,7 @@ async function main() {
           id: vendor1.id,
         },
       },
+      price: 100,
     },
   })
 
@@ -559,6 +550,7 @@ async function main() {
           id: vendor2.id,
         },
       },
+      price: 200,
     },
   })
 
@@ -574,6 +566,7 @@ async function main() {
           id: vendor2.id,
         },
       },
+      price: 200,
     },
   })
 
@@ -589,6 +582,7 @@ async function main() {
           id: vendor2.id,
         },
       },
+      price: 200,
     },
   })
 
@@ -604,6 +598,7 @@ async function main() {
           id: vendor2.id,
         },
       },
+      price: 200,
     },
   })
 
@@ -619,6 +614,7 @@ async function main() {
           id: vendor1.id,
         },
       },
+      price: 100,
     },
   })
 
@@ -634,6 +630,7 @@ async function main() {
           id: vendor2.id,
         },
       },
+      price: 200,
     },
   })
 

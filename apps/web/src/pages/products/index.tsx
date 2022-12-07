@@ -1,11 +1,12 @@
 import { Product } from "@meka/database"
-import { GetStaticPropsResult } from "next"
+import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import React from "react"
 
-import Card from "../../components/Card"
+import ProductCard from "../../components/ProductCard"
 import SearchBox from "../../components/SearchBox"
 import MainViewLayout from "../../layouts/MainViewLayout"
 import { GetAllProducts } from "../../libs/api/GetAllProducts"
+import { SearchProducts } from "../../libs/api/SearchProducts"
 
 interface CatalogPageProps {
   products: Product[]
@@ -22,21 +23,44 @@ const CatalogPage = ({ products }: CatalogPageProps) => {
       {/* Items area */}
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
         {products.map((p) => (
-          <Card key={p.id} product={p} />
+          <ProductCard key={p.id} product={p} width="full" />
         ))}
       </div>
     </MainViewLayout>
   )
 }
 
-export const getStaticProps = async (): Promise<
-  GetStaticPropsResult<CatalogPageProps>
-> => {
-  const products = await GetAllProducts({})
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+): Promise<GetServerSidePropsResult<CatalogPageProps>> => {
+  context.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=1, stale-while-revalidate=59"
+  )
+
+  const queries = context.query
+
+  const pagination = {
+    page: 1,
+    perPage: 15,
+  }
+
+  if (Object.keys(queries).length === 0) {
+    const products = await GetAllProducts(pagination)
+
+    return {
+      props: { products: products.data, count: products.count },
+    }
+  }
+
+  const products = await SearchProducts(
+    queries.search as string,
+    pagination,
+    queries
+  )
 
   return {
     props: { products: products.data, count: products.count },
-    revalidate: 60,
   }
 }
 

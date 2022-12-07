@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client"
+import { Prisma, Product, ProductVendor } from "@prisma/client"
 
 const productVendorWithVendors = Prisma.validator<Prisma.ProductVendorArgs>()({
   include: {
@@ -30,3 +30,5 @@ const productVendorWithProductsAndVendors =
 
 export type ProductVendorWithProductsAndVendors =
   Prisma.ProductVendorGetPayload<typeof productVendorWithProductsAndVendors>
+
+export type ProductWithPrice = Product & Pick<ProductVendor, "price">
