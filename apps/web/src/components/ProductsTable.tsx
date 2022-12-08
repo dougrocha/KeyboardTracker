@@ -99,17 +99,19 @@ const ProductsTable = ({
         cell: (info) => {
           const imgUrl = info.row.original.coverImage
           return (
-            <div className="flex w-max items-center">
+            <div className="flex w-max flex-row items-center">
               {!imgUrl ? (
                 <Image
                   src={imgUrl ?? "/images/hero.jpg"}
                   alt="product"
-                  width={100}
-                  height={60}
+                  width={80}
+                  height={45}
                   className="aspect-video rounded object-cover object-center"
                 />
               ) : null}
-              <p className="ml-4 font-semibold">{info.getValue()}</p>
+              <p className="ml-3 whitespace-nowrap font-medium">
+                {info.getValue()}
+              </p>
             </div>
           )
         },
@@ -142,7 +144,7 @@ const ProductsTable = ({
         cell: (info) => (
           <div
             className={classNames(
-              "flex h-8 w-max select-none items-center justify-center rounded-lg px-2 text-xs font-semibold",
+              "mx-auto w-fit select-none whitespace-nowrap rounded-md px-2 py-1 text-start text-xs font-medium",
               getStatusColor(info.getValue())
             )}
           >
@@ -154,8 +156,8 @@ const ProductsTable = ({
         id: "actions",
         cell: (row) => (
           <Dialog>
-            <DialogTrigger className="whitespace-nowrap rounded bg-indigo-600 px-4 py-2 text-white">
-              Edit Product
+            <DialogTrigger className="whitespace-nowrap rounded bg-indigo-700 px-3 py-1 text-white">
+              Edit
             </DialogTrigger>
             <DialogContent className="m-4 w-1/2 rounded bg-primary-light p-4 py-12">
               <DialogHeading>Edit Product</DialogHeading>
@@ -191,6 +193,7 @@ const ProductsTable = ({
 
   return (
     <>
+      {/* Visibility will be handled by user input */}
       {/* <div className="border-b border-black">
         <span>Visibility: </span>
         <div className="flex h-40 max-w-max flex-col flex-wrap">
@@ -215,39 +218,41 @@ const ProductsTable = ({
         </div> */}
 
       {/* Table */}
-      <div className="mt-10 w-full overflow-x-auto">
-        <table className="w-full min-w-full table-auto border-collapse rounded">
+      <div className="mt-10 overflow-x-auto sm:rounded-lg">
+        <table className="min-w-full rounded">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="border-b-2 border-gray-400">
+              <tr
+                key={headerGroup.id}
+                className="bg-gray-200 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400"
+              >
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
                     colSpan={header.colSpan}
-                    className="bg-gray-100 px-6 py-4"
+                    scope="col"
+                    className="py-4 px-6"
                   >
                     {header.isPlaceholder ? null : (
-                      <>
-                        <div
-                          className={classNames(
-                            header.column.getCanSort() &&
-                              "cursor-pointer select-none",
-                            "text-start text-xs font-medium uppercase tracking-wider text-gray-600"
+                      <div
+                        className={classNames(
+                          header.column.getCanSort() &&
+                            "cursor-pointer select-none",
+                          "text-start text-xs font-medium uppercase tracking-wider text-gray-600"
+                        )}
+                        onClick={header.column.getToggleSortingHandler()}
+                      >
+                        <>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
                           )}
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          <>
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                            {{
-                              asc: " 🔼",
-                              desc: " 🔽",
-                            }[header.column.getIsSorted() as string] ?? null}
-                          </>
-                        </div>
-                      </>
+                          {{
+                            asc: " 🔼",
+                            desc: " 🔽",
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </>
+                      </div>
                     )}
                   </th>
                 ))}
@@ -260,7 +265,10 @@ const ProductsTable = ({
                 <tr key={row.id}>
                   {row.getVisibleCells().map((cell) => {
                     return (
-                      <td key={cell.id} className="border px-6 py-4 text-left">
+                      <td
+                        key={cell.id}
+                        className="py-4 px-6 font-medium text-gray-900 dark:text-white"
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -272,7 +280,7 @@ const ProductsTable = ({
               )
             })}
           </tbody>
-          <tfoot>
+          {/* <tfoot>
             {table.getFooterGroups().map((footerGroup) => (
               <tr key={footerGroup.id}>
                 {footerGroup.headers.map((header) => (
@@ -287,57 +295,57 @@ const ProductsTable = ({
                 ))}
               </tr>
             ))}
-          </tfoot>
+          </tfoot> */}
         </table>
-        <div className="flex h-full justify-between  space-x-2">
-          <div className="flex gap-x-4">
-            <select
-              className="rounded border transition-colors"
-              value={table.getState().pagination.pageSize}
-              onChange={(e) => {
-                table.setPageSize(Number(e.target.value))
-              }}
-            >
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </select>
-            <button
-              className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-              onClick={() => refetch()}
-            >
-              {isRefetching ? (
-                <BarLoader color={"#fff"} loading={isRefetching || isLoading} />
-              ) : (
-                "Refresh"
-              )}
-            </button>
-          </div>
-          <div className="flex">
-            <button
-              className="rounded border p-1 transition-colors hover:bg-gray-500 hover:text-white"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {"<"}
-            </button>
-            <button
-              className="rounded border p-1 transition-colors hover:bg-gray-500 hover:text-white"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {">"}
-            </button>
-            <span className="flex items-center justify-end gap-1 px-1">
-              <div>Page</div>
-              <strong>
-                {table.getState().pagination.pageIndex + 1} of{" "}
-                {table.getPageCount()}
-              </strong>
-            </span>
-          </div>
+      </div>
+      <div className="mt-2 flex justify-between gap-x-2">
+        <div className="flex gap-x-4">
+          <select
+            className="rounded border transition-colors"
+            value={table.getState().pagination.pageSize}
+            onChange={(e) => {
+              table.setPageSize(Number(e.target.value))
+            }}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+          <button
+            className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+            onClick={() => refetch()}
+          >
+            {isRefetching ? (
+              <BarLoader color={"#fff"} loading={isRefetching || isLoading} />
+            ) : (
+              "Refresh"
+            )}
+          </button>
+        </div>
+        <div className="flex">
+          <button
+            className="rounded border p-1 transition-colors hover:bg-gray-500 hover:text-white"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {"<"}
+          </button>
+          <button
+            className="rounded border p-1 transition-colors hover:bg-gray-500 hover:text-white"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            {">"}
+          </button>
+          <span className="flex items-center justify-end gap-1 px-1">
+            <div>Page</div>
+            <strong>
+              {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </strong>
+          </span>
         </div>
       </div>
     </>
