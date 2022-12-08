@@ -28,6 +28,7 @@ export class CreateProductDto {
   @IsString()
   policy?: string
 
+  @IsOptional()
   @Transform(({ value }) => (value ? value.toUpperCase() : 'UPCOMING'))
   @IsEnum(GroupBuyStatus)
   status?: GroupBuyStatus

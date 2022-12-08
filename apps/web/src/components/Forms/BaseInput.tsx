@@ -38,7 +38,7 @@ const FormFieldHelper = ({ id, text }: { id: string; text?: string }) => {
   if (!text && !get(errors, id)) return null
 
   return (
-    <div className="mt-1">
+    <div className="mt-1 pl-1">
       {text ? <p className="text-xs text-gray-500">{text}</p> : null}
       {get(errors, id) ? (
         <span className="text-sm text-red-500" role="alert">

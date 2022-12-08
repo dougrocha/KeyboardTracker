@@ -22,7 +22,7 @@ const VendorPage = ({ vendor }: { vendor: Vendor }) => {
             <span className="text-xl font-bold">
               Welcome! Start by making your first product
             </span>
-            <Dialog initialOpen>
+            <Dialog>
               <DialogTrigger className="flex items-center justify-center space-x-2 rounded bg-indigo-500 px-3 py-1 text-white">
                 <span className="whitespace-nowrap text-lg font-medium">
                   Create Product

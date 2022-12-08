@@ -1,6 +1,6 @@
 import classNames from "classnames"
 import { get } from "lodash"
-import React, { ComponentPropsWithoutRef, useId } from "react"
+import React, { ComponentPropsWithoutRef } from "react"
 import { RegisterOptions, useFormContext } from "react-hook-form"
 
 import BaseInput from "./BaseInput"

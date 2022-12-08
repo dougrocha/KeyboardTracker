@@ -27,7 +27,7 @@
       "env": ["NEXT_PUBLIC_API_URL", "NEXT_PUBLIC_WEB_URL"]
     },
     "api#dev": {
-      "dependsOn": ["^database#build", "^build"],
+      "dependsOn": ["^database#build"],
       "outputs": ["dist/**"],
       "cache": false
     },

@@ -14,9 +14,11 @@ import {
   DISCORD_USER_SERVICE,
   DESIGNER_SERVICE,
   VENDOR_SERVICE,
+  PRODUCT_SERVICE,
 } from '../common/constants.js'
 import { DesignerService } from '../designer/designer.service.js'
 import { ImageModule } from '../image/image.module.js'
+import { ProductService } from '../product/services/product.service.js'
 import { VendorService } from '../vendor/vendor.service.js'
 
 @Module({
@@ -47,6 +49,7 @@ import { VendorService } from '../vendor/vendor.service.js'
     { provide: DISCORD_USER_SERVICE, useClass: DiscordUserService },
     { provide: DESIGNER_SERVICE, useClass: DesignerService },
     { provide: VENDOR_SERVICE, useClass: VendorService },
+    { provide: PRODUCT_SERVICE, useClass: ProductService },
     UsersImagesProcessor,
   ],
   exports: [{ provide: USER_SERVICE, useClass: UserService }],

@@ -5,8 +5,15 @@ import { Inject, Injectable } from '@nestjs/common'
 import { CreateDesignerDto } from './dtos/create-designer.js'
 import { UpdateDesignerDto } from './dtos/update-designer.dto.js'
 
-import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../common/constants.js'
+import {
+  PRISMA_SERVICE,
+  PRODUCT_SERVICE,
+  SNOWFLAKE_SERVICE,
+} from '../common/constants.js'
 import BaseService from '../common/interfaces/base-service.interface.js'
+import { CreateProductDto } from '../product/dtos/create-product.dto.js'
+import { UpdateProductDto } from '../product/dtos/update-product.dto.js'
+import { ProductService } from '../product/services/product.service.js'
 import { SnowflakeService } from '../snowflake/snowflake.module.js'
 
 @Injectable()
@@ -14,6 +21,7 @@ export class DesignerService implements BaseService<Designer> {
   constructor(
     @Inject(PRISMA_SERVICE) private readonly prisma: PrismaClient,
     @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
+    @Inject(PRODUCT_SERVICE) private readonly productService: ProductService,
   ) {}
 
   create(data: CreateDesignerDto) {
@@ -114,6 +122,55 @@ export class DesignerService implements BaseService<Designer> {
         id: designerId,
         userId,
       },
+    })
+  }
+
+  createProduct(designerId: string, productData: CreateProductDto) {
+    return this.prisma.product.create({
+      data: {
+        ...productData,
+        id: this.snowflake.nextId(),
+        designers: {
+          create: {
+            designerId,
+          },
+        },
+      },
+    })
+  }
+
+  async updateProduct(
+    designerId: string,
+    { id: productId, ...productData }: UpdateProductDto,
+  ) {
+    const product = await this.productService.findOne(productId)
+
+    if (!product) {
+      throw new Error('Product not found')
+    }
+
+    const designer = await this.findOne(designerId)
+
+    if (!designer) {
+      throw new Error('Designer not found')
+    }
+
+    const productDesigner = await this.prisma.productDesigner.findFirst({
+      where: {
+        designerId,
+        productId,
+      },
+    })
+
+    if (!productDesigner) {
+      throw new Error('Product not found')
+    }
+
+    return this.prisma.product.update({
+      where: {
+        id: productId,
+      },
+      data: productData,
     })
   }
 }

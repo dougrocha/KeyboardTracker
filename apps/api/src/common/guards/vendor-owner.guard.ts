@@ -15,9 +15,14 @@ export class VendorOwner implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest()
     const { id: vendorId } = request.params
-    const { id: userId } = request.user
 
-    const role = this.reflector.get<VendorRole[]>('role', context.getHandler())
+    const user = request.user
+
+    if (!user) return false
+
+    const userId = user.id
+
+    const role = this.reflector.get<VendorRole[]>('roles', context.getHandler())
 
     const vendor = await this.vendorService.findUserVendorRole(userId, vendorId)
 

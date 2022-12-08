@@ -1,8 +1,23 @@
+import { PlusIcon } from "@heroicons/react/24/outline"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { Designer } from "@meka/database"
 import { PaginationState } from "@tanstack/react-table"
 import React, { useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import * as yup from "yup"
 
+import { SaveButtonGroup } from "."
+
+import CreateDesignerProduct from "../../components/CreateDesignerProduct"
+import Form from "../../components/Forms/Form"
 import Input from "../../components/Forms/Input"
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeading,
+  DialogDescription,
+  DialogClose,
+} from "../../components/ModalDialog"
 import ProductsTable from "../../components/ProductsTable"
 import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileSection from "../../components/Profile/ProfileSection"
@@ -12,24 +27,22 @@ import {
   useGetMyDesigner,
 } from "../../libs/api/Designer"
 
-const DesignerPage = () => {
-  const methods = useForm()
-  const { handleSubmit, reset } = methods
+const schema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  username: yup.string().required(),
+  email: yup.string().email("Invalid email address"),
+})
 
+const DesignerPage = () => {
   const [readOnly, setReadOnly] = useState(true)
 
-  const { designer } = useGetMyDesigner({
-    onSuccess: (data) => {
-      // On success, reset the form with the new data
-      reset(data)
-    },
-  })
+  const { designer } = useGetMyDesigner()
 
   if (!designer) return <DesignerCreatePage />
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = (data: Designer) => {
     console.log(data)
-  })
+  }
 
   return (
     <>
@@ -45,35 +58,50 @@ const DesignerPage = () => {
       />
 
       <ProfileSection>
-        <FormProvider {...methods}>
-          <form onSubmit={onSubmit} className="mt-8 max-w-sm space-y-4">
-            <Input id="name" label="Name" readOnly={readOnly} />
-            <Input id="username" label="Username" readOnly={readOnly} />
-            <Input id="email" label="Email" readOnly={readOnly} />
+        <Form<Designer>
+          defaultValues={designer}
+          onSubmit={onSubmit}
+          className="mt-8 max-w-sm space-y-4"
+          resolver={yupResolver(schema)}
+        >
+          <Input required id="name" label="Name" readOnly={readOnly} />
+          <Input required id="username" label="Username" readOnly={readOnly} />
+          <Input
+            id="email"
+            label="Email"
+            readOnly={readOnly}
+            helperText="This email is mainly used for support."
+          />
 
-            <div className="flex flex-col space-y-2 text-white sm:flex-row sm:justify-between sm:space-y-0">
-              <button
-                className="w-32 rounded bg-gray-600 px-4 py-2 text-center text-white"
-                onClick={() => {
-                  setReadOnly(!readOnly)
-                  if (!readOnly) reset(designer)
-                }}
-                type="button"
-              >
-                {readOnly ? "Edit" : "Cancel"}
-              </button>
-              {!readOnly && (
-                <button
-                  className="w-32 cursor-pointer rounded bg-gray-600 px-4 py-2 text-white"
-                  value="Save"
-                  type="submit"
-                >
-                  Save
-                </button>
-              )}
-            </div>
-          </form>
-        </FormProvider>
+          <SaveButtonGroup
+            readOnly={readOnly}
+            setReadOnly={setReadOnly}
+            defaultValues={designer}
+          />
+        </Form>
+      </ProfileSection>
+
+      <ProfileSection className="relative mt-10 block p-2">
+        <Dialog>
+          <DialogTrigger className="flex w-min items-center justify-center space-x-2 rounded bg-indigo-500 px-3 py-1 text-white">
+            <span className="whitespace-nowrap text-lg font-medium">
+              Create Product
+            </span>
+            <PlusIcon className="h-6 w-6" />
+          </DialogTrigger>
+          <DialogContent className="m-4 max-w-4xl rounded bg-primary-light px-2 py-12 sm:px-8 lg:w-1/2">
+            <DialogHeading className="text-3xl font-semibold">
+              Create a new Product
+            </DialogHeading>
+            <DialogDescription className="mt-2 text-lg text-neutral-600">
+              Don&apos;t worry you can always edit this later.
+            </DialogDescription>
+            <CreateDesignerProduct />
+            <DialogClose className="mt-6 w-full rounded bg-red-400 px-4 py-2 font-medium text-black">
+              Cancel
+            </DialogClose>
+          </DialogContent>
+        </Dialog>
       </ProfileSection>
 
       <DesignerTable />
@@ -130,6 +158,7 @@ const DesignerTable = () => {
         isRefetching={isRefetching}
         pagination={pagination}
         setPagination={setPagination}
+        visibility={{ price: false }}
       />
     </>
   )

@@ -14,7 +14,7 @@ import {
 import classNames from "classnames"
 import { format } from "date-fns"
 import Image from "next/image"
-import React, { useEffect } from "react"
+import React from "react"
 import { BarLoader } from "react-spinners"
 
 import Form from "./Forms/Form"
@@ -26,7 +26,6 @@ import {
   DialogHeading,
   DialogTrigger,
 } from "./ModalDialog"
-import ProfileSection from "./Profile/ProfileSection"
 
 const getStatusColor = (status: GroupBuyStatus) => {
   switch (status) {
@@ -60,6 +59,7 @@ interface ProductsTableProps {
   refetch: UseQueryResult["refetch"]
   error?: UseQueryResult["error"]
   isRefetching: boolean
+  visibility?: Partial<Record<keyof ProductWithPrice, boolean>>
 }
 
 const ProductsTable = ({
@@ -70,19 +70,14 @@ const ProductsTable = ({
   refetch,
   isRefetching,
   setPagination,
+  visibility: initialVisibility,
 }: ProductsTableProps) => {
-  const [columnVisibility, setColumnVisibility] = React.useState({})
+  const [columnVisibility, setColumnVisibility] = React.useState(
+    initialVisibility ?? {}
+  )
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const columnHelper = createColumnHelper<ProductWithPrice | Product>()
-
-  useEffect(() => {
-    if ((products[0] as ProductWithPrice).price === undefined) {
-      setColumnVisibility({
-        price: false,
-      })
-    }
-  }, [products])
 
   const formatCurrency = React.useMemo(
     () =>
@@ -99,17 +94,12 @@ const ProductsTable = ({
 
   const columns = React.useMemo(
     () => [
-      // columnHelper.display({
-      //   id: "index",
-      //   cell: (row) =>
-      //     pagination.pageIndex * pagination.pageSize + row.row.index + 1,
-      // }),
       columnHelper.accessor("name", {
         header: "Name",
         cell: (info) => {
           const imgUrl = info.row.original.coverImage
           return (
-            <div className="flex w-max  items-center">
+            <div className="flex w-max items-center">
               {!imgUrl ? (
                 <Image
                   src={imgUrl ?? "/images/hero.jpg"}
@@ -132,10 +122,8 @@ const ProductsTable = ({
       }),
       columnHelper.accessor(
         (row) =>
-          `${format(
-            new Date(row.groupBuyStartDate as Date),
-            "MM/dd/yyyy"
-          )} - ${format(new Date(row.groupBuyEndDate as Date), "MM/dd/yyyy")}`,
+          `${format(new Date(row.groupBuyStartDate as Date), "MM/dd/yyyy")} -
+            ${format(new Date(row.groupBuyEndDate as Date), "MM/dd/yyyy")}`,
         {
           id: "groupBuyDate",
           header: `Group Buy (${
@@ -145,6 +133,9 @@ const ProductsTable = ({
               })
               .split(" ")[2]
           })`,
+          cell: (info) => (
+            <p className="whitespace-nowrap">{info.getValue()}</p>
+          ),
         }
       ),
       columnHelper.accessor("status", {
@@ -163,7 +154,7 @@ const ProductsTable = ({
         id: "actions",
         cell: (row) => (
           <Dialog>
-            <DialogTrigger className="rounded bg-indigo-600 px-4 py-2 text-white">
+            <DialogTrigger className="whitespace-nowrap rounded bg-indigo-600 px-4 py-2 text-white">
               Edit Product
             </DialogTrigger>
             <DialogContent className="m-4 w-1/2 rounded bg-primary-light p-4 py-12">
@@ -199,158 +190,157 @@ const ProductsTable = ({
   })
 
   return (
-    <ProfileSection className="mt-10 p-2">
-      <div className="border-b border-black">
+    <>
+      {/* <div className="border-b border-black">
         <span>Visibility: </span>
         <div className="flex h-40 max-w-max flex-col flex-wrap">
-          {table.getAllLeafColumns().map((column) => {
-            return (
-              <div key={column.id} className="p-2">
-                <label className="capitalize">
-                  <input
-                    {...{
-                      type: "checkbox",
-                      checked: column.getIsVisible(),
-                      onChange: column.getToggleVisibilityHandler(),
-                    }}
-                    className="mr-2"
-                  />
-                  {column.id.replace(/([A-Z])/g, " $1")}
-                </label>
-              </div>
+        {table.getAllLeafColumns().map((column) => {
+          return (
+            <div key={column.id} className="p-2">
+            <label className="capitalize">
+            <input
+            {...{
+              type: "checkbox",
+              checked: column.getIsVisible(),
+              onChange: column.getToggleVisibilityHandler(),
+            }}
+            className="mr-2"
+            />
+            {column.id.replace(/([A-Z])/g, " $1")}
+            </label>
+            </div>
             )
           })}
-        </div>
-      </div>
-
-      {/* Button section */}
-      <div className="my-10">
-        <button
-          className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-          onClick={() => refetch()}
-        >
-          {isRefetching ? (
-            <BarLoader color={"#fff"} loading={isRefetching || isLoading} />
-          ) : (
-            "Refresh"
-          )}
-        </button>
-      </div>
+          </div>
+        </div> */}
 
       {/* Table */}
-
-      <table className="w-full table-auto border-collapse rounded">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="border-b-2 border-gray-400">
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  colSpan={header.colSpan}
-                  className="bg-gray-100 px-6 py-4"
-                >
-                  {header.isPlaceholder ? null : (
-                    <>
-                      <div
-                        className={classNames(
-                          header.column.getCanSort() &&
-                            "cursor-pointer select-none",
-                          "text-start text-xs font-medium uppercase tracking-wider text-gray-600"
-                        )}
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        <>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
+      <div className="mt-10 w-full overflow-x-auto">
+        <table className="w-full min-w-full table-auto border-collapse rounded">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} className="border-b-2 border-gray-400">
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    className="bg-gray-100 px-6 py-4"
+                  >
+                    {header.isPlaceholder ? null : (
+                      <>
+                        <div
+                          className={classNames(
+                            header.column.getCanSort() &&
+                              "cursor-pointer select-none",
+                            "text-start text-xs font-medium uppercase tracking-wider text-gray-600"
                           )}
-                          {{
-                            asc: " 🔼",
-                            desc: " 🔽",
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </>
-                      </div>
-                    </>
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody className="divide-y-2 divide-gray-400">
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
-                  return (
-                    <td key={cell.id} className="border px-6 py-4 text-left">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  )
-                })}
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          <>
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: " 🔼",
+                              desc: " 🔽",
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </>
+                        </div>
+                      </>
+                    )}
+                  </th>
+                ))}
               </tr>
-            )
-          })}
-        </tbody>
-        <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </th>
+            ))}
+          </thead>
+          <tbody className="divide-y-2 divide-gray-400">
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <td key={cell.id} className="border px-6 py-4 text-left">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+          </tbody>
+          <tfoot>
+            {table.getFooterGroups().map((footerGroup) => (
+              <tr key={footerGroup.id}>
+                {footerGroup.headers.map((header) => (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.footer,
+                          header.getContext()
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </tfoot>
+        </table>
+        <div className="flex h-full justify-between  space-x-2">
+          <div className="flex gap-x-4">
+            <select
+              className="rounded border transition-colors"
+              value={table.getState().pagination.pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value))
+              }}
+            >
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
               ))}
-            </tr>
-          ))}
-        </tfoot>
-      </table>
-      <div className="flex h-full justify-between  space-x-2">
-        <select
-          className="rounded border transition-colors"
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value))
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-        <div className="flex">
-          <button
-            className="rounded border p-1 transition-colors hover:bg-gray-500 hover:text-white"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {"<"}
-          </button>
-          <button
-            className="rounded border p-1 transition-colors hover:bg-gray-500 hover:text-white"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            {">"}
-          </button>
-          <span className="flex items-center justify-end gap-1 px-1">
-            <div>Page</div>
-            <strong>
-              {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </strong>
-          </span>
+            </select>
+            <button
+              className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+              onClick={() => refetch()}
+            >
+              {isRefetching ? (
+                <BarLoader color={"#fff"} loading={isRefetching || isLoading} />
+              ) : (
+                "Refresh"
+              )}
+            </button>
+          </div>
+          <div className="flex">
+            <button
+              className="rounded border p-1 transition-colors hover:bg-gray-500 hover:text-white"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {"<"}
+            </button>
+            <button
+              className="rounded border p-1 transition-colors hover:bg-gray-500 hover:text-white"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              {">"}
+            </button>
+            <span className="flex items-center justify-end gap-1 px-1">
+              <div>Page</div>
+              <strong>
+                {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getPageCount()}
+              </strong>
+            </span>
+          </div>
         </div>
       </div>
-    </ProfileSection>
+    </>
   )
 }
 
@@ -376,6 +366,7 @@ const EditProductView = ({ product }: EditProductViewProps) => {
         placeholder={product.name}
         className="rounded border"
       />
+      {/* If the product has a price show this option, this is mainly for products on the vendor side */}
       {"price" in product ? (
         <Input
           id={`${product.id}-price`}
