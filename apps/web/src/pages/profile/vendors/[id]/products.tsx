@@ -35,6 +35,8 @@ const VendorTable = ({ id }: { id: string }) => {
       perPage: pageSize,
     })
 
+  if (isLoading) return <div>Loading...</div>
+
   return (
     <ProductsTable
       products={products}

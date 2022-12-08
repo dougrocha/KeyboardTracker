@@ -5,6 +5,7 @@ import { PrismaService } from 'nestjs-prisma'
 
 import { AddVendorProductDto } from './dto/add-vendor-product.dto.js'
 import { CreateVendorDto } from './dto/create-vendor.dto.js'
+import { UpdateVendorProductDto } from './dto/update-vendor-product.dto.js'
 import { UpdateVendorDto } from './dto/update-vendor.dto.js'
 
 import { PRISMA_SERVICE, SNOWFLAKE_SERVICE } from '../common/constants.js'
@@ -196,12 +197,14 @@ export class VendorService implements BaseService<Vendor> {
    *
    * Creating a product will not create a new product here it will only allow the vendor to sell the product.
    */
-  async addVendorProduct(
-    vendorId: string,
-    { vendorId: _vendorId, productId, ...data }: AddVendorProductDto,
-  ) {
+  async addVendorProduct({
+    vendorId,
+    productId,
+    ...data
+  }: AddVendorProductDto) {
     return await this.prisma.productVendor.create({
       data: {
+        ...data,
         vendor: {
           connect: {
             id: vendorId,
@@ -213,6 +216,22 @@ export class VendorService implements BaseService<Vendor> {
           },
         },
       },
+    })
+  }
+
+  async updateVendorProduct(
+    vendorId: string,
+    productId: string,
+    data: UpdateVendorProductDto,
+  ) {
+    return await this.prisma.productVendor.update({
+      where: {
+        vendorId_productId: {
+          vendorId,
+          productId,
+        },
+      },
+      data,
     })
   }
 }

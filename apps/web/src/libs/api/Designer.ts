@@ -1,6 +1,11 @@
 import { Designer, Product } from "@meka/database"
 import { PaginationParams } from "@meka/types"
-import { useQuery, UseQueryOptions } from "@tanstack/react-query"
+import {
+  MutationOptions,
+  useMutation,
+  useQuery,
+  UseQueryOptions,
+} from "@tanstack/react-query"
 
 import AxiosClient from "../AxiosClient"
 
@@ -16,6 +21,28 @@ const GetDesignerUrl = async () => {
 
 const GetOtherDesignerUrl = async (id: string) => {
   const data = await AxiosClient.get<Designer>(`/designer/${id}`)
+  return data.data
+}
+
+const CreateProductUrl = async (
+  designerId?: string,
+  product?: Omit<Product, "id">
+) => {
+  const data = await AxiosClient.post<Omit<Product, "id">>(
+    `/designer/${designerId}/products`,
+    product
+  )
+  return data.data
+}
+
+const UpdateProductUrl = async (
+  designerId?: string,
+  product?: Omit<Product, "id">
+) => {
+  const data = await AxiosClient.patch<Omit<Product, "id">>(
+    `/designer/${designerId}/products`,
+    product
+  )
   return data.data
 }
 
@@ -59,6 +86,40 @@ export const useGetDesignerProducts = ({
     () => GetDesignerProductsUrl(id ?? "", pagination),
     {
       enabled: !!id,
+    }
+  )
+}
+
+export const useCreateDesignerProduct = (
+  designerId?: string,
+  options?: MutationOptions<
+    Omit<Product, "id">,
+    unknown,
+    Omit<Product, "id">,
+    unknown
+  >
+) => {
+  return useMutation(
+    (product: Omit<Product, "id">) => CreateProductUrl(designerId, product),
+    {
+      ...options,
+    }
+  )
+}
+
+export const useUpdateDesignerProduct = (
+  designerId?: string,
+  options?: MutationOptions<
+    Omit<Product, "id">,
+    unknown,
+    Omit<Product, "id">,
+    unknown
+  >
+) => {
+  return useMutation(
+    (product: Omit<Product, "id">) => CreateProductUrl(designerId, product),
+    {
+      ...options,
     }
   )
 }

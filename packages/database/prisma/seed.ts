@@ -506,21 +506,21 @@ async function main() {
     },
   })
 
-  const productVendor1 = await prisma.productVendor.create({
-    data: {
-      product: {
-        connect: {
-          id: product1.id,
-        },
-      },
-      vendor: {
-        connect: {
-          id: vendor1.id,
-        },
-      },
-      price: 100,
-    },
-  })
+  // const productVendor1 = await prisma.productVendor.create({
+  //   data: {
+  //     product: {
+  //       connect: {
+  //         id: product1.id,
+  //       },
+  //     },
+  //     vendor: {
+  //       connect: {
+  //         id: vendor1.id,
+  //       },
+  //     },
+  //     price: 100,
+  //   },
+  // })
 
   const productVendor2 = await prisma.productVendor.create({
     data: {
@@ -911,8 +911,6 @@ async function main() {
     ],
   })
 }
-
-console.time("seed")
 
 main()
   .then(async () => {

@@ -9,16 +9,20 @@ import {
   Query,
   Post,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common'
 
 import { AddVendorProductDto } from './dto/add-vendor-product.dto.js'
 import { CreateVendorDto } from './dto/create-vendor.dto.js'
+import { UpdateVendorProductDto } from './dto/update-vendor-product.dto.js'
 import { UpdateVendorDto } from './dto/update-vendor.dto.js'
 import { VendorService } from './vendor.service.js'
 
 import { VENDOR_SERVICE } from '../common/constants.js'
 import { VendorRoles } from '../common/decorators/roles.decorator.js'
 import { PaginationParams } from '../common/dto/pagination-params.dto.js'
+import { AuthenticatedGuard } from '../common/guards/authenticated.guard.js'
+import { VendorOwner } from '../common/guards/vendor-owner.guard.js'
 
 @Controller('vendor')
 export class VendorController {
@@ -75,10 +79,37 @@ export class VendorController {
 
   @Post(':id/products')
   @VendorRoles('ADMIN')
+  @UseGuards(AuthenticatedGuard, VendorOwner)
   async addProduct(
     @Param('id') vendorId: string,
     @Body() product: AddVendorProductDto,
   ) {
-    return await this.vendorService.addVendorProduct(vendorId, product)
+    const newProduct = await this.vendorService.addVendorProduct({
+      ...product,
+      vendorId,
+    })
+    return {
+      product: newProduct.id,
+    }
+  }
+
+  @Patch(':id/products/:productId')
+  @VendorRoles('ADMIN')
+  @UseGuards(AuthenticatedGuard, VendorOwner)
+  async updateProduct(
+    @Param('id') vendorId: string,
+    @Param('productId') productId: string,
+    @Body() product: UpdateVendorProductDto,
+  ) {
+    const updatedProduct = await this.vendorService.updateVendorProduct(
+      vendorId,
+      productId,
+      product,
+    )
+    return {
+      message: 'Product updated successfully',
+      product: updatedProduct.id,
+      vendorId: vendorId,
+    }
   }
 }

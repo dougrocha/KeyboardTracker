@@ -277,8 +277,8 @@ model Product {
   coverImage String?
   images     Image[]
 
-  estimatedDeliveryQuarter YearQuarter
-  estimatedDeliveryYear    String?     @db.Char(4)
+  estimatedDeliveryQuarter YearQuarter?
+  estimatedDeliveryYear    String?      @db.Char(4)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()

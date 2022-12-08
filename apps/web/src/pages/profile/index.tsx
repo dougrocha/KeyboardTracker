@@ -82,7 +82,7 @@ const UserSection = ({ user }: { user: User }) => {
   )
 }
 
-const SaveButtonGroup = <T extends FieldValues>({
+export const SaveButtonGroup = <T extends FieldValues>({
   setReadOnly,
   readOnly,
   defaultValues,
