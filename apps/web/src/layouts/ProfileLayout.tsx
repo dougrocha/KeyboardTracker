@@ -36,35 +36,36 @@ const ProfileLayout = ({
     <>
       <NextSeo {...seo} />
       <MainViewLayout
-        className="relative flex flex-col pb-10 lg:flex-row"
+        className="relative flex flex-shrink flex-col pb-10 lg:flex-row"
         hideFooter
       >
         {/* Sidebar Button */}
 
-        <button
-          className={classNames(
-            "fixed top-16 left-0 z-20 flex h-16 w-16 items-center justify-center rounded-r-full bg-white text-gray-600 shadow-lg lg:hidden",
-            isDesktop && "hidden"
-          )}
-          onClick={() => !isDesktop && setIsSidebarOpen((prev) => !prev)}
-        >
-          <Bars3BottomLeftIcon className="h-6 w-6" />
-        </button>
+        {isDesktop ? null : (
+          <button
+            className={classNames(
+              "fixed top-16 left-0 z-20 flex h-16 w-16 items-center justify-center rounded-r-full bg-white text-gray-600 shadow-lg lg:hidden"
+            )}
+            onClick={() => setIsSidebarOpen((prev) => !prev)}
+          >
+            <Bars3BottomLeftIcon className="h-6 w-6" />
+          </button>
+        )}
 
         {/* Sidebar */}
         <div
           className={classNames(
             isSidebarOpen
-              ? "fixed left-10 z-10 block w-min rounded-md bg-primary-light shadow-lg shadow-indigo-400"
-              : `hidden`,
-            "lg:sticky lg:top-10 lg:block lg:h-full lg:max-h-screen lg:w-52 lg:shadow-none"
+              ? "fixed left-10 z-10 block rounded-md bg-primary-light shadow-lg shadow-indigo-400"
+              : `hidden lg:inline-block`,
+            "lg:sticky lg:top-10 lg:h-full lg:w-52 lg:shadow-none"
           )}
         >
           <ProfileSidebar />
         </div>
 
         {/* Main content */}
-        <div className="min-h-full w-full px-4 pt-10 dark:bg-zinc-700">
+        <div className="min-h-full w-full overflow-auto px-4 pt-10 dark:bg-zinc-700">
           {children}
           <footer className="mt-10">
             <ProfileFooter />
@@ -82,13 +83,13 @@ const ProfileSidebar = () => {
   const setSidebarMenu = useSetAtom(profileMenuAtom)
 
   return (
-    <section className="flex h-full w-full flex-shrink-0 flex-col justify-between gap-y-2 p-4 transition-colors lg:h-[calc(100vh_-_150px)]">
+    <section className="flex h-full w-full flex-col justify-between gap-y-2 p-4 transition-colors lg:h-[calc(100vh_-_150px)]">
       <ul className="flex flex-col">
         {SidebarTags.map((tag) => (
           <li
             key={tag.name}
             className="relative flex h-12 w-full flex-row items-center justify-start rounded px-4 text-sm font-medium text-gray-800 hover:bg-indigo-200 hover:text-gray-900 lg:hover:bg-gray-200 "
-            onClick={() => setSidebarMenu((prev) => !prev)}
+            onClick={() => setSidebarMenu(false)}
           >
             {tag.type === "vendors" &&
               (vendors ? (
@@ -113,6 +114,7 @@ const ProfileSidebar = () => {
           <li
             key={tag.name}
             className="relative flex h-12 w-full flex-row items-center justify-start whitespace-nowrap rounded px-4 text-sm font-medium text-gray-800 hover:bg-indigo-200 hover:text-gray-900 lg:hover:bg-gray-200 "
+            onClick={() => setSidebarMenu(false)}
           >
             <SidebarRow name={tag.name} href={tag.href} />
           </li>

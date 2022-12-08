@@ -25,7 +25,7 @@ const MainViewLayout = ({
         className={classNames(
           className,
           hideFooter ? "" : "mb-auto",
-          `container mx-auto max-w-full px-2 sm:px-6`
+          `container mx-auto px-2 sm:px-6`
         )}
       >
         {children}
