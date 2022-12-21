@@ -1,16 +1,30 @@
 import {
   AdjustmentsVerticalIcon,
+  ArrowPathIcon,
+  CheckCircleIcon,
   ListBulletIcon,
+  PlusIcon,
 } from "@heroicons/react/20/solid"
 import { CheckBadgeIcon, GlobeAltIcon } from "@heroicons/react/24/outline"
 import { Vendor } from "@meka/database"
 import Link from "next/link"
 import React from "react"
 
+import Form from "../../../components/Forms/Form"
+import Input from "../../../components/Forms/Input"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeading,
+  DialogTrigger,
+  useDialogState,
+} from "../../../components/ModalDialog"
 import ProfileHeader from "../../../components/Profile/ProfileHeader"
 import ProfileSection from "../../../components/Profile/ProfileSection"
 import ProfileLayout from "../../../layouts/ProfileLayout"
-import { useGetVendors } from "../../../libs/api/Vendor"
+import { useCreateVendor, useGetVendors } from "../../../libs/api/Vendor"
 
 const VendorPage = () => {
   const { vendors } = useGetVendors()
@@ -93,7 +107,69 @@ const CreateVendorPage = () => {
   return (
     <>
       <ProfileHeader title="Create your vendor account today!" />
+
+      <Dialog>
+        <DialogTrigger className="flex w-min items-center justify-center space-x-2 rounded bg-indigo-500 px-3 py-1 text-white">
+          <span className="whitespace-nowrap text-lg font-medium">
+            Create Vendor
+          </span>
+          <PlusIcon className="h-6 w-6" />
+        </DialogTrigger>
+        <DialogContent className="m-4 max-w-4xl rounded bg-primary-light px-2 py-12 sm:px-8 lg:w-1/2">
+          <DialogHeading className="text-3xl font-semibold">
+            Create Vendor
+          </DialogHeading>
+          <DialogDescription className="mt-2 text-lg text-neutral-600">
+            Sells your newest products to the world with us.
+          </DialogDescription>
+          <CreateVendorForm />
+        </DialogContent>
+      </Dialog>
     </>
+  )
+}
+
+const CreateVendorForm = () => {
+  const { setOpen } = useDialogState()
+
+  const { createVendor, isSuccess, isLoading } = useCreateVendor()
+
+  const onSubmit = (data: Partial<Vendor>) => {
+    createVendor(data)
+    setTimeout(() => setOpen(false), 1000)
+  }
+
+  return (
+    <Form onSubmit={onSubmit} className="mt-4 flex flex-col gap-y-4">
+      <Input
+        id="name"
+        label="Vendor Name"
+        type="text"
+        className="rounded border"
+      />
+      <div className="flex flex-row items-center justify-end gap-x-4">
+        <DialogClose
+          type="button"
+          className="flex items-center gap-x-2 rounded-md bg-gray-300 px-4 py-2 text-gray-800 shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+        >
+          Cancel
+        </DialogClose>
+
+        <button
+          type="submit"
+          className="flex items-center gap-x-2 rounded-md bg-gray-800 px-4 py-2 text-white shadow-md hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+        >
+          {isLoading && !isSuccess ? (
+            <span className="animate-spin">
+              <ArrowPathIcon className="h-5 w-5" />
+            </span>
+          ) : (
+            "Create"
+          )}
+          {isSuccess && <CheckCircleIcon className="h-5 w-5 text-green-500" />}
+        </button>
+      </div>
+    </Form>
   )
 }
 

@@ -1,3 +1,4 @@
+import { User } from '@meka/database'
 import {
   Body,
   Controller,
@@ -19,6 +20,7 @@ import { UpdateVendorDto } from './dto/update-vendor.dto.js'
 import { VendorService } from './vendor.service.js'
 
 import { VENDOR_SERVICE } from '../common/constants.js'
+import { GetCurrentUser } from '../common/decorators/current-user.decorator.js'
 import { VendorRoles } from '../common/decorators/roles.decorator.js'
 import { PaginationParams } from '../common/dto/pagination-params.dto.js'
 import { AuthenticatedGuard } from '../common/guards/authenticated.guard.js'
@@ -40,8 +42,14 @@ export class VendorController {
   }
 
   @Post()
-  async create(@Body() createVendorBody: CreateVendorDto) {
-    return await this.vendorService.create(createVendorBody)
+  @UseGuards(AuthenticatedGuard)
+  async create(
+    @Body() createVendorBody: CreateVendorDto,
+    @GetCurrentUser() user: User,
+  ) {
+    const vendor = await this.vendorService.create(createVendorBody)
+    await this.vendorService.connectUserVendor(user.id, vendor.id)
+    return vendor
   }
 
   @Patch(':id')

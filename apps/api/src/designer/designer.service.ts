@@ -74,7 +74,10 @@ export class DesignerService implements BaseService<Designer> {
       where: {
         id: id,
       },
-      data,
+      data: {
+        username: data.username,
+        name: data.name,
+      },
     })
   }
 

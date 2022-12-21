@@ -3,7 +3,6 @@ import { PlusIcon } from "@heroicons/react/24/outline"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Designer, Product, ProductWithPrice } from "@meka/database"
 import { PaginationState } from "@tanstack/react-table"
-import { useRouter } from "next/router"
 import React, { useState } from "react"
 import * as yup from "yup"
 
@@ -24,13 +23,15 @@ import {
 import ProductsTable from "../../components/ProductsTable"
 import ProfileHeader from "../../components/Profile/ProfileHeader"
 import ProfileSection from "../../components/Profile/ProfileSection"
+import useAuth from "../../hooks/useAuth"
 import ProfileLayout from "../../layouts/ProfileLayout"
 import {
+  useCreateDesigner,
   useGetDesignerProducts,
   useGetMyDesigner,
+  useUpdateDesigner,
   useUpdateDesignerProduct,
 } from "../../libs/api/Designer"
-import { useUpdateVendorProduct } from "../../libs/api/Vendor"
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -43,10 +44,13 @@ const DesignerPage = () => {
 
   const { designer } = useGetMyDesigner()
 
+  const { mutate: updateDesigner } = useUpdateDesigner(designer?.id ?? "")
+
   if (!designer) return <DesignerCreatePage />
 
   const onSubmit = (data: Designer) => {
-    console.log(data)
+    updateDesigner(data)
+    setReadOnly(true)
   }
 
   return (
@@ -56,7 +60,7 @@ const DesignerPage = () => {
           <>
             <b>Welcome Back! </b>{" "}
             <span className="capitalize">
-              {designer.name ?? designer.username}
+              {/* {designer.name ?? designer.username} */}
             </span>
           </>
         }
@@ -122,9 +126,34 @@ const CreateProductButton = () => {
 }
 
 const DesignerCreatePage = () => {
+  const { user } = useAuth()
+
+  const { mutate } = useCreateDesigner()
+
+  const onSubmit = () => {
+    if (!user) return
+
+    mutate({
+      name: user.name,
+      username: user.username,
+    })
+  }
+
   return (
     <>
       <ProfileHeader title="Create your designer today!" />
+
+      <ProfileSection>
+        <button
+          className="flex w-min items-center justify-center space-x-2 rounded bg-indigo-500 px-3 py-1 text-white"
+          onClick={() => onSubmit()}
+        >
+          <span className="whitespace-nowrap text-lg font-medium">
+            Create Designer
+          </span>
+          <PlusIcon className="h-6 w-6" />
+        </button>
+      </ProfileSection>
     </>
   )
 }
