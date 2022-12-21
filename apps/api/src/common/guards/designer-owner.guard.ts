@@ -17,6 +17,7 @@ export class DesignerOwner implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest()
+
     const { id: designerId } = request.params
     const { id: userId } = request.user
 

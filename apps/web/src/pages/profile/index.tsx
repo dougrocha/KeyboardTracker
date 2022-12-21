@@ -181,15 +181,11 @@ const ImageField = ({
               We recommend using an image that is at least 48x48 in size.
             </p>
 
-            <label
-              htmlFor="avatar"
-              className="mt-5 inline-block w-full cursor-pointer border border-gray-800 bg-gray-300 px-2 py-2.5 text-center text-gray-900"
-            >
-              Upload Avatar
-            </label>
             <Input
               id="avatar"
-              className="hidden"
+              label="Upload Avatar"
+              labelStyle="mt-5 inline-block w-full cursor-pointer border border-gray-800 bg-gray-300 px-2 py-2.5 text-center text-gray-900"
+              className="absolute top-0 -z-[1] opacity-0"
               type="file"
               accept="image/*"
               validation={{

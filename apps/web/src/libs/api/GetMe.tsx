@@ -7,6 +7,11 @@ interface AvatarReturn {
   fileId: string
 }
 
+export async function DeleteProfile(): Promise<void> {
+  const res = await AxiosClient.delete<void>(`/user/me`)
+  return res.data
+}
+
 export async function GetProfileInformation(): Promise<User> {
   const res = await AxiosClient.get<User>(`/user/me`)
   return res.data
@@ -43,4 +48,10 @@ export function UseUpdateUserAvatar(
   return useMutation(["user", "avatar"], UpdateMeAvatar, {
     ...options,
   })
+}
+
+export function UseDeleteProfile(
+  options?: UseMutationOptions<void, Error, void>
+) {
+  return useMutation(["user"], DeleteProfile, options)
 }

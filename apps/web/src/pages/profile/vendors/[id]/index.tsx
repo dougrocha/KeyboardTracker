@@ -9,7 +9,6 @@ import {
   DialogContent,
   DialogHeading,
   DialogDescription,
-  DialogClose,
 } from "../../../../components/ModalDialog"
 import VendorLayout from "../../../../layouts/VendorLayout"
 
@@ -36,10 +35,7 @@ const VendorPage = ({ vendor }: { vendor: Vendor }) => {
                 <DialogDescription className="mt-2 text-lg text-neutral-600">
                   Don&apos;t worry you can always edit this later.
                 </DialogDescription>
-                <CreateVendorProduct />
-                <DialogClose className="mt-6 w-full rounded bg-red-400 px-4 py-2 font-medium text-black">
-                  Cancel
-                </DialogClose>
+                <CreateVendorProduct vendorId={vendor.id} />
               </DialogContent>
             </Dialog>
           </div>

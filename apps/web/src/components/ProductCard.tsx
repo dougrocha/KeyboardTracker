@@ -58,7 +58,11 @@ const ProductCard = ({
       <>
         <div className="relative h-36 w-full select-none">
           <Image
-            src={product.coverImage ?? "/images/hero.jpg"}
+            src={
+              product.coverImage
+                ? `${process.env.NEXT_PUBLIC_API_URL}/product/${product.id}/image/${product.coverImage}`
+                : "/images/hero.jpg"
+            }
             alt={product.name}
             fill
             sizes="

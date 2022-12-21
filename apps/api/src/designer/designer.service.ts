@@ -166,6 +166,8 @@ export class DesignerService implements BaseService<Designer> {
       throw new Error('Product not found')
     }
 
+    console.log(productData)
+
     return this.prisma.product.update({
       where: {
         id: productId,

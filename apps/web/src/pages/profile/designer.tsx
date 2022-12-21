@@ -1,7 +1,9 @@
+import { ArrowPathIcon, CheckCircleIcon } from "@heroicons/react/20/solid"
 import { PlusIcon } from "@heroicons/react/24/outline"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Designer } from "@meka/database"
+import { Designer, Product, ProductWithPrice } from "@meka/database"
 import { PaginationState } from "@tanstack/react-table"
+import { useRouter } from "next/router"
 import React, { useState } from "react"
 import * as yup from "yup"
 
@@ -17,6 +19,7 @@ import {
   DialogHeading,
   DialogDescription,
   DialogClose,
+  useDialogState,
 } from "../../components/ModalDialog"
 import ProductsTable from "../../components/ProductsTable"
 import ProfileHeader from "../../components/Profile/ProfileHeader"
@@ -25,7 +28,9 @@ import ProfileLayout from "../../layouts/ProfileLayout"
 import {
   useGetDesignerProducts,
   useGetMyDesigner,
+  useUpdateDesignerProduct,
 } from "../../libs/api/Designer"
+import { useUpdateVendorProduct } from "../../libs/api/Vendor"
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -82,26 +87,7 @@ const DesignerPage = () => {
       </ProfileSection>
 
       <ProfileSection className="relative mt-10 block p-2">
-        <Dialog>
-          <DialogTrigger className="flex w-min items-center justify-center space-x-2 rounded bg-indigo-500 px-3 py-1 text-white">
-            <span className="whitespace-nowrap text-lg font-medium">
-              Create Product
-            </span>
-            <PlusIcon className="h-6 w-6" />
-          </DialogTrigger>
-          <DialogContent className="m-4 max-w-4xl rounded bg-primary-light px-2 py-12 sm:px-8 lg:w-1/2">
-            <DialogHeading className="text-3xl font-semibold">
-              Create a new Product
-            </DialogHeading>
-            <DialogDescription className="mt-2 text-lg text-neutral-600">
-              Don&apos;t worry you can always edit this later.
-            </DialogDescription>
-            <CreateDesignerProduct />
-            <DialogClose className="mt-6 w-full rounded bg-red-400 px-4 py-2 font-medium text-black">
-              Cancel
-            </DialogClose>
-          </DialogContent>
-        </Dialog>
+        <CreateProductButton />
       </ProfileSection>
 
       <DesignerTable />
@@ -112,6 +98,28 @@ const DesignerPage = () => {
 DesignerPage.getLayout = (page: React.ReactNode) => (
   <ProfileLayout>{page}</ProfileLayout>
 )
+
+const CreateProductButton = () => {
+  return (
+    <Dialog>
+      <DialogTrigger className="flex w-min items-center justify-center space-x-2 rounded bg-indigo-500 px-3 py-1 text-white">
+        <span className="whitespace-nowrap text-lg font-medium">
+          Create Product
+        </span>
+        <PlusIcon className="h-6 w-6" />
+      </DialogTrigger>
+      <DialogContent className="m-4 max-w-4xl rounded bg-primary-light px-2 py-12 sm:px-8 lg:w-1/2">
+        <DialogHeading className="text-3xl font-semibold">
+          Create a new Product
+        </DialogHeading>
+        <DialogDescription className="mt-2 text-lg text-neutral-600">
+          Don&apos;t worry you can always edit this later.
+        </DialogDescription>
+        <CreateDesignerProduct />
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 const DesignerCreatePage = () => {
   return (
@@ -159,8 +167,103 @@ const DesignerTable = () => {
         pagination={pagination}
         setPagination={setPagination}
         visibility={{ price: false }}
+        editComponent={EditProductView}
       />
     </>
+  )
+}
+
+interface EditProductViewProps {
+  product: ProductWithPrice | Product
+}
+
+const EditProductView = ({ product }: EditProductViewProps) => {
+  const { setOpen } = useDialogState()
+
+  const { designer } = useGetMyDesigner()
+
+  const { mutate, isSuccess, isLoading } = useUpdateDesignerProduct(
+    designer?.id
+  )
+
+  const onSubmit = async (data: ProductWithPrice | Product) => {
+    mutate(data)
+    setTimeout(() => setOpen(false), 1000)
+  }
+
+  return (
+    <Form<ProductWithPrice | Product>
+      onSubmit={onSubmit}
+      defaultValues={product}
+      className="mt-4 flex flex-col gap-y-4"
+    >
+      <Input
+        id={`name`}
+        label="Name"
+        type="text"
+        placeholder={product.name}
+        className="rounded border"
+      />
+      {/* If the product has a price show this option, this is mainly for products on the vendor side */}
+      {"price" in product ? (
+        <Input
+          id={`price`}
+          label="Price"
+          type="number"
+          placeholder={product.price?.toString()}
+          min={0}
+          step={0.01}
+          className="rounded border"
+        />
+      ) : null}
+      <Input
+        id={`description`}
+        label="Description"
+        type="text"
+        placeholder={product.description}
+        className="rounded border"
+      />
+
+      {/* date for group buy start date */}
+      <Input
+        id={`groupBuyStartDate`}
+        label="Group Buy Start Date"
+        type="date"
+        placeholder={product.groupBuyStartDate?.toString()}
+        className="rounded border"
+      />
+      {/* date for group buy end date */}
+      <Input
+        id={`groupBuyEndDate`}
+        label="Group Buy End Date"
+        type="date"
+        placeholder={product.groupBuyEndDate?.toString()}
+        className="rounded border"
+      />
+
+      <div className="flex flex-row items-center justify-end gap-x-4">
+        <DialogClose
+          type="button"
+          className="flex items-center gap-x-2 rounded-md bg-gray-300 px-4 py-2 text-gray-800 shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+        >
+          Cancel
+        </DialogClose>
+
+        <button
+          type="submit"
+          className="flex items-center gap-x-2 rounded-md bg-gray-800 px-4 py-2 text-white shadow-md hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+        >
+          {isLoading && !isSuccess ? (
+            <span className="animate-spin">
+              <ArrowPathIcon className="h-5 w-5" />
+            </span>
+          ) : (
+            "Create"
+          )}
+          {isSuccess && <CheckCircleIcon className="h-5 w-5 text-green-500" />}
+        </button>
+      </div>
+    </Form>
   )
 }
 

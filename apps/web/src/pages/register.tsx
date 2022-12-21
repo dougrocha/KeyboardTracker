@@ -76,9 +76,13 @@ const RegisterPage = () => {
         </p>
       </section>
 
-      <section className="flex flex-col items-center justify-center gap-y-2 md:w-1/2">
-        <h1>STAY UP TO DATE ON THE LATEST GROUP BUYS</h1>
-      </section>
+      {isPressed ? (
+        <p>REGISTER</p>
+      ) : (
+        <section className="flex flex-col items-center justify-center gap-y-2 md:w-1/2">
+          <h1>STAY UP TO DATE ON THE LATEST GROUP BUYS</h1>
+        </section>
+      )}
     </>
   )
 }
@@ -98,19 +102,17 @@ const RegisterButton = ({
   isPressed,
   setPressed,
 }: RegisterButtonProps) => {
-  const id = useId()
-
   return (
     <button
       className={classNames(
-        isPressed === id ? "bg-gray-200" : "bg-white",
+        isPressed === label ? "bg-gray-200" : "bg-white",
         "group flex h-20 w-full items-center justify-between rounded-md border border-black py-2 px-4 aria-pressed:bg-gray-200"
       )}
       onClick={() => {
         if (!setPressed) return
-        isPressed === id ? setPressed("") : setPressed(id)
+        isPressed === label ? setPressed("") : setPressed(label)
       }}
-      aria-pressed={isPressed === id}
+      aria-pressed={isPressed === label}
     >
       {icon}
       <div className="flex w-full flex-col items-start justify-center space-y-1">
@@ -118,7 +120,7 @@ const RegisterButton = ({
         <span className="text-sm">{description}</span>
       </div>
       <div className="flex h-full flex-col justify-start pl-8">
-        {isPressed === id ? (
+        {isPressed === label ? (
           <CheckCircleIcon className="h-5 w-5 text-black" />
         ) : (
           <MinusCircleIcon className="h-5 w-5 fill-transparent stroke-black text-black" />

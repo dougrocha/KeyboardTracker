@@ -15,8 +15,17 @@ import React from "react"
 import { mergeRefs } from "react-merge-refs"
 
 interface useTooltipProps {
+  /**
+   * Whether the tooltip is initially open
+   */
   initialOpen?: boolean
+  /**
+   * The placement of the tooltip relative to the trigger
+   */
   placement?: "top" | "bottom" | "left" | "right"
+  /**
+   * The delay in milliseconds before the tooltip opens
+   */
   delay?: number
   open?: boolean
   onOpenChange?: (open: boolean) => void

@@ -1,3 +1,6 @@
+import { createReadStream } from 'fs'
+import { access, constants } from 'fs/promises'
+
 import { GroupBuyStatus } from '@meka/database'
 import {
   Controller,
@@ -6,10 +9,18 @@ import {
   Query,
   Param,
   ParseEnumPipe,
+  HttpException,
+  Res,
+  HttpStatus,
+  HttpCode,
+  StreamableFile,
 } from '@nestjs/common'
+import { Response } from 'express'
 
-import { PRODUCT_SERVICE } from '../../common/constants.js'
+import { IMAGE_SERVICE, PRODUCT_SERVICE } from '../../common/constants.js'
 import { PaginationParams } from '../../common/dto/pagination-params.dto.js'
+import { ImageNotFoundException } from '../../common/exceptions/imageNotFound.exception.js'
+import { ImageService } from '../../image/image.service.js'
 import { FindManyProductsDto } from '../dtos/find-many-products.dto.js'
 import { ProductSearchQuery } from '../dtos/queries/product-search-query.dto.js'
 import { ProductService } from '../services/product.service.js'
@@ -18,6 +29,7 @@ import { ProductService } from '../services/product.service.js'
 export class ProductController {
   constructor(
     @Inject(PRODUCT_SERVICE) private readonly productService: ProductService,
+    @Inject(IMAGE_SERVICE) private readonly imagesService: ImageService,
   ) {}
 
   /**
@@ -88,5 +100,31 @@ export class ProductController {
     @Query() pagination: PaginationParams,
   ) {
     return await this.productService.findManyWithStatus(status, pagination)
+  }
+
+  /**
+   * GET /products/:id/image/:image_id
+   */
+  @Get(':id/image/:image_id')
+  @HttpCode(HttpStatus.OK)
+  async findImageById(
+    @Param('id') productId: string,
+    @Param('image_id') imageId: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    if (!productId || !imageId)
+      throw new HttpException('Product id and image id are required', 400)
+
+    const path = this.imagesService.joinFilePath(productId, imageId) + '.webp'
+
+    return await access(path, constants.F_OK | constants.R_OK)
+      .then(() => {
+        res.set('Content-Type', 'image/webp')
+        res.header('Content-Disposition', `inline, filename=${imageId}.webp`)
+        return new StreamableFile(createReadStream(path))
+      })
+      .catch(() => {
+        throw new ImageNotFoundException()
+      })
   }
 }

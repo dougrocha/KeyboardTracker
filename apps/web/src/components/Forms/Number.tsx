@@ -24,10 +24,11 @@ const Number = ({
   id,
   placeholder,
   helperText,
-  readOnly = false,
+  readOnly,
   validation,
   validateNumber,
-  hideLabel = true,
+  hideLabel,
+  prefix,
   ...rest
 }: NumberProps) => {
   return (
@@ -38,7 +39,9 @@ const Number = ({
       placeholder={placeholder}
       hideLabel={hideLabel}
       helperText={helperText}
+      prefix={prefix}
       type="number"
+      step="0.01"
       validation={{
         valueAsNumber: true,
         validate: validateNumber,

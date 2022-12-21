@@ -19,10 +19,12 @@ import {
   StreamableFile,
   UseGuards,
   UseInterceptors,
+  Req,
 } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { Queue } from 'bull'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 
 import {
   DESIGNER_SERVICE,
@@ -57,6 +59,7 @@ export class UsersController {
     @Inject(IMAGE_SERVICE) private readonly imagesService: ImageService,
     @InjectQueue('images') private readonly imagesQueue: Queue<JobImageType>,
     @Inject(SNOWFLAKE_SERVICE) private readonly snowflake: SnowflakeService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Get('me')
@@ -102,9 +105,18 @@ export class UsersController {
   @Delete('me')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(AuthenticatedGuard)
-  async delete(@GetCurrentUser() user: User) {
-    const deletedUser = await this.userService.delete(user.id)
-    return { ...deletedUser, password: undefined }
+  async delete(
+    @Req() req: Request,
+    @Res() res: Response,
+    @GetCurrentUser() user: User,
+  ) {
+    await this.userService.delete(user.id)
+    req.session.destroy(() => {
+      res.redirect(this.configService.get('APP_URL'))
+      return {
+        msg: 'User logged out',
+      }
+    })
   }
 
   @Patch('me/avatar')

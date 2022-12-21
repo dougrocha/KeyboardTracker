@@ -4,7 +4,12 @@ import {
   PaginatedResults,
   PaginationParams,
 } from "@meka/types"
-import { useMutation, useQuery, UseQueryOptions } from "@tanstack/react-query"
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from "@tanstack/react-query"
 
 import AxiosClient from "../AxiosClient"
 
@@ -36,17 +41,48 @@ const CreateVendorProductUrl = async (product: AddVendorProduct) => {
   return data
 }
 
-export const useCreateVendorProduct = ({
+const UpdateVendorProductUrl = async (
+  vendorId: string,
+  productId: string,
+  product: Partial<ProductWithPrice>
+) => {
+  const { data } = await AxiosClient.patch<Partial<ProductWithPrice>>(
+    `/vendor/${vendorId}/products/${productId}`,
+    product
+  )
+  return data
+}
+
+export const useUpdateVendorProduct = ({
   vendorId,
   productId,
 }: {
   vendorId: string
   productId: string
 }) => {
+  const queryClient = useQueryClient()
+
   const { mutate, ...rest } = useMutation(
-    ["vendor", vendorId, "products", productId],
-    CreateVendorProductUrl
+    (product: Partial<ProductWithPrice>) =>
+      UpdateVendorProductUrl(vendorId, productId, product),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["vendor", vendorId, "products"])
+      },
+    }
   )
+
+  return { updateProduct: mutate, ...rest }
+}
+
+export const useCreateVendorProduct = ({ vendorId }: { vendorId: string }) => {
+  const queryClient = useQueryClient()
+
+  const { mutate, ...rest } = useMutation(CreateVendorProductUrl, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["vendor", vendorId, "products"])
+    },
+  })
 
   return { createProduct: mutate, ...rest }
 }
