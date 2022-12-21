@@ -50,9 +50,10 @@ const ProductPage = ({ product, vendors }: ProductPageProps) => {
         <ProductImage
           size="lg"
           image={{
-            imgUrl: "/images/hero.jpg",
+            imgUrl: product.coverImage ?? "images/hero.jpg",
             title: name,
             description: product.description,
+            productId: id,
           }}
         />
 
@@ -136,9 +137,9 @@ const ImagesSection = ({ images }: { images?: ProductImage[] }) => {
   return (
     <section className="mt-24 mb-20">
       <h3 className="text-3xl font-semibold">Kits</h3>
-      <div className="mt-10 grid grid-cols-3 space-x-4">
+      <div className="mt-10 grid space-x-4 md:grid-cols-2 lg:grid-cols-3">
         {images.map((image) => (
-          <ProductImage key={image.id} image={image} />
+          <ProductImage key={image.id} image={image} text />
         ))}
       </div>
     </section>
@@ -148,29 +149,42 @@ const ImagesSection = ({ images }: { images?: ProductImage[] }) => {
 const ProductImage = ({
   image,
   size = "lg",
+  text,
 }: {
   image?: Partial<ProductImage>
   size?: "sm" | "lg"
+  text?: boolean
 }) => {
   return (
-    <div
-      className={classNames(
-        `relative w-full lg:w-1/2`,
-        size === "sm" && "h-52",
-        size === "lg" && "h-96"
-      )}
-    >
-      <Image
-        src={"/images/hero.jpg"}
-        alt={`${image?.title}`}
-        fill
-        sizes="(max-width: 768px) 100vw,
-              (max-width: 1200px) 50vw,
-              33vw"
-        priority
-        className="absolute rounded-lg object-cover object-center"
-      />
-      <p className="mt-2 font-medium">{image?.title}</p>
+    <div className="w-full">
+      <div
+        className={classNames(
+          `relative w-full`,
+          size === "sm" && "h-28 lg:h-52",
+          size === "lg" && "h-52 md:h-96"
+        )}
+      >
+        <Image
+          src={
+            image?.imgUrl?.startsWith("images")
+              ? image?.imgUrl
+              : `${process.env.NEXT_PUBLIC_API_URL}/product/${image?.productId}/image/${image?.imgUrl}`
+          }
+          alt={`${image?.title}`}
+          fill
+          sizes="(max-width: 768px) 100vw,
+        (max-width: 1200px) 50vw,
+        33vw"
+          priority
+          className="absolute rounded-lg object-cover object-center"
+        />
+      </div>
+      {text ? (
+        <>
+          <p className="mt-2 font-medium">{image?.title}</p>
+          <p className="text-sm">{image?.description}</p>
+        </>
+      ) : null}
     </div>
   )
 }

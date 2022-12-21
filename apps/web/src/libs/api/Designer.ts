@@ -4,6 +4,7 @@ import {
   MutationOptions,
   useMutation,
   useQuery,
+  useQueryClient,
   UseQueryOptions,
 } from "@tanstack/react-query"
 
@@ -35,12 +36,9 @@ const CreateProductUrl = async (
   return data.data
 }
 
-const UpdateProductUrl = async (
-  designerId?: string,
-  product?: Omit<Product, "id">
-) => {
-  const data = await AxiosClient.patch<Omit<Product, "id">>(
-    `/designer/${designerId}/products`,
+const UpdateProductUrl = async (designerId?: string, product?: Product) => {
+  const data = await AxiosClient.patch<Product>(
+    `/designer/${designerId}/products/${product?.id}`,
     product
   )
   return data.data
@@ -109,16 +107,15 @@ export const useCreateDesignerProduct = (
 
 export const useUpdateDesignerProduct = (
   designerId?: string,
-  options?: MutationOptions<
-    Omit<Product, "id">,
-    unknown,
-    Omit<Product, "id">,
-    unknown
-  >
+  options?: MutationOptions<Product, unknown, Product, unknown>
 ) => {
+  const queryClient = useQueryClient()
   return useMutation(
-    (product: Omit<Product, "id">) => CreateProductUrl(designerId, product),
+    (product: Product) => UpdateProductUrl(designerId, product),
     {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["designer", designerId, "products"])
+      },
       ...options,
     }
   )

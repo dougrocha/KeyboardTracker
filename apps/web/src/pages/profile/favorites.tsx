@@ -53,16 +53,21 @@ const FavoritesContainer = () => {
 
                   <div className="flex items-center justify-between">
                     <div className="relative h-24 w-full">
-                      {!favorite.product.coverImage ? (
-                        <Image
-                          src={
-                            favorite.product.coverImage ?? "/images/hero.jpg"
-                          }
-                          className="object-cover"
-                          alt={favorite.product.name + " cover image"}
-                          fill
-                        />
-                      ) : null}
+                      <Image
+                        src={
+                          favorite.product.coverImage
+                            ? `${process.env.NEXT_PUBLIC_API_URL}/product/${favorite.product.id}/image/${favorite.product.coverImage}`
+                            : "/images/hero.jpg"
+                        }
+                        fill
+                        sizes="
+                          (max-width: 640px) 100vw,
+                          (max-width: 768px) 50vw,
+                          (max-width: 1024px) 33.3vw,
+                          512px"
+                        className="object-cover"
+                        alt={favorite.product.name + " cover image"}
+                      />
                     </div>
                   </div>
                   <div className="mt-4 p-4">

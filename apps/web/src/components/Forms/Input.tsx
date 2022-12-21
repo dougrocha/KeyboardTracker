@@ -16,6 +16,7 @@ interface InputProps
   hideLabel?: boolean
   icon?: JSX.Element
   validation?: RegisterOptions
+  labelStyle?: string
   rounded?: {
     size?: "sm" | "md" | "lg"
     position?: "t" | "b" | "l" | "r" | "tl" | "tr" | "bl" | "br" | "none"
@@ -33,6 +34,7 @@ const Input = ({
   icon,
   hideLabel,
   className,
+  labelStyle,
   rounded,
   ...rest
 }: InputProps) => {
@@ -47,6 +49,7 @@ const Input = ({
       label={label}
       helperText={helperText}
       hideLabel={hideLabel}
+      labelStyle={labelStyle}
     >
       <input
         type={type}

@@ -58,7 +58,13 @@ export class ProductService implements BaseService<Product> {
     perPage,
   }: PaginationParams): Promise<PaginatedResults<Product>> {
     if (!page || !perPage) {
-      const products = await this.prisma.product.findMany()
+      const products = await this.prisma.product.findMany({
+        where: {
+          status: {
+            not: GroupBuyStatus.HIDDEN,
+          },
+        },
+      })
       return {
         data: products,
         count: products.length,

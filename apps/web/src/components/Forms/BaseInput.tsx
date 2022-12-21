@@ -1,3 +1,4 @@
+import classNames from "classnames"
 import { get } from "lodash"
 import React from "react"
 import { useFormContext } from "react-hook-form"
@@ -7,6 +8,7 @@ interface BaseInputProps extends React.PropsWithChildren {
   label?: string
   hideLabel?: boolean
   helperText?: string
+  labelStyle?: string
 }
 
 const BaseInput = ({
@@ -14,13 +16,19 @@ const BaseInput = ({
   label,
   helperText,
   hideLabel = false,
+  labelStyle,
   children,
 }: BaseInputProps) => (
   <div>
     {hideLabel ? (
       <span className="relative block">{children}</span>
     ) : (
-      <label className="block text-sm text-black dark:text-white">
+      <label
+        className={classNames(
+          "block text-sm text-black dark:text-white",
+          labelStyle
+        )}
+      >
         {label}
         <span className="relative block">{children}</span>
       </label>

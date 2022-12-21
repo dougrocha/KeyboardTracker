@@ -1,3 +1,10 @@
+import {
+  ArrowsUpDownIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  ArrowPathIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/20/solid"
 import { GroupBuyStatus, Product, ProductWithPrice } from "@meka/database"
 import { UseQueryResult } from "@tanstack/react-query"
 import {
@@ -26,6 +33,7 @@ import {
   DialogHeading,
   DialogTrigger,
 } from "./ModalDialog"
+import ToolTip, { TooltipContent, TooltipTrigger } from "./ToolTip"
 
 const getStatusColor = (status: GroupBuyStatus) => {
   switch (status) {
@@ -46,7 +54,7 @@ const getStatusColor = (status: GroupBuyStatus) => {
     case GroupBuyStatus.UPCOMING:
     case GroupBuyStatus.HIDDEN:
     default:
-      return "bg-gray-500"
+      return "bg-gray-400"
   }
 }
 
@@ -60,6 +68,11 @@ interface ProductsTableProps {
   error?: UseQueryResult["error"]
   isRefetching: boolean
   visibility?: Partial<Record<keyof ProductWithPrice, boolean>>
+  editComponent: ({
+    product,
+  }: {
+    product: ProductWithPrice | Product
+  }) => JSX.Element
 }
 
 const ProductsTable = ({
@@ -71,6 +84,7 @@ const ProductsTable = ({
   isRefetching,
   setPagination,
   visibility: initialVisibility,
+  editComponent,
 }: ProductsTableProps) => {
   const [columnVisibility, setColumnVisibility] = React.useState(
     initialVisibility ?? {}
@@ -142,35 +156,63 @@ const ProductsTable = ({
       ),
       columnHelper.accessor("status", {
         cell: (info) => (
-          <div
-            className={classNames(
-              "mx-auto w-fit select-none whitespace-nowrap rounded-md px-2 py-1 text-start text-xs font-medium",
-              getStatusColor(info.getValue())
+          <>
+            {info.getValue().includes(GroupBuyStatus.HIDDEN) ? (
+              <ToolTip>
+                <TooltipContent className="select-none rounded-md bg-slate-400 px-2 py-1 text-start text-xs font-medium">
+                  This product is hidden from the public.
+                  <br /> You can only see it with an id.
+                </TooltipContent>
+                <TooltipTrigger>
+                  <div
+                    className={classNames(
+                      "w-fit select-none whitespace-nowrap rounded-md px-2 py-1 text-start text-xs font-medium",
+                      getStatusColor(info.getValue())
+                    )}
+                  >
+                    {info.getValue().replaceAll("_", " ")}
+                  </div>
+                </TooltipTrigger>
+              </ToolTip>
+            ) : (
+              <div
+                className={classNames(
+                  "w-fit select-none whitespace-nowrap rounded-md px-2 py-1 text-start text-xs font-medium",
+                  getStatusColor(info.getValue())
+                )}
+              >
+                {info.getValue().replaceAll("_", " ")}
+              </div>
             )}
-          >
-            {info.getValue().replaceAll("_", " ")}
-          </div>
+          </>
         ),
       }),
       columnHelper.display({
         id: "actions",
         cell: (row) => (
           <Dialog>
-            <DialogTrigger className="whitespace-nowrap rounded bg-indigo-700 px-3 py-1 text-white">
-              Edit
+            <DialogTrigger className="flex w-min items-center justify-center space-x-2 rounded bg-indigo-500 px-3 py-1 text-white">
+              <span className="whitespace-nowrap text-lg font-medium">
+                Edit
+              </span>
             </DialogTrigger>
-            <DialogContent className="m-4 w-1/2 rounded bg-primary-light p-4 py-12">
-              <DialogHeading>Edit Product</DialogHeading>
-              <DialogDescription>
+            <DialogContent className="m-4 max-w-4xl rounded bg-primary-light px-2 py-12 sm:px-8 lg:w-1/2">
+              <DialogHeading className="text-3xl font-semibold">
+                Edit Product
+              </DialogHeading>
+              <DialogDescription className="mt-2 text-lg text-neutral-600">
                 Edit the product information
               </DialogDescription>
-              <EditProductView product={row.row.original} />
+              {React.createElement(editComponent, {
+                product: row.row.original,
+              })}
             </DialogContent>
           </Dialog>
         ),
+        enableSorting: false,
       }),
     ],
-    [columnHelper, formatCurrency]
+    [columnHelper, editComponent, formatCurrency]
   )
 
   const table = useReactTable<ProductWithPrice | Product>({
@@ -238,7 +280,7 @@ const ProductsTable = ({
                         className={classNames(
                           header.column.getCanSort() &&
                             "cursor-pointer select-none",
-                          "text-start text-xs font-medium uppercase tracking-wider text-gray-600"
+                          "flex text-start text-xs font-medium uppercase tracking-wider text-gray-600"
                         )}
                         onClick={header.column.getToggleSortingHandler()}
                       >
@@ -247,10 +289,16 @@ const ProductsTable = ({
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                          {{
-                            asc: " 🔼",
-                            desc: " 🔽",
-                          }[header.column.getIsSorted() as string] ?? null}
+                          {header.column.getCanSort() && (
+                            <span className="ml-1 h-5 w-5 text-indigo-600">
+                              {{
+                                asc: <ArrowUpIcon />,
+                                desc: <ArrowDownIcon />,
+                              }[header.column.getIsSorted() as string] ?? (
+                                <ArrowsUpDownIcon />
+                              )}
+                            </span>
+                          )}
                         </>
                       </div>
                     )}
@@ -349,51 +397,6 @@ const ProductsTable = ({
         </div>
       </div>
     </>
-  )
-}
-
-interface EditProductViewProps {
-  product: ProductWithPrice | Product
-}
-
-const EditProductView = ({ product }: EditProductViewProps) => {
-  const onSubmit = async (data: ProductWithPrice | Product) => {
-    console.log(data)
-  }
-
-  return (
-    <Form<ProductWithPrice | Product>
-      onSubmit={onSubmit}
-      defaultValues={product}
-      className="mt-8 flex h-full max-w-full flex-col gap-2 space-y-4"
-    >
-      <Input
-        id={`${product.id}-name`}
-        label="Name"
-        type="text"
-        placeholder={product.name}
-        className="rounded border"
-      />
-      {/* If the product has a price show this option, this is mainly for products on the vendor side */}
-      {"price" in product ? (
-        <Input
-          id={`${product.id}-price`}
-          label="Price"
-          type="number"
-          placeholder={product.price?.toString()}
-          min={0}
-          step={0.01}
-          className="rounded border"
-        />
-      ) : null}
-      <Input
-        id={`${product.id}-description`}
-        label="Description"
-        type="text"
-        placeholder={product.description}
-        className="rounded border"
-      />
-    </Form>
   )
 }
 

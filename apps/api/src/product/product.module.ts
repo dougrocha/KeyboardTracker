@@ -14,9 +14,11 @@ import {
   VENDOR_SERVICE,
 } from '../common/constants.js'
 import { DesignerService } from '../designer/designer.service.js'
+import { ImageModule } from '../image/image.module.js'
 import { VendorService } from '../vendor/vendor.service.js'
 
 @Module({
+  imports: [ImageModule.register({ path: ['products'] })],
   providers: [
     { provide: PRISMA_SERVICE, useClass: PrismaService },
     { provide: PRODUCT_SERVICE, useClass: ProductService },

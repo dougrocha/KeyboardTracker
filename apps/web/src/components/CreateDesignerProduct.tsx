@@ -1,6 +1,6 @@
+import { ArrowPathIcon, CheckCircleIcon } from "@heroicons/react/20/solid"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Product, ProductType } from "@meka/database"
-import { useRouter } from "next/router"
 import React from "react"
 import * as yup from "yup"
 
@@ -9,10 +9,10 @@ import Input from "./Forms/Input"
 import Radio from "./Forms/Radio"
 import SelectGroup from "./Forms/SelectGroup"
 import TextArea from "./Forms/TextArea"
+import { DialogClose, useDialogState } from "./ModalDialog"
 
 import {
   useCreateDesignerProduct,
-  useGetDesigner,
   useGetMyDesigner,
 } from "../libs/api/Designer"
 
@@ -35,15 +35,19 @@ const schema = yup.object().shape({
 })
 
 const CreateDesignerProduct = () => {
+  const { setOpen } = useDialogState()
+
   const { designer } = useGetMyDesigner()
 
-  const { mutate } = useCreateDesignerProduct(designer?.id ?? "")
+  const { mutate, isLoading, isSuccess } = useCreateDesignerProduct(
+    designer?.id ?? ""
+  )
 
   if (!designer) return <p>Something is wrong.</p>
 
   const onSubmit = (data: Omit<Product, "id">) => {
-    console.log(data)
     mutate(data)
+    setTimeout(() => setOpen(false), 1000)
   }
 
   return (
@@ -90,12 +94,31 @@ const CreateDesignerProduct = () => {
             className="bg-gray-400 shadow"
           />
         </SelectGroup>
-        <button
-          type="submit"
-          className="mt-6 rounded bg-green-400 px-4 py-2 font-medium text-black"
-        >
-          Create Product
-        </button>
+
+        <div className="flex flex-row items-center justify-end gap-x-4">
+          <DialogClose
+            type="button"
+            className="flex items-center gap-x-2 rounded-md bg-gray-300 px-4 py-2 text-gray-800 shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+          >
+            Cancel
+          </DialogClose>
+
+          <button
+            type="submit"
+            className="flex items-center gap-x-2 rounded-md bg-gray-800 px-4 py-2 text-white shadow-md hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50"
+          >
+            {isLoading && !isSuccess ? (
+              <span className="animate-spin">
+                <ArrowPathIcon className="h-5 w-5" />
+              </span>
+            ) : (
+              "Create"
+            )}
+            {isSuccess && (
+              <CheckCircleIcon className="h-5 w-5 text-green-500" />
+            )}
+          </button>
+        </div>
       </Form>
     </>
   )

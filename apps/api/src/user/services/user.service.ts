@@ -43,7 +43,13 @@ export class UserService implements BaseService<User> {
   }
 
   async delete(id: string) {
-    return await this.prisma.user.delete({ where: { id } })
+    return await this.prisma.user.update({
+      where: { id },
+      data: {
+        deleted: true,
+        deletedAt: new Date(),
+      },
+    })
   }
 
   async findUserByEmail(email: string) {

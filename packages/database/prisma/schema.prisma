@@ -29,6 +29,9 @@ model User {
 
   isFavoritesPrivate Boolean @default(false)
 
+  deletedAt DateTime?
+  deleted   Boolean   @default(false)
+
   discord         DiscordIdentity?
   designerAccount Designer?
   formResponses   FormResponse[]

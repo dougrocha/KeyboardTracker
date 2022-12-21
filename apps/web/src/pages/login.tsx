@@ -4,7 +4,7 @@ import classNames from "classnames"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React, { ReactElement } from "react"
-import { SubmitHandler, useForm } from "react-hook-form"
+import { SubmitHandler } from "react-hook-form"
 import { FaDiscord, FaGoogle } from "react-icons/fa"
 
 import Form from "../components/Forms/Form"
@@ -109,6 +109,13 @@ const LoginPage = () => {
             Login
           </button>
         </Form>
+
+        <p className="text-sm">
+          Don&apos;t have an account?{" "}
+          <Link href="/register" className="text-blue-600">
+            Register
+          </Link>
+        </p>
       </section>
     </>
   )

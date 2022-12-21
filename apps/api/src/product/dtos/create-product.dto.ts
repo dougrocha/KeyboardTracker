@@ -56,13 +56,17 @@ export class CreateProductDto {
   @IsOptional()
   @Transform(({ value }) => value && new Date(value))
   @IsDate()
-  @MinDate(new Date())
+  @MinDate(new Date(), {
+    message: 'Group buy start date must be in the future',
+  })
   groupBuyStartDate?: Date
 
   @IsOptional()
   @Transform(({ value }) => value && new Date(value))
   @IsDate()
-  @MinDate(new Date())
+  @MinDate(new Date(), {
+    message: 'Group buy end date must be in the future',
+  })
   groupBuyEndDate?: Date
 
   @IsString()
@@ -71,7 +75,7 @@ export class CreateProductDto {
 
   @IsOptional()
   @IsEnum(YearQuarter)
-  estimatedDeliveryQuarter: YearQuarter
+  estimatedDeliveryQuarter?: YearQuarter
 
   @IsOptional()
   @IsString()
