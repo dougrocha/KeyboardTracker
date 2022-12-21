@@ -1,9 +1,8 @@
-import { IsNotEmpty, IsOptional, IsString, Min } from 'class-validator'
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class CreateDesignerDto {
   @IsOptional()
   @IsString()
-  @Min(4)
   name: string
 
   @IsNotEmpty()

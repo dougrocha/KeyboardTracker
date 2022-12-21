@@ -33,13 +33,11 @@ export class DesignersController {
 
   @Post()
   @UseGuards(AuthenticatedGuard)
-  async createAccount(
-    @GetCurrentUser() user: User,
-    @Body() createDesignerBody: CreateDesignerDto,
-  ) {
+  async createAccount(@GetCurrentUser() user: User) {
     return await this.designerService.create({
       userId: user.id,
-      ...createDesignerBody,
+      username: user.username,
+      name: user.name,
     })
   }
 

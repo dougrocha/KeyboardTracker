@@ -1,4 +1,4 @@
-import { Designer, Product } from "@meka/database"
+import { Designer, Product, User } from "@meka/database"
 import { PaginationParams } from "@meka/types"
 import {
   MutationOptions,
@@ -72,6 +72,20 @@ export const useGetDesigner = (id: string) => {
   return { designer: data, isLoading, error }
 }
 
+const UpdateDesignerUrl = async (id: string, user: Partial<Designer>) => {
+  const data = await AxiosClient.patch<Designer>(`/designer/` + id, user)
+  return data.data
+}
+
+export const useUpdateDesigner = (
+  id: string,
+  options?: MutationOptions<Partial<Designer>, unknown, Designer, unknown>
+) => {
+  return useMutation((user: Partial<Designer>) => UpdateDesignerUrl(id, user), {
+    ...options,
+  })
+}
+
 export const useGetDesignerProducts = ({
   id,
   pagination,
@@ -116,6 +130,27 @@ export const useUpdateDesignerProduct = (
       onSuccess: () => {
         queryClient.invalidateQueries(["designer", designerId, "products"])
       },
+      ...options,
+    }
+  )
+}
+
+const CreateDesigner = async (designer: Partial<Designer>) => {
+  const data = await AxiosClient.post<Partial<Designer>>(`/designer`, designer)
+  return data.data
+}
+
+export const useCreateDesigner = (
+  options?: MutationOptions<
+    Partial<Designer>,
+    unknown,
+    Partial<Designer>,
+    unknown
+  >
+) => {
+  return useMutation(
+    (designer: Partial<Designer>) => CreateDesigner(designer),
+    {
       ...options,
     }
   )

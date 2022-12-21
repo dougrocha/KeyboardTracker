@@ -156,6 +156,15 @@ export class VendorService implements BaseService<Vendor> {
       .then((vendors) => vendors.map((vendor) => vendor.vendor))
   }
 
+  async connectUserVendor(userId: string, vendorId: string) {
+    return await this.prisma.userVendor.create({
+      data: {
+        userId,
+        vendorId,
+      },
+    })
+  }
+
   async findVendorsByCountry(country: string) {
     return this.prisma.vendor.findMany({
       where: {

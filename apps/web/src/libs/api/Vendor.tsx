@@ -131,3 +131,20 @@ export const useGetVendor = (
 
   return { vendor: data, ...rest }
 }
+
+const CreateVendorUrl = async (vendor: Partial<Vendor>) => {
+  const { data } = await AxiosClient.post<Partial<Vendor>>(`/vendor`, vendor)
+  return data
+}
+
+export const useCreateVendor = () => {
+  const queryClient = useQueryClient()
+
+  const { mutate, ...rest } = useMutation(CreateVendorUrl, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user", "vendors"])
+    },
+  })
+
+  return { createVendor: mutate, ...rest }
+}
