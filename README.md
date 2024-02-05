@@ -52,6 +52,8 @@ This is the table that shows all the keyboards currently in your inventory. You 
 
 ## Tech Stack
 
+- TypeScript
+- Turborepo
 - Next.js/React
 - NestJS
 - PostgreSQL
@@ -68,14 +70,38 @@ git clone
 
 2\. Install dependencies
 
+This step will also require setting up a PostgreSQL database and a Redis instance, and setting up the .env file following the .env.example file.
+
 ```bash
 pnpm install
+```
+
+After setting up the .env file, you can run the following command to create the database and run the migrations:
+
+```bash
+cd packages/database
+pnpm prisma seed
+pnpm prisma db:generate
+pnpm build
+```
+
+Do not forget to run these commands:
+
+```bash
+cd apps/api
+pnpm generate
 ```
 
 3\. Start the development server
 
 ```bash
 pnpm dev
+```
+
+or start the production server
+
+```bash
+pnpm build && pnpm start
 ```
 
 4\. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
