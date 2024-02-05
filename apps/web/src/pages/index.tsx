@@ -53,8 +53,8 @@ const HomePage = ({
         </Carousel>
 
         <div className="flex flex-col items-center">
-          <p className="mb-8 mt-10 text-2xl font-semibold">Live Group Buys</p>
-          <div className="grid w-full grid-cols-1 place-items-center gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+          <p className="mt-10 mb-8 text-2xl font-semibold">Live Group Buys</p>
+          <div className="grid w-full grid-cols-1 place-items-center gap-y-6 gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
             {mostRecentProducts?.data?.map((p) => (
               <ProductCard key={p.id} product={p} width="full" />
             ))}

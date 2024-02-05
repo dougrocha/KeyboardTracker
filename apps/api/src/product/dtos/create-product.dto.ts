@@ -4,7 +4,6 @@ import {
   ProductType,
   YearQuarter,
 } from '@meka/database'
-import { DecimalJsLike } from '@prisma/client/runtime'
 import { Transform } from 'class-transformer'
 import {
   IsDate,
@@ -71,7 +70,7 @@ export class CreateProductDto {
 
   @IsString()
   @IsOptional()
-  price?: string | number | Prisma.Decimal | DecimalJsLike
+  price?: string | number | Prisma.Decimal
 
   @IsOptional()
   @IsEnum(YearQuarter)

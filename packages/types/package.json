@@ -11,7 +11,7 @@
     "lint": "eslint src --fix"
   },
   "devDependencies": {
-    "@meka/config": "*",
+    "@meka/config": "workspace:*",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "eslint": "^8.28.0",

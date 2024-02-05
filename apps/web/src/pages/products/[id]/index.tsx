@@ -2,7 +2,7 @@ import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
 import {
   Vendor,
   ProductIncludeAll,
-  Image as ProductImage,
+  type Image as ProductImage,
 } from "@meka/database"
 import classNames from "classnames"
 import { GetStaticPropsContext, GetStaticPropsResult } from "next"
@@ -167,7 +167,7 @@ const ProductImage = ({
         <Image
           src={
             image?.imgUrl?.startsWith("images")
-              ? image?.imgUrl
+              ? `${process.env.NEXT_PUBLIC_WEB_URL}/${image?.imgUrl}`
               : `${process.env.NEXT_PUBLIC_API_URL}/product/${image?.productId}/image/${image?.imgUrl}`
           }
           alt={`${image?.title}`}

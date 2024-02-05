@@ -1,73 +1,81 @@
-# Turborepo starter
+# Keyboard Tracker
 
-This is an official Yarn v1 starter turborepo.
+This project is store/tracker for your favorite keyboards. Meka serves as a central place to find, track, discuss, and sell your favorite keyboards.
+Meka gives you the ability to track your favorite keyboards and learn more about them.
 
-## What's inside?
+## Features
 
-This turborepo uses [Yarn](https://classic.yarnpkg.com/) as a package manager. It includes the following packages/apps:
+- Track your favorite keyboards
+- Learn more about your favorite keyboards
 
-### Apps and Packages
+- Sell keyboards
+- Manage all your keyboards with an interactive dashboard
+- Gain user interest with interest checks
 
-- `docs`: a [Next.js](https://nextjs.org) app
-- `web`: another [Next.js](https://nextjs.org) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
+## Live Demo
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+Since this site has a lot of features, it is not live. I am working on a demo version of the site that will be live soon.
 
-### Utilities
+## Screenshots
 
-This turborepo has some additional tools already setup for you:
+Here are some screenshots of the site:
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+### Home Page
 
-### Build
+This is the home page of the site.
 
-To build all apps and packages, run the following command:
+![image](/images/home_page.png)
 
+### Main Keyboard (Product) Page
+
+In this page, you can search all the products, and see some basic details of the keyboards.
+
+![image](/images/keyboard_page.png)
+
+### User Profile Page
+
+Here you can see all the keyboards you favorited, the designs you created, and the keyboard vendor you have access to.
+
+![image](/images/user_profile_page.png)
+
+### User Dashboard Page
+
+In this page, you can see all the vendors you are a part of, along with some quick action buttons.
+
+![image](/images/user_dashboard_page.png)
+
+### Dashboard Table
+
+This is the table that shows all the keyboards currently in your inventory. You are able to edit the information, delete the keyboard, or view the keyboard.
+
+![image](/images/dashboard_table.png)
+
+## Tech Stack
+
+- Next.js/React
+- NestJS
+- PostgreSQL
+- Prisma
+- Tailwind
+
+## Getting Started
+
+1. Clone the repository
+
+```bash
+git clone
 ```
-cd my-turborepo
-yarn run build
+
+2\. Install dependencies
+
+```bash
+pnpm install
 ```
 
-### Develop
+3\. Start the development server
 
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-yarn run dev
+```bash
+pnpm dev
 ```
 
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Pipelines](https://turborepo.org/docs/core-concepts/pipelines)
-- [Caching](https://turborepo.org/docs/core-concepts/caching)
-- [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching)
-- [Scoped Tasks](https://turborepo.org/docs/core-concepts/scopes)
-- [Configuration Options](https://turborepo.org/docs/reference/configuration)
-- [CLI Usage](https://turborepo.org/docs/reference/command-line-reference)
+4\. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

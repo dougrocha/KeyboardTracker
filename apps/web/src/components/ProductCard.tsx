@@ -28,7 +28,7 @@ const ProductCard = ({
     },
     onError: (err) => {
       setIsFavorite(false)
-      console.error(err)
+                        console.error(err)
     },
     enabled: favorite == undefined ? true : false,
   })
@@ -56,7 +56,7 @@ const ProductCard = ({
       )}
     >
       <>
-        <div className="relative h-36 w-full select-none">
+        <div className="relative w-full h-36 select-none">
           <Image
             src={
               product.coverImage
@@ -75,22 +75,22 @@ const ProductCard = ({
         </div>
 
         <button
-          className="absolute top-2 right-2 z-10 rounded-full bg-white p-2 dark:bg-gray-800"
+          className="absolute top-2 right-2 z-10 p-2 bg-white rounded-full dark:bg-gray-800"
           onClick={(e) => {
             changeOnFavorite(e)
           }}
         >
           {isFavorite ? (
-            <SolidHeartIcon className="h-5 w-5 text-red-500" />
+            <SolidHeartIcon className="w-5 h-5 text-red-500" />
           ) : (
-            <HeartIcon className="h-5 w-5 text-black dark:text-white" />
+            <HeartIcon className="w-5 h-5 text-black dark:text-white" />
           )}
         </button>
 
-        <div className="flex h-24 w-full justify-between bg-indigo-50 p-2 dark:bg-gray-800">
+        <div className="flex justify-between p-2 w-full h-24 bg-indigo-50 dark:bg-gray-700">
           <div className="flex flex-col justify-between">
             <p className="text-lg font-semibold">{product.name}</p>
-            <p className="max-w-min rounded bg-indigo-400 px-2 py-1 text-xs font-medium text-white ">
+            <p className="py-1 px-2 max-w-min text-xs font-medium text-white bg-indigo-500 rounded">
               {product.status}
             </p>
           </div>

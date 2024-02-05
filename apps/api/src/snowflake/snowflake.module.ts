@@ -1,7 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common'
 import intFormat from 'biguint-format'
 import FlakeId from 'flake-idgen'
-import { nanoid } from 'nanoid/non-secure'
+
+const nanoid = require('nanoid')
 
 import { SNOWFLAKE_SERVICE } from '../common/constants.js'
 

@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const withTM = require("next-transpile-modules")(["@meka/ui", "@meka/database"])
+// const withTM = require("next-transpile-modules")(["@meka/database"])
 
 /**
  * @type {import('next').NextConfig}
@@ -19,6 +19,7 @@ const nextConfig = {
       },
     ]
   },
+  transpilePackages: ["@meka/database"],
   reactStrictMode: true,
   images: {
     domains: ["localhost"],
@@ -30,7 +31,9 @@ const nextConfig = {
   },
 }
 
-module.exports = () => {
-  const plugins = [withTM]
-  return plugins.reduce((acc, next) => next(acc), { ...nextConfig })
-}
+// module.exports = () => {
+//   const plugins = [withTM]
+//   return plugins.reduce((acc, next) => next(acc), { ...nextConfig })
+// }
+
+module.exports = nextConfig

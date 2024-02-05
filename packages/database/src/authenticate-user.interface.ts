@@ -10,3 +10,5 @@ export interface ProtectedAuth {
   user?: User
   isLoggedIn: boolean
 }
+
+export { User }

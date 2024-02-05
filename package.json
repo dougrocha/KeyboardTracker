@@ -13,7 +13,7 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "db:seed": "yarn workspace @meka/database prisma db push --accept-data-loss --force-reset && yarn workspace @meka/database prisma db seed"
+    "db:seed": "pnpm --filter \"@meka/database\" prisma db push --accept-data-loss --force-reset && pnpm --filter \"@meka/database\" @meka/database prisma db seed"
   },
   "devDependencies": {
     "prettier": "^2.8.0",
@@ -21,6 +21,5 @@
   },
   "engines": {
     "node": ">=14.0.0"
-  },
-  "packageManager": "yarn@3.3.0"
+  }
 }
